@@ -1,0 +1,13 @@
+//
+//  EventHandler.swift
+//  PawWalker
+//
+//  Created by shagar on 12/02/25.
+//
+
+import Combine
+
+class EventHandler {
+    static var cartCountSubject = PassthroughSubject<Int,Never>()
+    
+}

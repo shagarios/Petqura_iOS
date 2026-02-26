@@ -1,0 +1,42 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 5.10 (swiftlang-5.10.0.13 clang-1500.3.9.4)
+// swift-module-flags: -target arm64-apple-ios12.0-simulator -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -enable-bare-slash-regex -module-name CFNetworkSDK
+@_exported import CFNetworkSDK
+import Foundation
+import Swift
+import _Concurrency
+import _StringProcessing
+import _SwiftConcurrencyShims
+public enum APIState : Swift.Int {
+  case VERIFY
+  case CONFIG_FETCH
+  case SAVED_CARDS
+  case PAY
+  case ANALYTICS
+  case RESEND_OTP
+  case SUBMIT_OTP
+  case DELETE_CARDS
+  case CARD_BIN
+  case CARD_TDR
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+public protocol APIHandlers : AnyObject {
+  func onSuccess(apiState: CFNetworkSDK.APIState, result: Swift.Dictionary<Swift.String, Any>)
+  func onSuccess(apiState: CFNetworkSDK.APIState, result: [Swift.Dictionary<Swift.String, Any>])
+  func onFailure(apiState: CFNetworkSDK.APIState, response: Swift.Dictionary<Swift.String, Any>)
+}
+public protocol CFNetworkDelegate {
+  func didCompleteAPICall(data: Foundation.Data?, response: Foundation.URLResponse?, error: (any Swift.Error)?, apiState: CFNetworkSDK.APIState, apiHandler: any CFNetworkSDK.APIHandlers)
+}
+open class CFNetworkLayer {
+  public init()
+  public func request(url: Foundation.URL, body: Swift.Dictionary<Swift.String, Any>?, method: Swift.String, headers: [Swift.String : Swift.String], delegate: any CFNetworkSDK.CFNetworkDelegate, apiState: CFNetworkSDK.APIState, apiHandler: any CFNetworkSDK.APIHandlers)
+  @objc deinit
+}
+extension CFNetworkSDK.APIState : Swift.Equatable {}
+extension CFNetworkSDK.APIState : Swift.Hashable {}
+extension CFNetworkSDK.APIState : Swift.RawRepresentable {}

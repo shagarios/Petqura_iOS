@@ -1,0 +1,210 @@
+//
+//  ProductDetailsViewModel.swift
+//  PawWalker
+//
+//  Created by shagar on 23/01/25.
+//
+
+import SwiftUI
+import Combine
+
+class ProductDetailsViewModel  : ObservableObject {
+    @Published var product : Product?
+    @Published var showMore : Bool = false
+    private var cancellables = Set<AnyCancellable>()
+    @Published var reviewList : [ProductReview] = []
+    @Published var showReviewPage : Bool = false
+    @Published var showCartPage : Bool = false
+    @Published var cartCount : Int = UserSessionManager.shared.cartItemCount
+    @Published var showFullDescription : Bool = false
+    @Published var navigateToDetailScreen : Bool = false
+    @Published var selectedVariant : Variant?
+    @Injected var apiClient : ApiClientProtocol
+    @Published var productList : [Product] = []
+    @Published var showReviewBottomSheet : Bool = false
+    @Published var reviewText : String = TextResource.empty
+    @Published var reviewRating : Int = 0
+    @Published var averageRating : Double = 0
+    @Published var isLoading : Bool = false
+    
+    init(product : Product?) {
+        self.product = product
+        selectedVariant = self.product?.variants.first
+        handleCartCountUpdate()
+        // defer async work so it starts *after* init is done
+//              Task { [weak self] in
+//                  guard let self else { return }
+//                  await self.fetchSimilarProducts()
+//                  await self.fetchReviews()
+//              }
+    }
+    func handleCartCountUpdate() {
+        EventHandler.cartCountSubject.sink { completion in
+            switch completion {
+            case .finished:
+                break
+            }
+        } receiveValue: { count in
+            self.cartCount = count
+            
+        }
+        .store(in: &cancellables)
+    }
+    func getVariantList() -> [Variant] {
+       return self.product?.variants ?? []
+    }
+    func getDiscountPrice() -> Int {
+        return Int(selectedVariant?.discountedPrice ?? 0)
+    }
+    func fetchSimilarProducts() async {
+        if Connectivity.isConnectedToInternet {
+            apiClient.APIRequest(router: .similarProducts(seller: self.product?.addedByID ?? ""),
+                                 responseType: ProductListModel.self)
+                .sink { completion in
+                    switch completion {
+                    case .finished:
+                        break
+                    case .failure(_):
+                        break
+                    }
+                } receiveValue: {[unowned self] response in
+                    if let products = response.result?.products {
+                        self.productList = products
+                    }
+                }
+                .store(in: &cancellables)
+        }
+    }
+    func fetchReviews() async {
+        if Connectivity.isConnectedToInternet {
+            apiClient.APIRequest(router: .productReview(productId: product?.productID ?? ""),
+                                 responseType: ProductReviewModel.self)
+            .sink { [weak self] completion in
+                switch completion {
+                case .finished:
+                    break
+                case .failure(_):
+                    break
+                }
+            } receiveValue: { response in
+                if let result = response.result {
+                    self.reviewList = result.reviews
+                    self.averageRating = result.averageRating ?? 0
+                }
+            }
+            .store(in: &cancellables)
+        }
+    }
+    @MainActor
+    func postToCart(productId : String, varaintId : String,quantity : Int) async {
+        if Connectivity.isConnectedToInternet {
+            let params : [String : Any] = [
+                ApiParameters.productId : productId,
+                ApiParameters.productVariantId : varaintId,
+                ApiParameters.quantity : quantity
+            ]
+            self.isLoading = true
+            apiClient.APIRequest(router: .addTocat, parameters: params, responseType: AddToCartModel.self)
+                .sink { [weak self] completion in
+                    switch completion {
+                    case .finished:
+                        break
+                    case .failure(_):
+                        self?.isLoading = false
+                    }
+                } receiveValue: { response in
+                    self.isLoading = false
+                    if let result = response.result {
+                        let cartCount = result.cart.count
+                        EventHandler.cartCountSubject.send(cartCount)
+                        ToastCenter.shared.showToast(TextResource.addedToCartAlert,type: .success)
+                    }
+                }
+                .store(in: &cancellables)
+        }
+        else {
+            ToastCenter.shared.showToast(TextResource.noInternet,type: .error)
+        }
+    }
+    func getNonDiscountPrice() -> Int {
+        return Int(self.selectedVariant?.nonDiscountPrice ?? 0)
+    }
+    func addToFavorite(productId : String,variantId : String,completion : @escaping (Bool) -> ()) {
+        let param : [String : Any] = [ApiParameters.id : productId,
+                                      ApiParameters.favoriteItem: FavoriteType.product.rawValue,ApiParameters.variantId: variantId]
+        if Connectivity.isConnectedToInternet {
+            self.isLoading = true
+            apiClient.APIRequest(router: .addToFavorite, parameters: param, responseType: SimpleResponse.self)
+                .sink { completion in
+                    switch completion {
+                    case .finished:
+                        break
+                    case .failure(let error):
+                        ToastCenter.shared.showToast(error.backendError?.message ?? TextResource.apiError,type: .error)
+                        break
+                    }
+                } receiveValue: { response in
+                    ToastCenter.shared.showToast(TextResource.addedTofavorite,type: .success)
+                    completion(true)
+                }
+                .store(in: &cancellables)
+        }
+        else {
+            ToastCenter.shared.showToast(TextResource.noInternet,type: .error)
+        }
+    }
+    func deleteProductFromFavorites(productId : String,variantId : String,
+                                    completion : @escaping (Bool) -> ()) {
+        if Connectivity.isConnectedToInternet {
+            self.isLoading = true
+            let param : [String : Any] = [ApiParameters.id : productId,ApiParameters.variantId: variantId,ApiParameters.favoriteItem : FavoriteType.product.rawValue]
+            apiClient.APIRequest(router: .deleteFavorite, parameters: param, responseType: SimpleResponse.self)
+                .sink { completion in
+                    switch  completion {
+                    case .finished:
+                        break
+                    case .failure(let error):
+                        self.isLoading = false
+                        break
+                        
+                    }
+                } receiveValue: { response in
+                    self.isLoading = false
+                    ToastCenter.shared.showToast(response.message ?? "successfully deleted from favorites",type: .success)
+                    completion(true)
+                }
+                .store(in: &cancellables)
+        }
+        else {
+            ToastCenter.shared.showToast(TextResource.noInternet,type: .error)
+        }
+    }
+    func submitReviewToServer() {
+        if Connectivity.isConnectedToInternet {
+            var param : [String: Any] = [ApiParameters.pid : self.product?.productID ?? TextResource.empty]
+            param[ApiParameters.reviewContent] = self.reviewText
+            param[ApiParameters.reviewStarCount] = self.reviewRating
+            self.isLoading = false
+            apiClient.APIRequest(router: .addProductReview, parameters: param, responseType: SimpleResponse.self)
+                .sink { completion in
+                    switch completion {
+                    case .finished:
+                        break
+                    case .failure(let error):
+                        self.isLoading = false
+                        ToastCenter.shared.showToast(error.backendError?.message ?? "There is an error occured while adding review",type: .error)
+                        break
+                    }
+                } receiveValue: { response in
+                    self.isLoading = false
+                    Task {
+                        await self.fetchReviews()
+                    }
+                }
+                .store(in: &cancellables)
+        }
+        else {
+            ToastCenter.shared.showToast(TextResource.noInternet,type: .error)
+        }
+    }
+}

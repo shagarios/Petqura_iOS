@@ -1,0 +1,12 @@
+//
+//  PawWalker-Dev.xcconfig
+//  PawWalker
+//
+//  Created by shagar on 29/10/24.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+API_BASE_URL = http://beqa.pawwalker.in
+//GOOGLE_MAP_KEY = AIzaSyAE0lXuHo54PR-h-u9NGqs8D3tDoGuwyO8
+INSTANCE=DEVELOPMENT
