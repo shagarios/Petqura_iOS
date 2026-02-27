@@ -38,6 +38,11 @@ class ClinicListViewModel : ObservableObject {
     }
     @Published var showFilterList : Bool = false
     @Published var shouldSearch = true
+    
+    // Filter
+    @Published var filters: [FilterType] = []
+    @Published var selectedFilter: FilterType?
+    @Published var selectedItems: Set<FilterItem> = []
     weak var coordinator: ClinicCoordinator?
     @Injected var coredataService : CoreDataServiceProtocol
     init(coordinator: ClinicCoordinator) {
@@ -207,6 +212,41 @@ class ClinicListViewModel : ObservableObject {
         self.fetchClinicList(serviceId: coordinator?.appCoordinator?.selectedServiceId ?? "")
         case .failure(let failure):
             break
+        }
+    }
+    
+    
+    /// get clinic filter data
+    func getFliterData() {
+        if internet.isConnectedToInternet {
+            self.isLoading = true
+            apiClient.APIRequest(router: .clinicFilters, responseType: FilterResponse.self)
+                .sink { [weak self] completion in
+                    switch completion {
+                    case .finished:
+                        break
+                    case .failure(let error):
+                        self?.isLoading = false
+                        ToastCenter.shared.showToast(error.backendError?.message ?? TextResource.apiError,type: .error)
+                    }
+                } receiveValue: { [weak self] response in
+                    if let data = response.result?.filters {
+                        self?.filters = data
+                        self?.selectedFilter = data.first
+                    }
+                }
+                .store(in: &cancellables)
+        }
+        else {
+            ToastCenter.shared.showToast(TextResource.noInternet)
+        }
+    }
+    
+    func toggleItem(_ item: FilterItem) {
+        if selectedItems.contains(item) {
+            selectedItems.remove(item)
+        } else {
+            selectedItems.insert(item)
         }
     }
 }

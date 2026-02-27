@@ -26,6 +26,8 @@
 		40F823632C90B93E00C6328C /* Injection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F823622C90B93E00C6328C /* Injection.swift */; };
 		40F823662C90BCFE00C6328C /* ApiError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F823652C90BCFE00C6328C /* ApiError.swift */; };
 		40F823682C90BDDE00C6328C /* DataParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F823672C90BDDE00C6328C /* DataParser.swift */; };
+		59A065392F51B4E3009FC337 /* FilterScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59A065382F51B4E3009FC337 /* FilterScreen.swift */; };
+		59A0653B2F51B52F009FC337 /* FilterResponseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59A0653A2F51B52F009FC337 /* FilterResponseModel.swift */; };
 		888D9EE042D416C92CA9554B /* Pods_PawWalkerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD5621700962D9C5FE98741D /* Pods_PawWalkerTests.framework */; };
 		D31BF9B32D527E1600E0B225 /* AppointmentDetailsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D31BF9B22D527E0B00E0B225 /* AppointmentDetailsViewModel.swift */; };
 		D31BF9B52D527F3C00E0B225 /* AppointmentDetailsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = D31BF9B42D527F3C00E0B225 /* AppointmentDetailsScreen.swift */; };
@@ -297,6 +299,8 @@
 		47DA8A1F88E1108686CD532F /* Pods-PawWalker-PawWalkerUITests.debug-prod.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PawWalker-PawWalkerUITests.debug-prod.xcconfig"; path = "Target Support Files/Pods-PawWalker-PawWalkerUITests/Pods-PawWalker-PawWalkerUITests.debug-prod.xcconfig"; sourceTree = "<group>"; };
 		50A5E3F3EE027EA879E6CCB7 /* Pods-PawWalker.release-prod.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PawWalker.release-prod.xcconfig"; path = "Target Support Files/Pods-PawWalker/Pods-PawWalker.release-prod.xcconfig"; sourceTree = "<group>"; };
 		584903E23EB68F4722304E6B /* Pods-PawWalkerTests.release-prod.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PawWalkerTests.release-prod.xcconfig"; path = "Target Support Files/Pods-PawWalkerTests/Pods-PawWalkerTests.release-prod.xcconfig"; sourceTree = "<group>"; };
+		59A065382F51B4E3009FC337 /* FilterScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterScreen.swift; sourceTree = "<group>"; };
+		59A0653A2F51B52F009FC337 /* FilterResponseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterResponseModel.swift; sourceTree = "<group>"; };
 		59F849C00A7A04EDAC5D35E7 /* Pods-PawWalker-PawWalkerUITests.debug-dev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PawWalker-PawWalkerUITests.debug-dev.xcconfig"; path = "Target Support Files/Pods-PawWalker-PawWalkerUITests/Pods-PawWalker-PawWalkerUITests.debug-dev.xcconfig"; sourceTree = "<group>"; };
 		A38948B842042C6267BE13E4 /* Pods-PawWalker.release-dev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PawWalker.release-dev.xcconfig"; path = "Target Support Files/Pods-PawWalker/Pods-PawWalker.release-dev.xcconfig"; sourceTree = "<group>"; };
 		A7BF68075D627A9F799F7B83 /* Pods-PawWalker-PawWalkerUITests.release-prod.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PawWalker-PawWalkerUITests.release-prod.xcconfig"; path = "Target Support Files/Pods-PawWalker-PawWalkerUITests/Pods-PawWalker-PawWalkerUITests.release-prod.xcconfig"; sourceTree = "<group>"; };
@@ -1758,6 +1762,7 @@
 		D3F533B72D074501002122AF /* View */ = {
 			isa = PBXGroup;
 			children = (
+				59A065382F51B4E3009FC337 /* FilterScreen.swift */,
 				D3A7EC832DEB1DDE00621003 /* Clinic+Views.swift */,
 				D3C0E2082DCE53A900945F88 /* ClinicItemView.swift */,
 				D3F533BD2D0749BD002122AF /* ClinicListScreen.swift */,
@@ -1776,6 +1781,7 @@
 		D3F533B92D07450C002122AF /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				59A0653A2F51B52F009FC337 /* FilterResponseModel.swift */,
 				D3F533BA2D074971002122AF /* ClinicListModel.swift */,
 			);
 			path = Model;
@@ -2172,6 +2178,7 @@
 				40F823632C90B93E00C6328C /* Injection.swift in Sources */,
 				D3E2C49F2D3FF8F200F64F7D /* ClinicDetailScreenViewModel.swift in Sources */,
 				D3A232C02E450FA8001FCDA7 /* ReviewScreen.swift in Sources */,
+				59A065392F51B4E3009FC337 /* FilterScreen.swift in Sources */,
 				D36B1A452CD13740005EA763 /* BundleExtension.swift in Sources */,
 				D3C0E20B2DCFA39C00945F88 /* ProductDetail+SimilarProduct.swift in Sources */,
 				D3427D0C2EC2587300154238 /* FavoriteCoordinator.swift in Sources */,
@@ -2253,6 +2260,7 @@
 				D31BF9BB2D53D48800E0B225 /* StringExtension.swift in Sources */,
 				D31BF9D22D5733CD00E0B225 /* ImageURLView.swift in Sources */,
 				D3E7F33F2D5CE9E4001A4149 /* CustomBadgeModifier.swift in Sources */,
+				59A0653B2F51B52F009FC337 /* FilterResponseModel.swift in Sources */,
 				D35405A62CDF783A00436654 /* OtpScreen.swift in Sources */,
 				40F823682C90BDDE00C6328C /* DataParser.swift in Sources */,
 				D31BF9CE2D572FBB00E0B225 /* ImageLoaderProtocol.swift in Sources */,

@@ -42,12 +42,18 @@ struct ClinicListScreen: View {
          
         }
         .bottomSheet(isPresented: $viewModel.showFilterList) {
-            ServiceBottomSheet(services: UserSessionManager.shared.services, completion: { service in
-                viewModel.showFilterList = false
-                viewModel.page = 1
-                viewModel.clinicList.removeAll()
-                viewModel.selctedServiceId = service.id
-            })
+            ClinicFilterBottomSheet(
+                viewModel: viewModel,
+                onApply: {
+                
+                }
+            )
+//            ServiceBottomSheet(services: UserSessionManager.shared.services, completion: { service in
+//                viewModel.showFilterList = false
+//                viewModel.page = 1
+//                viewModel.clinicList.removeAll()
+//                viewModel.selctedServiceId = service.id
+//            })
                 .frame(height: UIScreen.screenHeight * 0.70)
         }
 //        .topBarView(titleView: viewModel.coordinator?.appCoordinator?.titleView(),
