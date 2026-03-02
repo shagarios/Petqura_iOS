@@ -45,6 +45,7 @@ enum Router {
     case logout
     case delete
     case getAppointmentDetails(appointmentId : String)
+    case clinicFilters
     private var baseUrl:  String {
         return Bundle.main.apiBaseUrl
     }
@@ -61,11 +62,11 @@ enum Router {
         case .clinicList(let serviceId,let page,let keyword,let latitude,let longitude):
             if latitude.isNotEmpty || longitude.isNotEmpty {
                 return serviceId.isEmpty ? baseUrl + "/clinic_listing?page_count=30&page=\(page)&keyword=\(keyword)&latitude=\(latitude)&longitude=\(longitude)" :
-                baseUrl + "/clinic_listing?page_count=30&service_id[]=\(serviceId)&page=\(page)&keyword=\(keyword)&latitude=\(latitude)&longitude=\(longitude)"
+                baseUrl + "/clinic_listing?page_count=30&\(serviceId)&page=\(page)&keyword=\(keyword)&latitude=\(latitude)&longitude=\(longitude)"
             }
             else {
                 return serviceId.isEmpty ? baseUrl + "/clinic_listing?page_count=30&page=\(page)&keyword=\(keyword)" :
-                baseUrl + "/clinic_listing?page_count=30&service_id[]=\(serviceId)&page=\(page)&keyword=\(keyword)"
+                baseUrl + "/clinic_listing?page_count=30&\(serviceId)&page=\(page)&keyword=\(keyword)"
             }
         case .productList(let categoryId,let page,let keyword):
             return  categoryId.isEmpty  ?   baseUrl + "/get_products?page=\(page)&keyword=\(keyword)" :  baseUrl + "/get_products??page=\(page)&category_filter[]=\(categoryId)&keyword=\(keyword)"
@@ -132,6 +133,8 @@ enum Router {
             return baseUrl + "/remove-account"
         case .getAppointmentDetails(let id):
             return baseUrl + "/appointments_details?appointment_id=\(id)"
+        case .clinicFilters:
+            return baseUrl + "/clinic_filters"
         }
     }
     
@@ -217,6 +220,8 @@ enum Router {
         case .delete:
             return .post
         case .getAppointmentDetails:
+            return .get
+        case .clinicFilters:
             return .get
         }
     }

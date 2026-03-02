@@ -38,8 +38,16 @@ class ClinicListViewModel : ObservableObject {
     }
     @Published var showFilterList : Bool = false
     @Published var shouldSearch = true
+    
+    // Filter
+    @Published var filters: [FilterType] = []
+    @Published var selectedFilter: FilterType?
+    @Published var selectedItems: Set<FilterItem> = []
     weak var coordinator: ClinicCoordinator?
     @Injected var coredataService : CoreDataServiceProtocol
+    @Published var filterArrayString: String = ""
+    @Published var filersApiData : [FilterApiData] = []
+    
     init(coordinator: ClinicCoordinator) {
         setupSearchPublisher()
         self.coordinator = coordinator
@@ -111,6 +119,8 @@ class ClinicListViewModel : ObservableObject {
             }
 
             self.hasNext = response.result.hasNext ?? false
+            filterArrayString = ""
+            selectedItems.removeAll()
         }
         .store(in: &cancellables)
     }
@@ -204,9 +214,66 @@ class ClinicListViewModel : ObservableObject {
         switch result {
         case .success(let location):
         self.locationData = location.first
-        self.fetchClinicList(serviceId: coordinator?.appCoordinator?.selectedServiceId ?? "")
+            if filterArrayString.isEmpty {
+                self.fetchClinicList(serviceId: "service_id[]=\(coordinator?.appCoordinator?.selectedServiceId ?? "")")
+            }
+            else {
+                self.fetchClinicList(serviceId: filterArrayString)
+            }
         case .failure(let failure):
             break
         }
     }
+    
+    
+    /// get clinic filter data
+    func getFliterData() {
+        if internet.isConnectedToInternet {
+            self.isLoading = true
+            apiClient.APIRequest(router: .clinicFilters, responseType: FilterResponse.self)
+                .sink { [weak self] completion in
+                    switch completion {
+                    case .finished:
+                        break
+                    case .failure(let error):
+                        self?.isLoading = false
+                        ToastCenter.shared.showToast(error.backendError?.message ?? TextResource.apiError,type: .error)
+                    }
+                } receiveValue: { [weak self] response in
+                    if let data = response.result?.filters {
+                        self?.filters = data
+                        self?.selectedFilter = data.first
+                    }
+                }
+                .store(in: &cancellables)
+        }
+        else {
+            ToastCenter.shared.showToast(TextResource.noInternet)
+        }
+    }
+    
+    func toggleItem(_ item: FilterItem,type : String) {
+        if selectedItems.contains(item) {
+            selectedItems.remove(item)
+            filersApiData.removeAll(where: {$0.id == item.id})
+        } else {
+            selectedItems.insert(item)
+//            filterArrayString.append("\(type)[]=\(item.id)")
+            filersApiData.append(FilterApiData(type: type, name: item.name, id: item.id))
+        }
+    }
+    func makeApiString() -> String {
+        var parts : [String] = []
+         for item in filersApiData {
+             parts.append("\(item.type)[]=\(item.id)")
+        }
+        return parts.joined(separator: "&")
+    }
+}
+
+
+struct FilterApiData {
+    var type : String
+    var name : String
+    var id : String
 }
