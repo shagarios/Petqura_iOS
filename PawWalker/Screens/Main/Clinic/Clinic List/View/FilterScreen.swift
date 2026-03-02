@@ -114,7 +114,8 @@ extension ClinicFilterBottomSheet {
                 }
                 .contentShape(Rectangle())
                 .onTapGesture {
-                    viewModel.toggleItem(item)
+                    guard let type = viewModel.selectedFilter?.type else {return}
+                    viewModel.toggleItem(item,type: type)
                 }
             }
         }

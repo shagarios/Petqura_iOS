@@ -41,13 +41,21 @@ struct ClinicListScreen: View {
             viewModel.fetchLocation()
          
         }
+        .if(viewModel.showFilterList, transform: { view in
+            view
+                .toolbar(.hidden, for: .tabBar)
+        })
         .bottomSheet(isPresented: $viewModel.showFilterList) {
             ClinicFilterBottomSheet(
                 viewModel: viewModel,
                 onApply: {
-                
+                    viewModel.showFilterList = false
+                    viewModel.filterArrayString = viewModel.makeApiString()
+                    viewModel.filersApiData.removeAll()
+                    
                 }
             )
+            
 //            ServiceBottomSheet(services: UserSessionManager.shared.services, completion: { service in
 //                viewModel.showFilterList = false
 //                viewModel.page = 1

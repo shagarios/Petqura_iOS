@@ -45,6 +45,9 @@ class ClinicListViewModel : ObservableObject {
     @Published var selectedItems: Set<FilterItem> = []
     weak var coordinator: ClinicCoordinator?
     @Injected var coredataService : CoreDataServiceProtocol
+    @Published var filterArrayString: String = ""
+    @Published var filersApiData : [FilterApiData] = []
+    
     init(coordinator: ClinicCoordinator) {
         setupSearchPublisher()
         self.coordinator = coordinator
@@ -116,6 +119,8 @@ class ClinicListViewModel : ObservableObject {
             }
 
             self.hasNext = response.result.hasNext ?? false
+            filterArrayString = ""
+            selectedItems.removeAll()
         }
         .store(in: &cancellables)
     }
@@ -209,7 +214,12 @@ class ClinicListViewModel : ObservableObject {
         switch result {
         case .success(let location):
         self.locationData = location.first
-        self.fetchClinicList(serviceId: coordinator?.appCoordinator?.selectedServiceId ?? "")
+            if filterArrayString.isEmpty {
+                self.fetchClinicList(serviceId: "service_id[]=\(coordinator?.appCoordinator?.selectedServiceId ?? "")")
+            }
+            else {
+                self.fetchClinicList(serviceId: filterArrayString)
+            }
         case .failure(let failure):
             break
         }
@@ -242,11 +252,28 @@ class ClinicListViewModel : ObservableObject {
         }
     }
     
-    func toggleItem(_ item: FilterItem) {
+    func toggleItem(_ item: FilterItem,type : String) {
         if selectedItems.contains(item) {
             selectedItems.remove(item)
+            filersApiData.removeAll(where: {$0.id == item.id})
         } else {
             selectedItems.insert(item)
+//            filterArrayString.append("\(type)[]=\(item.id)")
+            filersApiData.append(FilterApiData(type: type, name: item.name, id: item.id))
         }
     }
+    func makeApiString() -> String {
+        var parts : [String] = []
+         for item in filersApiData {
+             parts.append("\(item.type)[]=\(item.id)")
+        }
+        return parts.joined(separator: "&")
+    }
+}
+
+
+struct FilterApiData {
+    var type : String
+    var name : String
+    var id : String
 }
