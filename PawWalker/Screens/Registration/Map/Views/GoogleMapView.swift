@@ -13,7 +13,8 @@ import GoogleMaps
 
 struct GoogleMapsView: UIViewRepresentable {
     @ObservedObject var viewModel : MapViewModel
-    @State var zoom : Float? = FloatingSize.zoom.rawValue
+    private let defaultZoom: Float = 17
+    @State var zoom : Float? = 17
     @State var previewing: Bool = false
     func makeCoordinator() -> MapCoordinator {
         return MapCoordinator(parent: self, latitude: $viewModel.lat, longitude: $viewModel.long)
@@ -21,7 +22,7 @@ struct GoogleMapsView: UIViewRepresentable {
     
     func makeUIView(context: Self.Context) -> GMSMapView {
         let camera = GMSCameraPosition.camera(withLatitude: viewModel.lat ,
-                        longitude: viewModel.long, zoom: zoom ?? FloatingSize.zoom.rawValue)
+                        longitude: viewModel.long, zoom: zoom ?? defaultZoom)
         let mapView = GMSMapView()
         mapView.animate(to: camera)
         mapView.delegate = context.coordinator
@@ -49,7 +50,7 @@ struct GoogleMapsView: UIViewRepresentable {
     
     func updateUIView(_ mapView: GMSMapView, context: Context) {
         let updatedCamera = GMSCameraPosition.camera(withLatitude: viewModel.lat,
-                                        longitude: viewModel.long, zoom: 14)
+                                        longitude: viewModel.long, zoom: defaultZoom)
         if context.coordinator.shouldUpdateCamera(mapView: mapView, to: updatedCamera.target) {
             mapView.animate(to: updatedCamera)
         }

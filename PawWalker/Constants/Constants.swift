@@ -13,8 +13,8 @@ struct Strings {
 }
 
 enum FloatingSize: Float {
-    case zoom = 10.0
-    case locationZoom = 15.0
+    case zoom = 15.0
+    case locationZoom = 16.0
     case divider20 = 20.0
     case defaultValue = 1.0
     case divider100 = 100.0

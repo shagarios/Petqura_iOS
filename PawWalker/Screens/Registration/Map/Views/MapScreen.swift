@@ -23,7 +23,7 @@ struct MapScreen: View {
                 GoogleMapsView(viewModel: viewModel)
                     .overlay(
                         placeSearchView
-                        .padding(.top,20)
+                        .padding(.top,10)
                              ,alignment: .top)
                 infoView
             }
@@ -43,9 +43,9 @@ struct MapScreen: View {
     }
     private var placeSearchView : some View {
         HStack {
-            Spacer()
             Image(ImageResource.location)
                 .foregroundStyle(Color.darkGray)
+                .padding(.leading,10)
             Button(action: {
                 viewModel.showingPlacesAutocomplete = true
             },
@@ -53,7 +53,7 @@ struct MapScreen: View {
                 Text("Search your City or Area")
                     .foregroundStyle(Color.darkGray)
             })
-            .padding(.leading,20)
+            
             Spacer()
         }
         .frame(height: 50)

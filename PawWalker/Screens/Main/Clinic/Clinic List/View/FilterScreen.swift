@@ -75,7 +75,7 @@ extension ClinicFilterBottomSheet {
 
         List(viewModel.filters) { filter in
 
-            Text(filter.name)
+            Text(filter.name ?? "")
                 .foregroundColor(
                     viewModel.selectedFilter?.id == filter.id
                     ? .black : .gray
@@ -99,10 +99,9 @@ extension ClinicFilterBottomSheet {
             ForEach(
                 viewModel.selectedFilter?.displayItems ?? []
             ) { item in
-
                 HStack {
 
-                    Text(item.name)
+                    Text(item.name ?? "")
 
                     Spacer()
 

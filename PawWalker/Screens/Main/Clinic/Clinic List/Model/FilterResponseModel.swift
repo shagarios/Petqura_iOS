@@ -18,20 +18,13 @@ struct FilterResult: Codable {
 
 
 struct FilterType: Codable, Identifiable {
-
-    var id: Int {
-        internalId ?? UUID().hashValue
-    }
-
-    let internalId: Int?
-    let name: String
+    let id: String?
+    let name: String?
     let type: String?
-
     let subcategories: [FilterItem]?
     let items: [FilterItem]?
-
     enum CodingKeys: String, CodingKey {
-        case internalId = "id"
+        case id
         case name
         case type
         case subcategories
@@ -47,25 +40,8 @@ struct FilterType: Codable, Identifiable {
 
 struct FilterItem: Codable, Identifiable, Hashable {
 
-    let id: String
-    let name: String
-
-    init(id: String, name: String) {
-        self.id = id
-        self.name = name
-    }
-
-    init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-
-        if let intId = try? container.decode(Int.self, forKey: .id) {
-            id = "\(intId)"
-        } else {
-            id = try container.decode(String.self, forKey: .id)
-        }
-
-        name = try container.decode(String.self, forKey: .name)
-    }
+    let id: String?
+    let name: String?
 
     enum CodingKeys: String, CodingKey {
         case id
