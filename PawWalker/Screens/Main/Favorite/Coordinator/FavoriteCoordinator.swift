@@ -9,7 +9,9 @@ import SwiftUI
 enum FavoritePage : Hashable {
     case favoritePage
     case slotBooking(clinicId: String)
-    case appointMentDetailsScreen(appointmentData : AppointmentData?,clinicData: ClinicData?,docterData: DocterData?)
+    case appointMentDetailsScreen(appointmentData : AppointmentData?,
+                                  clinicData: ClinicData?,docterData: DocterData?,
+                                  serviceList: [Service])
 }
 
 class FavoriteCoordinator: ObservableObject {
@@ -32,14 +34,15 @@ class FavoriteCoordinator: ObservableObject {
             FavoriteScreen(coordinator: self)
         case .slotBooking(let clinicId):
             makeSlotBookingView(clinicId: clinicId)
-        case .appointMentDetailsScreen(appointmentData: let appointmentData, clinicData: let clinicData, docterData: let docterData):
-            makeAppointmentDetailsScreen(appointmentData: appointmentData, clinicData: clinicData, docterData: docterData)
+        case .appointMentDetailsScreen(appointmentData: let appointmentData, clinicData: let clinicData, docterData: let docterData,let serviceList):
+            makeAppointmentDetailsScreen(appointmentData: appointmentData, clinicData: clinicData, docterData: docterData,serviceList: serviceList)
         }
     }
     
-    func makeAppointmentDetailsScreen(appointmentData : AppointmentData?,clinicData: ClinicData?,docterData: DocterData?) -> AppointmentDetailsScreen {
+    func makeAppointmentDetailsScreen(appointmentData : AppointmentData?,clinicData: ClinicData?,docterData: DocterData?,serviceList: [Service]) -> AppointmentDetailsScreen {
         let viewModel = AppointmentDetailsViewModel(appointmentData: appointmentData,
-                                                    clinicData: clinicData, docterData: docterData, serviceList: [])
+                                                    clinicData: clinicData,
+            docterData: docterData, serviceList: serviceList)
         viewModel.coordinator = self
         return AppointmentDetailsScreen(viewModel: viewModel)
     }
@@ -54,7 +57,7 @@ extension FavoriteCoordinator: SlotBookingNavigation {
     }
     
     func navigateToAppointmentDetails(appointmentData: AppointmentData?, clinicData: ClinicData?, docterData: DocterData?, serviceList: [Service]) {
-        self.push(.appointMentDetailsScreen(appointmentData: appointmentData, clinicData: clinicData, docterData: docterData))
+        self.push(.appointMentDetailsScreen(appointmentData: appointmentData, clinicData: clinicData, docterData: docterData,serviceList: serviceList))
     }
     
 }

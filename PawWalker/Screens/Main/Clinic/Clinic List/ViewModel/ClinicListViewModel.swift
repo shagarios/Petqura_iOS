@@ -62,6 +62,7 @@ class ClinicListViewModel : ObservableObject {
                 }
                 self.filteredClinicList.removeAll()
                 self.searchPage = 1
+                self.searchHasNext = false
                 self.shouldShowEmptySearchView = false
                 if self.searchText.isNotEmpty {
                     self.searchClinicList()
@@ -80,10 +81,12 @@ class ClinicListViewModel : ObservableObject {
             ToastCenter.shared.showToast(TextResource.noInternet, type: .error)
             return
         }
-        isLoading = true
+       isLoading = true
+
         if page == 1 {
             clinicList.removeAll()
         }
+        
         apiClient.APIRequest(
             router: .clinicList(serviceId: serviceId, page: page,
                 keyword: TextResource.empty,latitude: latitude,longitude: longitude),
@@ -98,6 +101,7 @@ class ClinicListViewModel : ObservableObject {
             case .finished:
                 break
             case .failure(let error):
+                isLoading = false
                 ToastCenter.shared.showToast(
                     error.backendError?.message ?? error.localizedDescription,
                     type: .error
@@ -105,19 +109,15 @@ class ClinicListViewModel : ObservableObject {
             }
         } receiveValue: { [weak self] response in
             guard let self = self else { return }
-
+            isLoading = false
             let clinics = response.result.clinics ?? []
-            if clinics.isEmpty {
-                self.shouldShowEmptyView = true
+            if self.page == 1 {
+                self.clinicList = clinics
             } else {
-                if self.page == 1 {
-                    self.clinicList = clinics
-                } else {
-                    self.clinicList.append(contentsOf: clinics)
-                }
-                self.shouldShowEmptyView = false
+                self.clinicList.append(contentsOf: clinics)
             }
 
+            self.shouldShowEmptyView = self.clinicList.isEmpty
             self.hasNext = response.result.hasNext ?? false
             filterArrayString = ""
             selectedItems.removeAll()
@@ -259,7 +259,8 @@ class ClinicListViewModel : ObservableObject {
         } else {
             selectedItems.insert(item)
 //            filterArrayString.append("\(type)[]=\(item.id)")
-            filersApiData.append(FilterApiData(type: type, name: item.name, id: item.id))
+            filersApiData.append(FilterApiData(type: type,
+                                               name: item.name ?? "", id: item.id ?? ""))
         }
     }
     func makeApiString() -> String {

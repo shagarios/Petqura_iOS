@@ -27,6 +27,12 @@ extension ClinicListScreen {
                     .onTapGestureForced {
                         self.viewModel.coordinator?.push(.clinicDetail(clinic: clinic))
                     }
+                    .onAppear {
+                        if viewModel.clinicList.last?.clinicID == clinic.clinicID && viewModel.hasNext {
+                            self.viewModel.page += 1
+                            viewModel.fetchClinicList(serviceId: "")
+                        }
+                    }
                 }
             }
         }

@@ -33,6 +33,7 @@ struct MyAppointments : Codable {
     let status : String?
     let appointmentId : String
     let clinicDetails : ClinicAppointment?
+    let clinicService: String?
     enum CodingKeys: String,CodingKey {
         case active
         case date = "appointment_date"
@@ -43,6 +44,7 @@ struct MyAppointments : Codable {
         case petName =  "pet_name"
         case appointmentId  = "appointment_id"
         case status
+        case clinicService = "clinic_service"
     }
 }
 

@@ -25,7 +25,6 @@ struct AppointmentDetailsScreen: View {
                 
                 selectedService
                     .padding(.top,20)
-                    .isRemove(viewModel.fromMyAppointment)
                 
                 petView
                     .padding(.top,5)
@@ -123,15 +122,19 @@ struct AppointmentDetailsScreen: View {
     }
     private var selectedService: some View {
         Button(action: {
-            viewModel.showServiceList = true
+            if viewModel.fromMyAppointment == false {
+                viewModel.showServiceList = true
+            }
         },
                label: {
             HStack {
                 HStack {
-                    Text(viewModel.selectedService == "" ? "Select Service" : viewModel.selectedService)
-                        .foregroundColor(viewModel.selectedService == "" ? .gray : .black)
-                        .font(FontConstants.primaryRegularTitle14)
-                        .foregroundStyle(Color.black)
+                    if viewModel.fromMyAppointment {
+                        serviceName(text: viewModel.serviceName)
+                    }
+                    else {
+                        serviceName(text: viewModel.selectedService == "" ? "Select Service" : viewModel.selectedService)
+                    }
                     Spacer()
                     Image(systemName: "chevron.down")
                         .foregroundColor(.gray)
@@ -143,8 +146,15 @@ struct AppointmentDetailsScreen: View {
                 )
             }
         })
+        .disabled(viewModel.fromMyAppointment)
     }
     
+    func serviceName (text: String) ->  some View {
+        Text(text)
+            .foregroundColor(viewModel.selectedService == "" ? .gray : .black)
+            .font(FontConstants.primaryRegularTitle14)
+            .foregroundStyle(Color.black)
+    }
     private var docterView : some View {
         HStack(spacing: 15) {
             docterImageView
