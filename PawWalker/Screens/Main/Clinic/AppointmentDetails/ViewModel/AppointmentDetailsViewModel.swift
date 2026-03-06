@@ -36,7 +36,9 @@ class AppointmentDetailsViewModel : ObservableObject {
     @Published var selectedServiceData : Services?
     @Published var selectedService : String = ""
     @Published var serviceList: [Services] = []
-    init(appointmentData: AppointmentData?, clinicData: ClinicData?, docterData: DocterData?,
+    @Published var serviceName: String = ""
+    init(appointmentData: AppointmentData?, clinicData: ClinicData?,
+         docterData: DocterData?,
          fromMyAppointmet: Bool = false,serviceList: [Service]) {
         self.fromMyAppointment = fromMyAppointmet
         if self.fromMyAppointment == false {
@@ -235,6 +237,7 @@ class AppointmentDetailsViewModel : ObservableObject {
                     couponId: ""
                 )
                 self.petName = result.petName ?? ""
+                self.serviceName = result.clinicService ?? ""
             }
             .store(in: &cancellable)
     }

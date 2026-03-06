@@ -38,7 +38,7 @@ class SlotBookingViewModel : ObservableObject {
            self.selectedSegment = dates.first 
             self.selectedTimeShift = getCurrentTimeShift()
         self.coordinator = coordinator
-        self.serviceList = serviceList
+       // self.serviceList = serviceList
     }
     
     func loadNextFiveDays() {
@@ -82,7 +82,7 @@ class SlotBookingViewModel : ObservableObject {
             guard let self = self else { return }
             self.isLoading = false
             let result = response.result
-
+            self.serviceList = result.clinic?.services ?? []
             self.slotList = result.slots.filter { !$0.slots.isEmpty }
             self.clinicData = ClinicData(
                 clinicName: result.clinic?.clinicName ?? "",
