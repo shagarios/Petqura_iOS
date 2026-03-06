@@ -13,7 +13,7 @@ extension ClinicListScreen {
             LazyVGrid(columns: colomns, alignment: .leading) {
                 ForEach(viewModel.searchText.isEmpty ? $viewModel.clinicList : $viewModel.filteredClinicList,
                         id: \.clinicID) {$clinic in
-                    ClinicItemView(clinic: clinic, completionHandler: { id in
+                    ClinicItemView(viewModel: viewModel, clinic: clinic, completionHandler: { id in
                         if let clinicId = id {
                             self.viewModel.selectedClinicId = clinicId
                            // self.viewModel.navigateToSlotBooking = true
@@ -21,6 +21,8 @@ extension ClinicListScreen {
                         }
                     }, loginRequiredHandler: {
                         viewModel.showLoginRequiredAlert = true
+                    }, addToFavoriteHandler: {
+                        
                     })
                     .padding(.leading,20)
                     .environmentObject(viewModel)

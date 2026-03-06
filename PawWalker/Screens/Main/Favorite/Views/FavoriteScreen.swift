@@ -14,7 +14,7 @@ struct FavoriteScreen : View {
         self.coordinator = coordinator
     }
     var body: some View {
-        VStack {
+        VStack(spacing: 0) {
             //headerView
              //   .padding(.top,10)
 //            if viewModel.selectedCategory == .product {
@@ -24,9 +24,18 @@ struct FavoriteScreen : View {
 //                clinicView
 //            }
             clinicView
+            Spacer()
+            suggetionNameView
+                .padding(.bottom,10)
+            clinicSuggetionListView
+            .padding(.bottom,90)
+               
+            
+            
         }
         .task{
             viewModel.fetchClnicFavorites()
+            viewModel.fetchClinicSuggetions()
         }
         .makeWithLoader(isLoading: $viewModel.isLoading)
         .padding(.horizontal,20)

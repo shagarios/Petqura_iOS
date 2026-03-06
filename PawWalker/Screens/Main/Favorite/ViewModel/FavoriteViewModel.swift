@@ -8,7 +8,7 @@
 import SwiftUI
 import Combine
 
-class FavoriteViewModel :  ObservableObject {
+class FavoriteViewModel : ClinicListViewModel {
     @Published var selectedCategory : FavoriteType = .clinic
     {
         didSet {
@@ -20,14 +20,17 @@ class FavoriteViewModel :  ObservableObject {
             }
         }
     }
-    @Injected var apiClient : ApiClientProtocol
+    init() {
+        super.init(coordinator: ClinicCoordinator())
+    }
+    private var cancellables = Set<AnyCancellable>()
     @Published var favoritesProductList : [FavoiteProduct] = []
     @Published var favoritesClinicList : [FavoriteClinic] = []
-    @Published var navigateToSlotBooking : Bool = false
-    @Published var selectedClinicId : String = TextResource.empty
-    private var cancellables = Set<AnyCancellable>()
-    @Published var isLoading : Bool = false
-    
+    @Published var clinicPage : Int = 1
+    @Injected var connectivity : NetworkMonitor
+    @Published var hasNextClinicSuggention : Bool = false
+    @Published var suggetionsPage: Int = 1
+    @Published var suggetionClinicList: [Clinic] = []
     func fetchProductFavorites() {
         if Connectivity.isConnectedToInternet {
            isLoading = true
@@ -163,6 +166,33 @@ class FavoriteViewModel :  ObservableObject {
                     }
                 }
                 .store(in: &cancellables)
+        }
+        else {
+            ToastCenter.shared.showToast(TextResource.noInternet,type: .error)
+        }
+    }
+    func fetchClinicSuggetions() {
+        if connectivity.isConnectedToInternet {
+            apiClient.APIRequest(router: .favoriteClinicSuggetions(page: suggetionsPage),
+                                 responseType: ClinicSuggetionsModel.self)
+                .sink {  [weak self] completion in
+                    switch completion {
+                    case .failure(let error):
+                        self?.isLoading = false
+                        if let errorMessage = error.backendError?.message {
+                            ToastCenter.shared.showToast(errorMessage,type: .error)
+                        }
+                        break
+                    case .finished:
+                        break
+                    }
+                } receiveValue: { response in
+                    print(response)
+                    self.suggetionClinicList = response.result.suggestions
+                    self.hasNextClinicSuggention = response.result.hasNext ?? false
+                }
+                .store(in: &cancellables)
+
         }
         else {
             ToastCenter.shared.showToast(TextResource.noInternet,type: .error)

@@ -51,7 +51,7 @@ struct FavoriteClinicModel : Codable {
 
 struct FavoriteClinic : Codable {
     let active: Bool
-    let clinicID: String?
+    let clinicID: String
     let clinicImage: String?
     let clinicName : String?
       enum CodingKeys: String, CodingKey {
@@ -60,4 +60,22 @@ struct FavoriteClinic : Codable {
           case clinicImage = "clinic_image"
           case clinicName = "clinic_name"
       }
+}
+
+struct ClinicSuggetionsModel: Codable {
+    let message : String
+    let result : ClinicSuggetions
+}
+
+struct ClinicSuggetions: Codable {
+    let hasNext : Bool?
+    let page : Int?
+    let pages :Int?
+    let suggestions : [Clinic]
+    enum CodingKeys: String,CodingKey {
+        case hasNext = "has_next"
+        case page
+        case pages
+        case suggestions 
+    }
 }

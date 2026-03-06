@@ -8,11 +8,12 @@
 import SwiftUI
 
 struct ClinicItemView : View {
-    @EnvironmentObject var viewModel : ClinicListViewModel
+    @ObservedObject var viewModel : ClinicListViewModel
     @State var isFavorite : Bool = false
     var clinic : Clinic
     var completionHandler : (String?) -> ()
     var loginRequiredHandler: () -> ()
+    var addToFavoriteHandler: () -> ()
     var body: some View {
         VStack {
             imageView
@@ -61,6 +62,7 @@ struct ClinicItemView : View {
                         viewModel.addToFavorite(clinicId: clinicId) { status in
                             if status {
                                 self.isFavorite = true
+                                addToFavoriteHandler()
                             }
                         }
                     }
@@ -77,6 +79,7 @@ struct ClinicItemView : View {
             Text(clinic.clinicName ?? "")
                 .font(FontConstants.primaryMediumTitle12)
                 .lineLimit(1)
+                .frame(width: 140)
             Spacer()
         }
      
@@ -99,7 +102,9 @@ struct ClinicItemView : View {
             completionHandler(clinic.clinicID)
         } label: {
             Text(TextResource.bookAppointment)
-                .primaryButtonStyle(height: 33,font: FontConstants.primaryMediumTitle12,fullWidth: true,cornerRadius: 15)
+                .primaryButtonStyle(height: 33,
+                                    font: FontConstants.primaryMediumTitle12,fullWidth: true,cornerRadius: 15)
+                .frame(width: 140)
         }
 
     }
