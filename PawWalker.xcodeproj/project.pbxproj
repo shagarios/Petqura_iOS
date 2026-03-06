@@ -132,6 +132,7 @@
 		D387C31B2D90231B005EDE1D /* MyAppointmentListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D387C31A2D90230A005EDE1D /* MyAppointmentListViewModel.swift */; };
 		D387C3232D903F87005EDE1D /* MyOrdersListScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = D387C3222D903F87005EDE1D /* MyOrdersListScreen.swift */; };
 		D387C3252D903FAE005EDE1D /* MyOrderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D387C3242D903FAE005EDE1D /* MyOrderView.swift */; };
+		D39555B32F59AB59006FFB91 /* FavoriteScreen+suggetions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D39555B22F59AB4B006FFB91 /* FavoriteScreen+suggetions.swift */; };
 		D3A232C02E450FA8001FCDA7 /* ReviewScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3A232BF2E450FA8001FCDA7 /* ReviewScreen.swift */; };
 		D3A232C32E45167F001FCDA7 /* CTRating in Frameworks */ = {isa = PBXBuildFile; productRef = D3A232C22E45167F001FCDA7 /* CTRating */; };
 		D3A232D72E4A6BEE001FCDA7 /* ProductReviewBottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3A232D62E4A6BEE001FCDA7 /* ProductReviewBottomSheet.swift */; };
@@ -399,6 +400,7 @@
 		D387C31A2D90230A005EDE1D /* MyAppointmentListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyAppointmentListViewModel.swift; sourceTree = "<group>"; };
 		D387C3222D903F87005EDE1D /* MyOrdersListScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyOrdersListScreen.swift; sourceTree = "<group>"; };
 		D387C3242D903FAE005EDE1D /* MyOrderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyOrderView.swift; sourceTree = "<group>"; };
+		D39555B22F59AB4B006FFB91 /* FavoriteScreen+suggetions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FavoriteScreen+suggetions.swift"; sourceTree = "<group>"; };
 		D3A232BF2E450FA8001FCDA7 /* ReviewScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewScreen.swift; sourceTree = "<group>"; };
 		D3A232D62E4A6BEE001FCDA7 /* ProductReviewBottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductReviewBottomSheet.swift; sourceTree = "<group>"; };
 		D3A232D82E4B9859001FCDA7 /* CustomPopupAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomPopupAlertView.swift; sourceTree = "<group>"; };
@@ -1009,6 +1011,7 @@
 				D356D14B2CE25C3C00C22BBB /* Encryption */,
 				D356D1482CDFE9E500C22BBB /* Analytics */,
 				D35405B02CDFB68200436654 /* ProgressHud */,
+				D39555B42F59D8AC006FFB91 /* Favorite */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -1225,6 +1228,13 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
+		D39555B42F59D8AC006FFB91 /* Favorite */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Favorite;
+			sourceTree = "<group>";
+		};
 		D3C0E20F2DD2458C00945F88 /* Model */ = {
 			isa = PBXGroup;
 			children = (
@@ -1332,6 +1342,7 @@
 		D3CB4DE92DA2897500F814DD /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				D39555B22F59AB4B006FFB91 /* FavoriteScreen+suggetions.swift */,
 				D3CB4DF42DA2EEED00F814DD /* FavoriteClinicView.swift */,
 				D3CB4DEC2DA29F2C00F814DD /* FavoriteScreen.swift */,
 				D3CB4DF22DA2CDC900F814DD /* FavoriteProductView.swift */,
@@ -2325,6 +2336,7 @@
 				D31BF9D02D57303700E0B225 /* KingFisherImageLoader.swift in Sources */,
 				D3F6D5FA2DBBDFD0007EE213 /* Connectivity .swift in Sources */,
 				D35405B22CDFB70000436654 /* SVProgressHud.swift in Sources */,
+				D39555B32F59AB59006FFB91 /* FavoriteScreen+suggetions.swift in Sources */,
 				D356D1472CDFE95200C22BBB /* AnalyticsManager.swift in Sources */,
 				40593A4D2C92005600C05574 /* NetworkErrror.swift in Sources */,
 				D35421C02D6F8DB900EECA56 /* MyAddressListScreen.swift in Sources */,
@@ -2515,7 +2527,7 @@
 				CODE_SIGN_ENTITLEMENTS = PawWalker/PawWalker.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_ASSET_PATHS = "\"PawWalker/Preview Content\"";
 				DEVELOPMENT_TEAM = V69Z2XQ5GM;
 				ENABLE_PREVIEWS = YES;
@@ -2563,7 +2575,7 @@
 				CODE_SIGN_ENTITLEMENTS = PawWalker/PawWalker.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_ASSET_PATHS = "\"PawWalker/Preview Content\"";
 				DEVELOPMENT_TEAM = V69Z2XQ5GM;
 				ENABLE_PREVIEWS = YES;
@@ -2767,7 +2779,7 @@
 				CODE_SIGN_ENTITLEMENTS = PawWalker/PawWalker.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_ASSET_PATHS = "\"PawWalker/Preview Content\"";
 				DEVELOPMENT_TEAM = V69Z2XQ5GM;
 				ENABLE_PREVIEWS = YES;
@@ -2917,7 +2929,7 @@
 				CODE_SIGN_ENTITLEMENTS = PawWalker/PawWalker.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_ASSET_PATHS = "\"PawWalker/Preview Content\"";
 				DEVELOPMENT_TEAM = V69Z2XQ5GM;
 				ENABLE_PREVIEWS = YES;
