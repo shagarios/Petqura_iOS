@@ -46,6 +46,7 @@ enum Router {
     case delete
     case getAppointmentDetails(appointmentId : String)
     case clinicFilters
+    case favoriteClinicSuggetions(page : Int)
     private var baseUrl:  String {
         return Bundle.main.apiBaseUrl
     }
@@ -135,6 +136,8 @@ enum Router {
             return baseUrl + "/appointments_details?appointment_id=\(id)"
         case .clinicFilters:
             return baseUrl + "/clinic_filters"
+        case .favoriteClinicSuggetions(let page):
+            return baseUrl + "/favourite-suggestions?favourited_item=clinic&page=\(page)"
         }
     }
     
@@ -220,7 +223,9 @@ enum Router {
         case .delete:
             return .post
         case .getAppointmentDetails:
-            return .get
+            fallthrough
+        case .favoriteClinicSuggetions:
+            fallthrough
         case .clinicFilters:
             return .get
         }

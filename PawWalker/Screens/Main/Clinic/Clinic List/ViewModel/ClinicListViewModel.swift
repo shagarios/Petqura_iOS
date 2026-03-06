@@ -278,3 +278,5 @@ struct FilterApiData {
     var name : String
     var id : String
 }
+
+
