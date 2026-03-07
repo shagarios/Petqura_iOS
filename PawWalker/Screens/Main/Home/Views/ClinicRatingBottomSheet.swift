@@ -28,9 +28,11 @@ struct ClinicRatingBottomSheet: View {
         VStack {
             Text("Hey \(UserSessionManager.shared.user?.name ?? ""),")
             Text(TextResource.clinicReviewDiscription)
+                .padding(.top,10)
         }
         .font(FontConstants.primaryRegularTitle12)
         .foregroundStyle(Color.black)
+        
     }
 }
 
