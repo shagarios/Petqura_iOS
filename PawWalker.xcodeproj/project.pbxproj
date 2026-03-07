@@ -133,6 +133,7 @@
 		D387C3232D903F87005EDE1D /* MyOrdersListScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = D387C3222D903F87005EDE1D /* MyOrdersListScreen.swift */; };
 		D387C3252D903FAE005EDE1D /* MyOrderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D387C3242D903FAE005EDE1D /* MyOrderView.swift */; };
 		D39555B32F59AB59006FFB91 /* FavoriteScreen+suggetions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D39555B22F59AB4B006FFB91 /* FavoriteScreen+suggetions.swift */; };
+		D39555B82F5AC341006FFB91 /* ClinicRatingBottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = D39555B72F5AC341006FFB91 /* ClinicRatingBottomSheet.swift */; };
 		D3A232C02E450FA8001FCDA7 /* ReviewScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3A232BF2E450FA8001FCDA7 /* ReviewScreen.swift */; };
 		D3A232C32E45167F001FCDA7 /* CTRating in Frameworks */ = {isa = PBXBuildFile; productRef = D3A232C22E45167F001FCDA7 /* CTRating */; };
 		D3A232D72E4A6BEE001FCDA7 /* ProductReviewBottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3A232D62E4A6BEE001FCDA7 /* ProductReviewBottomSheet.swift */; };
@@ -401,6 +402,7 @@
 		D387C3222D903F87005EDE1D /* MyOrdersListScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyOrdersListScreen.swift; sourceTree = "<group>"; };
 		D387C3242D903FAE005EDE1D /* MyOrderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyOrderView.swift; sourceTree = "<group>"; };
 		D39555B22F59AB4B006FFB91 /* FavoriteScreen+suggetions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FavoriteScreen+suggetions.swift"; sourceTree = "<group>"; };
+		D39555B72F5AC341006FFB91 /* ClinicRatingBottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClinicRatingBottomSheet.swift; sourceTree = "<group>"; };
 		D3A232BF2E450FA8001FCDA7 /* ReviewScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewScreen.swift; sourceTree = "<group>"; };
 		D3A232D62E4A6BEE001FCDA7 /* ProductReviewBottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductReviewBottomSheet.swift; sourceTree = "<group>"; };
 		D3A232D82E4B9859001FCDA7 /* CustomPopupAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomPopupAlertView.swift; sourceTree = "<group>"; };
@@ -1607,6 +1609,7 @@
 				D3F533A42D05E24E002122AF /* HomeScreen.swift */,
 				D387C2C22D88A653005EDE1D /* ServiceBottomSheet.swift */,
 				D387C30C2D8DDE8A005EDE1D /* CategoriesBottomSheet.swift */,
+				D39555B72F5AC341006FFB91 /* ClinicRatingBottomSheet.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2196,6 +2199,7 @@
 				D387C2972D742EBF005EDE1D /* MyAdressListModel.swift in Sources */,
 				D3C0E2172DD3490D00945F88 /* ClinicDetail+Review.swift in Sources */,
 				D3427CFE2EC06D2D00154238 /* AppCoordinatorVIew.swift in Sources */,
+				D39555B82F5AC341006FFB91 /* ClinicRatingBottomSheet.swift in Sources */,
 				D3A7EC842DEB1DE600621003 /* Clinic+Views.swift in Sources */,
 				D387C30D2D8DDE8A005EDE1D /* CategoriesBottomSheet.swift in Sources */,
 				D3E856882CE502ED0017EED7 /* MapScreen.swift in Sources */,

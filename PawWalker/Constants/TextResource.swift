@@ -161,4 +161,5 @@ struct TextResource {
     static let updatedLocationMessage = "Your location has been updated successfully"
     static let makeThisAddressAsPrimary = "Do you want to make this address as Primary?"
     static let ok = "OK"
+    static let clinicReviewDiscription = "How was your visit?"
 }

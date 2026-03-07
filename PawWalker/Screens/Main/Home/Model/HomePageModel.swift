@@ -14,6 +14,13 @@ struct HomeData : Codable {
     let banners: [Banner]
         let categories: [Category]
         let services: [Services]
+        let pendingReviews:[PendingReview]
+    enum CodingKeys: String, CodingKey {
+        case banners
+        case categories
+        case services
+        case pendingReviews = "pending_reviews"
+    }
 }
 
 // MARK: - Banner
@@ -58,3 +65,24 @@ struct Services: Codable {
     let title: String?
 }
 
+struct PendingReview: Codable, Identifiable {
+    let id: String
+    let entityId: String?
+    let entityImage: String?
+    let entityName: String?
+    let referenceDate: String?
+    let referenceDoctor: String?
+    let referenceTime: String?
+    let type: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case id
+        case entityId = "entity_id"
+        case entityImage = "entity_image"
+        case entityName = "entity_name"
+        case referenceDate = "reference_date"
+        case referenceDoctor = "reference_doctor"
+        case referenceTime = "reference_time"
+        case type
+    }
+}

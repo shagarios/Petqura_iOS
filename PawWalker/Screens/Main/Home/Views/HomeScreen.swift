@@ -54,7 +54,7 @@ struct HomeScreen: View {
                 viewModel.appCoordinator?.selectedServiceId = ""
                 if viewModel.appCoordinator?.selectedTab == .home {
                     viewModel.fetchHomePageData()
-                    await viewModel.fetchBlogList()
+                 //   await viewModel.fetchBlogList()
                 }
             
             }
