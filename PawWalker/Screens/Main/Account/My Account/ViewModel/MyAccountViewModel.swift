@@ -67,7 +67,7 @@ class MyAccountViewModel : ObservableObject {
     func getAppointments() {
         if Connectivity.isConnectedToInternet {
             self.isLoading = true
-            apiClient.APIRequest(router: .myAppointments, responseType: MyAppointmentModel.self)
+            apiClient.APIRequest(router: .myAppointments(page: 1), responseType: MyAppointmentModel.self)
                 .sink { [weak self] completion in
                     switch completion {
                     case .finished:

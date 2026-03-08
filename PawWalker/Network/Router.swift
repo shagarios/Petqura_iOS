@@ -32,7 +32,7 @@ enum Router {
     case getClinicFavorite
     case deleteFavorite
     case clinicPayment
-    case myAppointments
+    case myAppointments(page : Int)
     case similarProducts(seller : String)
     case productForYou
     case productReview(productId : String)
@@ -47,6 +47,7 @@ enum Router {
     case getAppointmentDetails(appointmentId : String)
     case clinicFilters
     case favoriteClinicSuggetions(page : Int)
+    case closeClinicReview
     private var baseUrl:  String {
         return Bundle.main.apiBaseUrl
     }
@@ -108,8 +109,8 @@ enum Router {
             return baseUrl + "/favourite"
         case .clinicPayment:
             return baseUrl + "/cashfree/book-appointment"
-        case .myAppointments:
-            return baseUrl + "/user_appointments"
+        case .myAppointments(let page):
+            return baseUrl + "/user_appointments?page=\(page)"
         case .similarProducts(let seller):
             return baseUrl + "/get_products?seller_id=\(seller)"
         case .productForYou:
@@ -138,6 +139,8 @@ enum Router {
             return baseUrl + "/clinic_filters"
         case .favoriteClinicSuggetions(let page):
             return baseUrl + "/favourite-suggestions?favourited_item=clinic&page=\(page)"
+        case .closeClinicReview:
+            return baseUrl + "/remove_from_pending_review"
         }
     }
     
@@ -228,6 +231,8 @@ enum Router {
             fallthrough
         case .clinicFilters:
             return .get
+        case .closeClinicReview:
+            return .delete
         }
     }
     

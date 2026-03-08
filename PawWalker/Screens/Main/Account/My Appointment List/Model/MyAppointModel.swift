@@ -28,6 +28,7 @@ struct MyAppointments : Codable {
     let date : String?
     let doctor : String?
     let startTime : String?
+    let docterName : String?
     let endTime : String?
     let petName : String?
     let status : String?
@@ -45,6 +46,7 @@ struct MyAppointments : Codable {
         case appointmentId  = "appointment_id"
         case status
         case clinicService = "clinic_service"
+        case docterName = "doctor_name"
     }
 }
 

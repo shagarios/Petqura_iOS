@@ -65,7 +65,7 @@ struct Services: Codable {
     let title: String?
 }
 
-struct PendingReview: Codable, Identifiable {
+struct PendingReview: Codable {
     let id: String
     let entityId: String?
     let entityImage: String?

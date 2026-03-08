@@ -10,7 +10,7 @@ import Combine
 
 class HomeScreenViewModel : ObservableObject {
     @Injected var apiClient : ApiClientProtocol
-    private var cancellables = Set<AnyCancellable>()
+     var cancellables = Set<AnyCancellable>()
     @Published var bannerImages : [String] = []
     @Published var services : [Services] = []
     @Published var categories : [Category] = []
@@ -27,8 +27,12 @@ class HomeScreenViewModel : ObservableObject {
     @Published var isLoading : Bool = false
     @Published var hasNext : Bool = false
     @Published var showMapScreen : Bool = false
+    @Published var clinicRating : Int = 0
     weak var appCoordinator: AppCoordinator?
+    @Published var pendingReview : PendingReview?
     @Injected var coreDataService : CoreDataServiceProtocol
+    @Published var showClinicReviewBottomSheet : Bool = false
+    @Published var clinicReviewText: String = ""
     init() {
         fetchUser()
     }
@@ -50,6 +54,10 @@ class HomeScreenViewModel : ObservableObject {
                     self.categories = result.categories
                     UserSessionManager.shared.services = result.services
                     UserSessionManager.shared.categories = result.categories
+                    if  result.pendingReviews.count >= 1{
+                        pendingReview = result.pendingReviews.first
+                        showClinicReviewBottomSheet = true
+                    }
                 }
             }
             .store(in: &cancellables)

@@ -22,6 +22,13 @@ struct MyAppointmentListScreen: View {
                             UserSessionManager.shared.appointmentId = item.appointmentId
                             coordinator?.appCoordinator?.navigateToAppointmentDetailsScreen = true
                         }
+                        .onAppear {
+                            if viewModel.myAppointmentList.last?.appointmentId
+                                == item.appointmentId && viewModel.hasNext {
+                                viewModel.page += 1
+                                viewModel.getAppointments()
+                            }
+                        }
                 }
             }
             .padding(.top,30)

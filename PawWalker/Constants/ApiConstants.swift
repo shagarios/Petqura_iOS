@@ -58,4 +58,5 @@ struct ApiParameters {
     static let couponId = "coupon_id"
     static let accessToken = "access_token"
     static let serviceId = "service_id"
+    static let pendingReviewId = "pending_review_id"
 }

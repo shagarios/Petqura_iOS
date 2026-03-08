@@ -22,7 +22,7 @@ struct MyAppointmentView: View {
             }
             HStack {
                 VStack(alignment : .leading) {
-                    MyAppoinmentLabel(name: TextResource.docter, value: myAppointmentData.doctor ?? "")
+                    MyAppoinmentLabel(name: TextResource.docter, value: myAppointmentData.docterName ?? "")
                     MyAppoinmentLabel(name: TextResource.clinic, value: myAppointmentData.clinicDetails?.clinicName ?? "")
                 }
                 Spacer()

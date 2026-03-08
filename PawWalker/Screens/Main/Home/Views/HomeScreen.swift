@@ -54,7 +54,7 @@ struct HomeScreen: View {
                 viewModel.appCoordinator?.selectedServiceId = ""
                 if viewModel.appCoordinator?.selectedTab == .home {
                     viewModel.fetchHomePageData()
-                 //   await viewModel.fetchBlogList()
+                    await viewModel.fetchBlogList()
                 }
             
             }
@@ -82,6 +82,10 @@ struct HomeScreen: View {
 //           // viewModel.navigateToCart = true
 //        }))
         .topBarView(titleView: appCoordinator.titleView())
+        .bottomSheet(isPresented: $viewModel.showClinicReviewBottomSheet) {
+            ClinicRatingBottomSheet(viewModel: viewModel)
+                .padding(.bottom,100)
+        }
     }
     
     private var serviceListView : some View {

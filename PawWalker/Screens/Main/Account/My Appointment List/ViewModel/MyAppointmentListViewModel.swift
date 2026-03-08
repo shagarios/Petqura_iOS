@@ -13,11 +13,16 @@ class MyAppointmentListViewModel : ObservableObject {
     @Published var isLoading : Bool = false
     @Published var myAppointmentList : [MyAppointments] = []
     var cancellable = Set<AnyCancellable>()
+    @Published var page : Int = 1
+    @Published var hasNext : Bool = false
     
     func getAppointments() {
         if Connectivity.isConnectedToInternet {
+            if page == 1 {
+                myAppointmentList.removeAll()
+            }
             self.isLoading = true
-            apiClient.APIRequest(router: .myAppointments, responseType: MyAppointmentModel.self)
+            apiClient.APIRequest(router: .myAppointments(page: self.page), responseType: MyAppointmentModel.self)
                 .sink { completion in
                     switch completion {
                     case .finished:
@@ -27,7 +32,7 @@ class MyAppointmentListViewModel : ObservableObject {
                     }
                 } receiveValue: { response in
                     self.isLoading = false
-                    self.myAppointmentList = response.result?.appointments ?? []
+                    self.myAppointmentList.append(contentsOf: response.result?.appointments ?? [])
                 }
                 .store(in: &cancellable)
         }
