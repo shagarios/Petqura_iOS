@@ -16,7 +16,7 @@ struct NewAddressScreen: View {
         self.coordinator = coordinator
     }
     var body: some View {
-        ScrollView {
+        ScrollView(showsIndicators: false) {
             VStack(alignment: .leading,spacing: 15) {
                 Menu(content: {
                     addressTypeList

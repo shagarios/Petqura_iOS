@@ -59,7 +59,7 @@ struct AppointmentResult: Codable {
     let total: String?
     let userDetails: UserDetails?
     let visited: Bool?
-    let clinicService: String?
+    let serviceName: String?
 
     enum CodingKeys: String, CodingKey {
         case active
@@ -84,7 +84,7 @@ struct AppointmentResult: Codable {
         case total
         case userDetails = "user_details"
         case visited
-        case clinicService = "clinic_service"
+        case serviceName = "service_name"
     }
 }
 

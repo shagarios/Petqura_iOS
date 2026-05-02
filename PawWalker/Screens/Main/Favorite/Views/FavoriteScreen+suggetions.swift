@@ -28,6 +28,8 @@ extension FavoriteScreen {
                     ClinicItemView(viewModel: viewModel, clinic: clinic, completionHandler: { id in
                         if let clinicId = id {
                             self.viewModel.selectedClinicId = clinicId
+                            coordinator?.appCoordinator?.selectedClinicId = clinicId
+                            coordinator?.appCoordinator?.navigateToSlotBookingScreen = true
                            // self.viewModel.navigateToSlotBooking = true
                           //  viewModel.coordinator?.push(.slotBooking(clinicId: clinicId, serviceList: clinic.services ?? []))
                         }

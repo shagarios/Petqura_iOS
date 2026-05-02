@@ -14,7 +14,7 @@ struct MyAppointmentListScreen: View {
         self.coordinator = coordinator
     }
     var body: some View {
-        ScrollView() {
+        ScrollView(showsIndicators: false) {
             LazyVStack {
                 ForEach(viewModel.myAppointmentList,id: \.appointmentId) { item in
                     MyAppointmentView(myAppointmentData: item)

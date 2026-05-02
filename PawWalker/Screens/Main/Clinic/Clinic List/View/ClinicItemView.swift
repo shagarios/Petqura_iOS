@@ -27,7 +27,8 @@ struct ClinicItemView : View {
             }
     private var imageView : some View {
         VStack {
-            ImageURLView(url: clinic.clinicImage ?? TextResource.empty)
+            ImageURLView(url: clinic.clinicImage ?? ImageName.clinicPlaceHolder,
+                         placeHolderImage: ImageName.clinicPlaceHolder,placeHolderSize: (130,130))
                 .frame(width: 130,height: 130)
         }
         .overlay(alignment: .topTrailing, content: {

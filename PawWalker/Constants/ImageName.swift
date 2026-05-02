@@ -11,4 +11,5 @@ struct ImageName {
     static let favouritesIcon = "favouritesIcon"
     static let accountIcon = "accountIcon"
     static let slideArrowIcon = "slideArrowIcon"
+    static let clinicPlaceHolder = "clinicPlaceHolder"
 }

@@ -19,6 +19,12 @@ struct DashboardScreen: View {
                 appCoordinator.selectedTab = .clinic
             }
         }
+        .onChange(of: appCoordinator.navigateToSlotBookingScreen) { newValue in
+            if newValue {
+                appCoordinator.selectedTab = .clinic
+                
+            }
+        }
 //        .task {
 //            await viewModel.fetchBasicInfo()
 //        }
@@ -81,11 +87,12 @@ struct DashboardScreen: View {
     }
     private var productComingSoonView : some View {
         VStack {
-            Spacer()
+           Spacer()
             Image(.cartEmpty)
-            Text(TextResource.petProductsComingSoon)
                 .padding(.top, -50)
-            Spacer()
+            Text(TextResource.petProductsComingSoon)
+              //  .padding(.top, -50)
+           Spacer()
         }
         .topBarView(titleView: appCoordinator.titleView())
     }

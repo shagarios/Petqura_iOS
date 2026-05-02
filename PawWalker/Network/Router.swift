@@ -58,7 +58,6 @@ enum Router {
             return "https://jsonplaceholder.typicode.com/posts"
         case .registerMobile:
             return baseUrl + "/user_register"
-            print("Base url : --> \(baseUrl)")
         case .verifyOtp:
            return baseUrl + "/user_verify_otp"
         case .clinicList(let serviceId,let page,let keyword,let latitude,let longitude):

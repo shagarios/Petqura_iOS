@@ -19,7 +19,7 @@ struct MyAccountScreen: View {
         self.coordinator = coordinator
     }
     var body: some View {
-        ScrollView {
+        ScrollView(showsIndicators: false) {
             VStack(alignment : .leading) {
                 Group {
                     if UserSessionManager.shared.accessToken.isNotEmpty {

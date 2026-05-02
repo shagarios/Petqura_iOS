@@ -8,10 +8,10 @@
 import SwiftUI
 enum FavoritePage : Hashable {
     case favoritePage
-    case slotBooking(clinicId: String)
-    case appointMentDetailsScreen(appointmentData : AppointmentData?,
-                                  clinicData: ClinicData?,docterData: DocterData?,
-                                  serviceList: [Service])
+//    case slotBooking(clinicId: String)
+//    case appointMentDetailsScreen(appointmentData : AppointmentData?,
+//                                  clinicData: ClinicData?,docterData: DocterData?,
+//                                  serviceList: [Service])
 }
 
 class FavoriteCoordinator: ObservableObject {
@@ -32,32 +32,32 @@ class FavoriteCoordinator: ObservableObject {
         switch page {
         case .favoritePage:
             FavoriteScreen(coordinator: self)
-        case .slotBooking(let clinicId):
-            makeSlotBookingView(clinicId: clinicId)
-        case .appointMentDetailsScreen(appointmentData: let appointmentData, clinicData: let clinicData, docterData: let docterData,let serviceList):
-            makeAppointmentDetailsScreen(appointmentData: appointmentData, clinicData: clinicData, docterData: docterData,serviceList: serviceList)
+//        case .slotBooking(let clinicId):
+//            makeSlotBookingView(clinicId: clinicId)
+//        case .appointMentDetailsScreen(appointmentData: let appointmentData, clinicData: let clinicData, docterData: let docterData,let serviceList):
+//            makeAppointmentDetailsScreen(appointmentData: appointmentData, clinicData: clinicData, docterData: docterData,serviceList: serviceList)
         }
     }
     
-    func makeAppointmentDetailsScreen(appointmentData : AppointmentData?,clinicData: ClinicData?,docterData: DocterData?,serviceList: [Service]) -> AppointmentDetailsScreen {
-        let viewModel = AppointmentDetailsViewModel(appointmentData: appointmentData,
-                                                    clinicData: clinicData,
-            docterData: docterData, serviceList: serviceList)
-        viewModel.coordinator = self
-        return AppointmentDetailsScreen(viewModel: viewModel)
-    }
-    func makeSlotBookingView(clinicId : String) -> SlotBookingScreen {
-        return SlotBookingScreen(coordinator: self, clinicId: clinicId, serviceList: [])
-    }
+//    func makeAppointmentDetailsScreen(appointmentData : AppointmentData?,clinicData: ClinicData?,docterData: DocterData?,serviceList: [Service]) -> AppointmentDetailsScreen {
+//        let viewModel = AppointmentDetailsViewModel(appointmentData: appointmentData,
+//                                                    clinicData: clinicData,
+//            docterData: docterData, serviceList: serviceList)
+//        viewModel.coordinator = self
+//        return AppointmentDetailsScreen(viewModel: viewModel)
+//    }
+//    func makeSlotBookingView(clinicId : String) -> SlotBookingScreen {
+//        return SlotBookingScreen(coordinator: self, clinicId: clinicId, serviceList: [])
+//    }
 }
 
-extension FavoriteCoordinator: SlotBookingNavigation {
-    func navigateToSlotBooking(clinicId: String, serviceList: [Service]) {
-        self.push(.slotBooking(clinicId: clinicId))
-    }
+//extension FavoriteCoordinator: SlotBookingNavigation {
+//    func navigateToSlotBooking(clinicId: String, serviceList: [Service]) {
+//        self.push(.slotBooking(clinicId: clinicId))
+//    }
+//    
+//    func navigateToAppointmentDetails(appointmentData: AppointmentData?, clinicData: ClinicData?, docterData: DocterData?, serviceList: [Service]) {
+//        self.push(.appointMentDetailsScreen(appointmentData: appointmentData, clinicData: clinicData, docterData: docterData,serviceList: serviceList))
+//    }
     
-    func navigateToAppointmentDetails(appointmentData: AppointmentData?, clinicData: ClinicData?, docterData: DocterData?, serviceList: [Service]) {
-        self.push(.appointMentDetailsScreen(appointmentData: appointmentData, clinicData: clinicData, docterData: docterData,serviceList: serviceList))
-    }
-    
-}
+//}

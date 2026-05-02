@@ -38,7 +38,12 @@ struct ClinicListScreen: View {
             viewModel.searchText = ""
         }
         .task {
-            viewModel.fetchLocation()
+            if viewModel.filterArrayString.isEmpty {
+                viewModel.fetchLocation()
+            }
+            else {
+                viewModel.fetchClinicList(serviceId: viewModel.filterArrayString)
+            }
          
         }
         .if(viewModel.showFilterList, transform: { view in
@@ -49,10 +54,8 @@ struct ClinicListScreen: View {
             ClinicFilterBottomSheet(
                 viewModel: viewModel,
                 onApply: {
-                    viewModel.showFilterList = false
                     viewModel.filterArrayString = viewModel.makeApiString()
-                    viewModel.filersApiData.removeAll()
-                    
+                    viewModel.showFilterList = false
                 }
             )
             
@@ -102,6 +105,14 @@ struct ClinicListScreen: View {
                 .resizable()
                 .frame(width: 25, height: 25)
                 .foregroundStyle(.darkGray)
+                .overlay(alignment: .topTrailing) {
+                    if viewModel.filterArrayString.isNotEmpty {
+                        Circle()
+                            .frame(width: 10, height: 10)
+                            .foregroundStyle(Color.primaryButton)
+                    }
+                     
+                }
         })
     }
     var emptyView : some View {

@@ -20,7 +20,8 @@ struct FavoriteClinicView : View {
     }
     
     private var imageView : some View {
-        ImageURLView(url: clinic.clinicImage ?? TextResource.empty)
+        ImageURLView(url: clinic.clinicImage ?? TextResource.empty,
+                     placeHolderImage: ImageName.clinicPlaceHolder,placeHolderSize: (90,90))
             .frame(width : 90, height: 90)
             .itemBorderStyle(radius : 20)
     }

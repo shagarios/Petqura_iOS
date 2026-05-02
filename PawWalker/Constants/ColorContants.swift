@@ -25,4 +25,5 @@ struct ColorContants {
 
 extension Color {
     static let headerBgGradient = LinearGradient(colors: [Color(lightHex: "#EEF5FF", darkHex: "#EEF5FF"),Color(lightHex: "#D6E7FF", darkHex: "#D6E7FF")], startPoint: .leading, endPoint: .trailing)
+    
 }

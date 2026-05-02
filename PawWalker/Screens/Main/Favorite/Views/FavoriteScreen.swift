@@ -27,11 +27,9 @@ struct FavoriteScreen : View {
             Spacer()
             suggetionNameView
                 .padding(.bottom,10)
+                .isRemove(viewModel.suggetionClinicList.count == 0)
             clinicSuggetionListView
             .padding(.bottom,90)
-               
-            
-            
         }
         .task{
             viewModel.fetchClnicFavorites()
@@ -90,7 +88,7 @@ struct FavoriteScreen : View {
     }
     
     private var favoriteProductListView : some View {
-        ScrollView{
+        ScrollView(showsIndicators: false){
             LazyVStack{
                 ForEach(viewModel.favoritesProductList,id: \.id) {item in
                     FavoriteProductView(product: item,deleteProductCallBack: { favorite in
@@ -122,15 +120,16 @@ struct FavoriteScreen : View {
         }
     }
     private var favoriteClinicListView : some View {
-        ScrollView {
+        ScrollView(showsIndicators: false) {
             LazyVStack {
                 ForEach(viewModel.favoritesClinicList,id: \.clinicID) {item in
                     FavoriteClinicView(clinic: item, appointmentCallBack: {clinicId in
                         viewModel.selectedClinicId = clinicId
                        // coordinator?.push(.slotBooking(clinicId:  viewModel.selectedClinicId))
-                        coordinator?.navigateToSlotBooking(clinicId:  viewModel.selectedClinicId, serviceList: [])
+                        coordinator?.appCoordinator?.selectedClinicId = item.clinicID
+                        coordinator?.appCoordinator?.navigateToSlotBookingScreen = true
                     },deleteCallback: { clinic in
-                        viewModel.deleteClinicFromFavorites(clinicId: clinic.clinicID ?? "")
+                        viewModel.deleteClinicFromFavorites(clinicId: clinic.clinicID)
                     })
                         .padding(.top,10)
                     Divider()

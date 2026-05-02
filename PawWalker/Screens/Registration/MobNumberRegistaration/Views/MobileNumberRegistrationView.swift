@@ -14,7 +14,7 @@ struct MobileNumberRegistrationView: View {
     }
     @State private var errorMessage: String?
     var body: some View {
-        ScrollView {
+        ScrollView(showsIndicators: false) {
             VStack(spacing : 0) {
                 RegistrationHeaderView()
                 VStack(spacing : 0){

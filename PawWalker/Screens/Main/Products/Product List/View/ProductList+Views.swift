@@ -31,7 +31,7 @@ extension ProductListScreen {
     }
     
    var productListView : some View {
-        ScrollView {
+        ScrollView(showsIndicators: false) {
             LazyVGrid(columns: colomns,spacing: 20) {
                 ForEach(viewModel.searchText.isEmpty ? viewModel.productList : viewModel.filteredProductList,
                     id: \.productID) { product in

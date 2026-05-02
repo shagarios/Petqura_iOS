@@ -16,7 +16,7 @@ struct ClinicDetailScreen : View {
     var cancellCallBack : (String) -> () = { _ in }
     var body : some View {
         VStack (spacing: 0){
-        ScrollView {
+        ScrollView(showsIndicators: false) {
             VStack (spacing : 0){
                 headerView
                     .padding(.leading,10)

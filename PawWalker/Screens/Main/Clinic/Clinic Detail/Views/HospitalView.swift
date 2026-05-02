@@ -18,7 +18,8 @@ struct HospitalView: View {
     }
     private var imageView : some View {
             VStack {
-                ImageURLView(url: self.clinic.image)
+                ImageURLView(url: self.clinic.image,placeHolderImage: ImageName.clinicPlaceHolder,
+                             placeHolderSize: (130,130))
                     .frame(width: 130,height: 150)
             }
             .itemBorderStyle()

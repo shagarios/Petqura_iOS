@@ -25,10 +25,14 @@ struct ClinicRatingBottomSheet: View {
                 detailView
             }
             textFieldView
+                .keyboardAware()
           comfirmView
                 .padding(.top,20)
         }
         .padding(.horizontal,15)
+        .onTapGestureForced {
+            UIApplication.shared.endEditing()
+        }
         
     }
     private var closeButton : some View {

@@ -81,22 +81,21 @@ class ClinicListViewModel : ObservableObject {
             ToastCenter.shared.showToast(TextResource.noInternet, type: .error)
             return
         }
-       isLoading = true
-
+        isLoading = true
         if page == 1 {
             clinicList.removeAll()
         }
         
         apiClient.APIRequest(
             router: .clinicList(serviceId: serviceId, page: page,
-                keyword: TextResource.empty,latitude: latitude,longitude: longitude),
+                                keyword: TextResource.empty,latitude: latitude,longitude: longitude),
             responseType: ClinicListModel.self
         )
         .receive(on: DispatchQueue.main)
         .sink { [weak self] completion in
             guard let self = self else { return }
             self.isLoading = false
-
+            
             switch completion {
             case .finished:
                 break
@@ -116,15 +115,12 @@ class ClinicListViewModel : ObservableObject {
             } else {
                 self.clinicList.append(contentsOf: clinics)
             }
-
             self.shouldShowEmptyView = self.clinicList.isEmpty
             self.hasNext = response.result.hasNext ?? false
-            filterArrayString = ""
-            selectedItems.removeAll()
         }
         .store(in: &cancellables)
     }
-
+    
     func addToFavorite(clinicId : String,completion : @escaping (Bool) -> Void) {
         if Connectivity.isConnectedToInternet {
             let param : [String : Any] = [ApiParameters.id : clinicId,ApiParameters.favoriteItem : FavoriteType.clinic.rawValue]
@@ -180,30 +176,30 @@ class ClinicListViewModel : ObservableObject {
             self.isLoading = true
             apiClient.APIRequest(router: .clinicList(serviceId: TextResource.empty,page: self.searchPage,keyword: self.searchText,latitude: latitude,longitude: longitude),
                                  responseType: ClinicListModel.self)
-                .sink { [weak self] completion in
-                    switch completion {
-                    case .finished:
-                        break
-                    case .failure(_):
-                        self?.isLoading = false
-                        self?.shouldSearch = false
-                        UIApplication.shared.endEditing()
-                        break
-                    }
-                } receiveValue: { response in
-                    if let clinics = response.result.clinics {
-                        self.isLoading = false
-                        self.filteredClinicList = clinics
-                    }
-                    self.searchHasNext = response.result.hasNext ?? false
-                    if self.filteredClinicList.isEmpty {
-                        self.shouldShowEmptySearchView = true
-                    }
-                    self.isLoading = false
-                    self.shouldSearch = false
+            .sink { [weak self] completion in
+                switch completion {
+                case .finished:
+                    break
+                case .failure(_):
+                    self?.isLoading = false
+                    self?.shouldSearch = false
                     UIApplication.shared.endEditing()
+                    break
                 }
-                .store(in: &cancellables)
+            } receiveValue: { response in
+                if let clinics = response.result.clinics {
+                    self.isLoading = false
+                    self.filteredClinicList = clinics
+                }
+                self.searchHasNext = response.result.hasNext ?? false
+                if self.filteredClinicList.isEmpty {
+                    self.shouldShowEmptySearchView = true
+                }
+                self.isLoading = false
+                self.shouldSearch = false
+                UIApplication.shared.endEditing()
+            }
+            .store(in: &cancellables)
         }
         else {
             ToastCenter.shared.showToast(TextResource.noInternet)
@@ -213,7 +209,7 @@ class ClinicListViewModel : ObservableObject {
         let result : Result<[LocationData],Error> = coredataService.fetch(tableName: TableNames.locationData, sort: nil, predicate: nil, limit: 0)
         switch result {
         case .success(let location):
-        self.locationData = location.first
+            self.locationData = location.first
             if filterArrayString.isEmpty {
                 self.fetchClinicList(serviceId: "service_id[]=\(coordinator?.appCoordinator?.selectedServiceId ?? "")")
             }
@@ -224,7 +220,6 @@ class ClinicListViewModel : ObservableObject {
             break
         }
     }
-    
     
     /// get clinic filter data
     func getFliterData() {
@@ -240,9 +235,20 @@ class ClinicListViewModel : ObservableObject {
                         ToastCenter.shared.showToast(error.backendError?.message ?? TextResource.apiError,type: .error)
                     }
                 } receiveValue: { [weak self] response in
+                    guard let self = self else {return}
                     if let data = response.result?.filters {
-                        self?.filters = data
-                        self?.selectedFilter = data.first
+                        self.filters = data.map({ filter in
+                            var updated = filter
+                            updated.subcategories = filter.displayItems.map({ filterItem in
+                                var updatedItem = filterItem
+                                updatedItem.category = filter.name ?? ""
+                                return updatedItem
+                            })
+                            updated.hasDot = self.selectedItems.contains(where: {$0.category == filter.name})
+                       return updated
+                        })
+                        self.selectedFilter = self.filters.first
+                        print("filter: \(self.filters)")
                     }
                 }
                 .store(in: &cancellables)
@@ -253,20 +259,33 @@ class ClinicListViewModel : ObservableObject {
     }
     
     func toggleItem(_ item: FilterItem,type : String) {
-        if selectedItems.contains(item) {
+        if (selectedItems.first(where: {$0.id == item.id}) != nil) {
             selectedItems.remove(item)
             filersApiData.removeAll(where: {$0.id == item.id})
+            
+            //  hasDot = false only if NO more items of this type are selected
+            let stillHasSelected = selectedItems.contains(where: {$0.category == selectedFilter?.name})
+            if !stillHasSelected,
+               let idx = filters.firstIndex(where: {$0.name == selectedFilter?.name}) {
+                filters[idx].hasDot = false
+            }
+            
         } else {
             selectedItems.insert(item)
-//            filterArrayString.append("\(type)[]=\(item.id)")
             filersApiData.append(FilterApiData(type: type,
                                                name: item.name ?? "", id: item.id ?? ""))
+            
+            //  Find the filter whose type matches and set hasDot = true
+            if let idx = filters.firstIndex(where: {$0.name == selectedFilter?.name}) {
+                filters[idx].hasDot = true
+            }
+            
         }
     }
     func makeApiString() -> String {
         var parts : [String] = []
-         for item in filersApiData {
-             parts.append("\(item.type)[]=\(item.id)")
+        for item in filersApiData {
+            parts.append("\(item.type)[]=\(item.id)")
         }
         return parts.joined(separator: "&")
     }

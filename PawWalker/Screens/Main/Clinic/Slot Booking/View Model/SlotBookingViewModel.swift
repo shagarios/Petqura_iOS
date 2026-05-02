@@ -30,8 +30,8 @@ class SlotBookingViewModel : ObservableObject {
     @Published var clinicData : ClinicData?
     @Published var isLoading : Bool = false
     var serviceList: [Service] = []
-    weak var coordinator: SlotBookingNavigation?
-    init(clinicId : String,coordinator: SlotBookingNavigation?,serviceList: [Service]) {
+    weak var coordinator: ClinicCoordinator?
+    init(clinicId : String,coordinator: ClinicCoordinator?,serviceList: [Service]) {
         self.clinicId = clinicId
         loadNextFiveDays()
         self.selectedSegment = dates.first

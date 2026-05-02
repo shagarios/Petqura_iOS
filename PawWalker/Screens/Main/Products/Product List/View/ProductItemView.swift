@@ -76,7 +76,7 @@ struct ProductItemView : View {
             .frame(width: 150, alignment: .leading)
     }
     var variantsView : some View {
-        ScrollView(.horizontal) {
+        ScrollView(.horizontal,showsIndicators: false) {
             LazyHStack {
                 ForEach(product.variants,id: \.productVariantID) {variant in
                     Button(action: {

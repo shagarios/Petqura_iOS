@@ -12,7 +12,7 @@ struct AppointmentDetailsScreen: View {
     @Environment(\.presentationMode) var mode: Binding<PresentationMode>
     @EnvironmentObject var appCoodinator : AppCoordinator
     var body: some View {
-        ScrollView{
+        ScrollView(showsIndicators: false){
             VStack(alignment: .leading) {
                 docterView
                     .padding(.top,20)

@@ -21,8 +21,9 @@ struct FilterType: Codable, Identifiable {
     let id: String?
     let name: String?
     let type: String?
-    let subcategories: [FilterItem]?
+    var subcategories: [FilterItem]?
     let items: [FilterItem]?
+    var hasDot: Bool = false
     enum CodingKeys: String, CodingKey {
         case id
         case name
@@ -39,10 +40,9 @@ struct FilterType: Codable, Identifiable {
 
 
 struct FilterItem: Codable, Identifiable, Hashable {
-
     let id: String?
     let name: String?
-
+    var category : String = ""
     enum CodingKeys: String, CodingKey {
         case id
         case name

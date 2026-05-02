@@ -24,7 +24,7 @@ class AppointmentDetailsViewModel : ObservableObject {
     @Published var isLoading: Bool = false
     @Injected var networkMonitor : NetworkMonitor
     @Published var appoinmentChargeData : AppointmentChargeResponse?
-    weak var coordinator: SlotBookingNavigation?
+    weak var coordinator: ClinicCoordinator?
     weak var appCoordinator : AppCoordinator?
     @Published var showCouponView: Bool = false
     @Published var couponText : String = ""
@@ -49,9 +49,9 @@ class AppointmentDetailsViewModel : ObservableObject {
         }
         makeServiceList(serviceArray: serviceList)
         CashFreeBroker.cashFreeCompletion.sink { status in
-            print(status)
             self.showCashfreePage = false
             if status {
+                self.coordinator?.popToRoot()
                 self.appCoordinator?.selectedAccountPage = .myAppointments
                 self.appCoordinator?.selectedTab = .account
             }
@@ -90,8 +90,9 @@ class AppointmentDetailsViewModel : ObservableObject {
                         switch completion {
                         case .finished:
                             break
-                        case .failure(_):
+                        case .failure(let error):
                             self.isLoading = false
+                            ToastCenter.shared.showToast(error.backendError?.message ?? TextResource.apiError)
                         }
                     } receiveValue: { result in
                         self.isLoading = false
@@ -237,7 +238,7 @@ class AppointmentDetailsViewModel : ObservableObject {
                     couponId: ""
                 )
                 self.petName = result.petName ?? ""
-                self.serviceName = result.clinicService ?? ""
+                self.serviceName = result.serviceName ?? ""
             }
             .store(in: &cancellable)
     }

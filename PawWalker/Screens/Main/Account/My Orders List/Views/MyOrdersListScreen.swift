@@ -14,7 +14,7 @@ struct MyOrdersListScreen: View {
         self.coordinator = coordinator
     }
     var body: some View {
-        ScrollView {
+        ScrollView(showsIndicators: false) {
             LazyVStack(spacing: 0) {
                 ForEach(viewModel.myOrderList,id: \.self) {item in
                     MyOrderView(myOrder: item)

@@ -27,6 +27,10 @@ struct ClinicCoordinatorView: View {
                                                      clinicData: nil, docterData: nil,
                                                      fromAppointMent: true, serviceList: []))
             }
+            else if coordinator.appCoordinator?.navigateToSlotBookingScreen == true {
+                coordinator.push(.slotBooking(clinicId: appCoordinator.selectedClinicId, serviceList: appCoordinator.serviceList))
+                coordinator.appCoordinator?.navigateToSlotBookingScreen = false
+            }
         }
     }
 }

@@ -73,7 +73,7 @@ class FavoriteViewModel : ClinicListViewModel {
                 } receiveValue: { response in
                     self.isLoading = false
                     if let result = response.result {
-                        self.favoritesClinicList = result
+                        self.favoritesClinicList = result.favourites
                     }
                     else {
                         self.favoritesClinicList.removeAll()
@@ -130,6 +130,8 @@ class FavoriteViewModel : ClinicListViewModel {
                     self.isLoading = false
                     ToastCenter.shared.showToast(response.message ?? "successfully deleted from favorites",)
                     self.fetchClnicFavorites()
+                    self.suggetionsPage = 1
+                    self.fetchClinicSuggetions()
                 }
                 .store(in: &cancellables)
         }
@@ -173,6 +175,9 @@ class FavoriteViewModel : ClinicListViewModel {
     }
     func fetchClinicSuggetions() {
         if connectivity.isConnectedToInternet {
+            if suggetionsPage == 1 {
+                suggetionClinicList.removeAll()
+            }
             apiClient.APIRequest(router: .favoriteClinicSuggetions(page: suggetionsPage),
                                  responseType: ClinicSuggetionsModel.self)
                 .sink {  [weak self] completion in
@@ -188,7 +193,7 @@ class FavoriteViewModel : ClinicListViewModel {
                     }
                 } receiveValue: { response in
                     print(response)
-                    self.suggetionClinicList = response.result.suggestions
+                    self.suggetionClinicList.append(contentsOf: response.result.suggestions)
                     self.hasNextClinicSuggention = response.result.hasNext ?? false
                 }
                 .store(in: &cancellables)

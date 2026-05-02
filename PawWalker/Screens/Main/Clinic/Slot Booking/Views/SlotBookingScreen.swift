@@ -9,8 +9,9 @@ import SwiftUI
 
 struct SlotBookingScreen: View {
     @StateObject var viewModel : SlotBookingViewModel
+    var coordinator : ClinicCoordinator?
     
-    init(coordinator : SlotBookingNavigation?,clinicId: String,serviceList: [Service]) {
+    init(coordinator : ClinicCoordinator,clinicId: String,serviceList: [Service]) {
         _viewModel = StateObject(wrappedValue: SlotBookingViewModel(clinicId: clinicId, coordinator: coordinator,serviceList: serviceList))
     }
     var body: some View {

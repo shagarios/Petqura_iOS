@@ -9,7 +9,7 @@ import SwiftUI
 extension ClinicListScreen {
      
     var clinicListView: some View {
-        ScrollView {
+        ScrollView(showsIndicators: false) {
             LazyVGrid(columns: colomns, alignment: .leading) {
                 ForEach(viewModel.searchText.isEmpty ? $viewModel.clinicList : $viewModel.filteredClinicList,
                         id: \.clinicID) {$clinic in

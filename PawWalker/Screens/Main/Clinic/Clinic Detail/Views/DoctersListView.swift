@@ -9,7 +9,7 @@ import SwiftUI
 
 extension ClinicDetailScreen {
     var doctersListView : some View {
-        ScrollView {
+        ScrollView(showsIndicators: false) {
             LazyVStack {
                 ForEach(viewModel.doctersList,id: \.doctorID) { docter in
                     DoctersItemView(docter: docter)

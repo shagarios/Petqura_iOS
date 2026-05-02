@@ -55,7 +55,7 @@ extension ProductDetailsScreen {
         }
     }
     var reviewList : some View {
-        ScrollView {
+        ScrollView(showsIndicators: false) {
             LazyVStack {
                 ForEach(viewModel.reviewList,id: \.reviewId) {item in
                     ReviewView(review: item)

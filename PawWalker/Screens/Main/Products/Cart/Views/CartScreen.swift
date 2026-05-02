@@ -18,7 +18,7 @@ struct CartDeatilsScreen: View {
                 cartEmptyView
             } else {
                 VStack(spacing: 0){
-                    ScrollView {
+                    ScrollView(showsIndicators: false) {
                         cartDataView
                     }
                     addressWithPayButtonView
@@ -104,7 +104,7 @@ struct CartDeatilsScreen: View {
     }
     
     private var cartListView : some View {
-        ScrollView {
+        ScrollView(showsIndicators: false) {
             LazyVStack {
                 ForEach(viewModel.cartList,id: \.cartID) { cart in
                     CartItemView(cart: cart, buttonPressAction: {action in

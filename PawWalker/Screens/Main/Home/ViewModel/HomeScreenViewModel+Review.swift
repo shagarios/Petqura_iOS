@@ -7,7 +7,6 @@
 
 extension HomeScreenViewModel {
     func submitReviewToServer() {
-        self.showClinicReviewBottomSheet = false
         if Connectivity.isConnectedToInternet {
             var param : [String: Any] = [ApiParameters.clinicId : self.pendingReview?.entityId ?? TextResource.empty]
             param[ApiParameters.reviewContent] = self.clinicReviewText
@@ -26,6 +25,9 @@ extension HomeScreenViewModel {
                     }
                 } receiveValue: {[weak self] response in
                     self?.isLoading = false
+                    self?.showClinicReviewBottomSheet = false
+                    self?.clinicRating = 0
+                    self?.clinicReviewText = ""
                     ToastCenter.shared.showToast(response.message ?? TextResource.empty,type: .success)
                     self?.fetchHomePageData()
                 }
@@ -51,6 +53,8 @@ extension HomeScreenViewModel {
                     }
                 } receiveValue: { [weak self] response in
                     print(response)
+                    self?.clinicRating = 0
+                    self?.clinicReviewText = ""
                     self?.fetchHomePageData()
                 }
                 .store(in: &cancellables)

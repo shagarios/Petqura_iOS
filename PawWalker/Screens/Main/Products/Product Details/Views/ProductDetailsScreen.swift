@@ -122,7 +122,7 @@ struct ProductDetailsScreen: View {
     }
 
     var variantsView : some View {
-        ScrollView(.horizontal) {
+        ScrollView(.horizontal,showsIndicators: false) {
             LazyHStack {
                 ForEach(viewModel.getVariantList(),id: \.productVariantID) {variant in
                     Button(action: {

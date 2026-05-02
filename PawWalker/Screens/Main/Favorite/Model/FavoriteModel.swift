@@ -46,7 +46,10 @@ struct FavoiteProduct : Codable {
 
 struct FavoriteClinicModel : Codable {
     let message : String
-    let result : [FavoriteClinic]?
+    let result : FavoriteClinicResult?
+}
+struct FavoriteClinicResult : Codable {
+    let favourites : [FavoriteClinic]
 }
 
 struct FavoriteClinic : Codable {

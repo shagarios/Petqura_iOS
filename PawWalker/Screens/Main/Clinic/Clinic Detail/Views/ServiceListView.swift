@@ -9,7 +9,7 @@ import SwiftUI
 
 extension ClinicDetailScreen {
     var serviceListView: some View {
-        ScrollView {
+        ScrollView(showsIndicators: false) {
             LazyVGrid(columns: colomns,alignment: .leading) {
                 ForEach(viewModel.serviceList,id: \.serviceID) { service in
                     ServiceItemView(serviceName: service.service ?? TextResource.empty,

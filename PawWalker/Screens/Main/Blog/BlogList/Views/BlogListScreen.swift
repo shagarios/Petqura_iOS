@@ -21,7 +21,7 @@ struct BlogListScreen : View {
         VStack{
             Spacer()
                 .frame(height : 20)
-            ScrollView{
+            ScrollView(showsIndicators: false){
                 LazyVGrid(columns: colomns) {
                     ForEach(viewModel.blogList,id: \.blogID) {blog in
                         BlogItemView(blog: blog)

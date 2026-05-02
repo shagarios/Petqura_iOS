@@ -55,7 +55,7 @@ struct MyAddressListScreen: View {
         })
     }
     private var addressListView : some View {
-        ScrollView {
+        ScrollView(showsIndicators: false) {
             LazyVStack {
                 ForEach(viewModel.addressList,id: \.id) { item in
                     AddressItemView(

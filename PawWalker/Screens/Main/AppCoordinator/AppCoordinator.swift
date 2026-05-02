@@ -14,6 +14,7 @@ class AppCoordinator: ObservableObject {
     @Published var selectedCategoryId : String = ""
     @Published var navigateToClinicOrders : Bool = false
     @Published var navigateToAppointmentDetailsScreen : Bool = false
+    @Published var navigateToSlotBookingScreen : Bool = false
     @Published var navigateToMyOrders : Bool = false
     @Published var flow : Flow = .dashboard
     @Injected var apiClient : ApiClientProtocol
@@ -21,6 +22,8 @@ class AppCoordinator: ObservableObject {
     @Published var appointmentId : String = ""
     @Published var cartItemCount : Int = 0
     @Published var selectedAccountPage : AccountPages = .myAccount
+    @Published var selectedClinicId : String = ""
+    @Published var serviceList : [Service] = []
     init() {
         //self.flow = UserSessionManager.shared.isMapCompleted ? .dashboard : .auth
         self.flow = .dashboard

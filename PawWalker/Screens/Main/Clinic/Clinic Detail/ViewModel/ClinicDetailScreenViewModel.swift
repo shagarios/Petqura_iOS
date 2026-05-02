@@ -42,7 +42,8 @@ class ClinicDetailScreenViewModel : ObservableObject {
     }
     func fetchReviews () async {
         if internet.isConnectedToInternet {
-            apiClient.APIRequest(router: .clinicReview(clinicId: clinic?.clinicID ?? ""), responseType: ClinicReviewModel.self)
+            apiClient.APIRequest(router: .clinicReview(clinicId: clinic?.clinicID ?? ""),
+                                 responseType: ClinicReviewModel.self)
                 .sink { completion in
                     switch completion {
                     case .finished:

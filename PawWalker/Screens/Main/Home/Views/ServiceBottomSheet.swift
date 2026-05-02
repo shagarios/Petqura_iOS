@@ -17,7 +17,7 @@ struct ServiceBottomSheet: View {
             .padding(.bottom,80)
     }
     private var serviceListView : some View {
-        ScrollView(.vertical) {
+        ScrollView(.vertical,showsIndicators: false) {
             LazyVGrid(columns: column) {
                 ForEach(services,id: \.id) { service in
                     ServiceCellView(
