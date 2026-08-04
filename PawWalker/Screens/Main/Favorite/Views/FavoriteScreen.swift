@@ -15,15 +15,14 @@ struct FavoriteScreen : View {
     }
     var body: some View {
         VStack(spacing: 0) {
-            //headerView
-             //   .padding(.top,10)
-//            if viewModel.selectedCategory == .product {
-//                productView
-//            }
-//            else {
-//                clinicView
-//            }
-            clinicView
+            headerView
+                .padding(.top,10)
+            if viewModel.selectedCategory == .product {
+                productView
+            }
+            else {
+                clinicView
+            }
             Spacer()
             suggetionNameView
                 .padding(.bottom,10)
@@ -37,13 +36,12 @@ struct FavoriteScreen : View {
         }
         .makeWithLoader(isLoading: $viewModel.isLoading)
         .padding(.horizontal,20)
-//        .topBarView(titleView: coordinator?.appCoordinator?.titleView(),
-//                    rightButtons:
-//                ViewUtils.shared.cartButtonView(count: coordinator?.appCoordinator?.cartItemCount ?? 0,
-//                            action: {
-//           // viewModel.navigateToCart = true
-//        }))
-        .topBarView(titleView: coordinator?.appCoordinator?.titleView())
+        .topBarView(titleView: coordinator?.appCoordinator?.titleView(),
+                    rightButtons:
+                ViewUtils.shared.cartButtonView(count: coordinator?.appCoordinator?.cartItemCount ?? 0,
+                            action: {
+            coordinator?.appCoordinator?.navigateToCart = true
+        }))
         
     }
     

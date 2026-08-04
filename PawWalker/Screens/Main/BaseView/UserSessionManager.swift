@@ -23,6 +23,7 @@ class UserSessionManager : ObservableObject{
     @Published var deviceToken : String = TextResource.empty
     @Published var showMapScreen: Bool = false
     @Published var appointmentId : String = ""
+    @Published var productIdententiyArray : [ProductIdentity] = []
     @Published var user : User? {
         didSet {
             self.accessToken = user?.accessToken ?? ""

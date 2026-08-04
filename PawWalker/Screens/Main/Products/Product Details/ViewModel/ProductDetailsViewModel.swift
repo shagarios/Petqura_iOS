@@ -26,17 +26,22 @@ class ProductDetailsViewModel  : ObservableObject {
     @Published var reviewRating : Int = 0
     @Published var averageRating : Double = 0
     @Published var isLoading : Bool = false
+    @Published var moreProductList : [MoreProduct] = []
+    @Injected var productCartUseCase : ProductCartUseCaseProtocol
+    @Published var moreProductPageCount : Int = 1
+    @Published var showMoreView : Bool = false
+    var productMoreUseCase : ProductMoreUseCase
+    @Published var showAlert : Bool = false
+    @Published var selectedMoreProduct: MoreProduct?
+    @Published var selectedProductVariant : Variant?
     
-    init(product : Product?) {
+    
+    init(product : Product?,productMoreUseCase : ProductMoreUseCase) {
         self.product = product
-        selectedVariant = self.product?.variants.first
-        handleCartCountUpdate()
-        // defer async work so it starts *after* init is done
-//              Task { [weak self] in
-//                  guard let self else { return }
-//                  await self.fetchSimilarProducts()
-//                  await self.fetchReviews()
-//              }
+        self.productMoreUseCase = productMoreUseCase
+        self.selectedVariant = self.product?.variants.first
+        self.handleCartCountUpdate()
+        
     }
     func handleCartCountUpdate() {
         EventHandler.cartCountSubject.sink { completion in
@@ -115,7 +120,7 @@ class ProductDetailsViewModel  : ObservableObject {
                 } receiveValue: { response in
                     self.isLoading = false
                     if let result = response.result {
-                        let cartCount = result.cart.count
+                        guard let cartCount = result.cart?.count else {return}
                         EventHandler.cartCountSubject.send(cartCount)
                         ToastCenter.shared.showToast(TextResource.addedToCartAlert,type: .success)
                     }
@@ -207,4 +212,31 @@ class ProductDetailsViewModel  : ObservableObject {
             ToastCenter.shared.showToast(TextResource.noInternet,type: .error)
         }
     }
+    func updateProductCart(action : CartAction, productId : String,productVariantId : String,forceAddToCart: Bool) async  throws {
+      let result = try await productCartUseCase.execute(action: action, productId: productId,
+                                                        productVariantId: productVariantId, forceAddToCart: forceAddToCart)
+    }
+    @MainActor
+    func fetchMoreProduct() async  {
+        guard let productId = product?.productID,let variantId = selectedVariant?.productVariantID else {
+            return
+        }
+        do {
+            let response = try await
+            productMoreUseCase.execute(productId: productId, variantId: variantId,
+                                       page: moreProductPageCount,
+                                       latitude: "", longtitude: "")
+            self.moreProductList = response.result?.products ?? []
+        }
+        catch {
+            
+        }
+    }
+    func loadData() async {
+        async let similiarProducts =  await fetchSimilarProducts()
+        async let reviews = await fetchReviews()
+        async let moreProduct = await fetchMoreProduct()
+        _ = await (similiarProducts,reviews,moreProduct)
+    }
+    
 }

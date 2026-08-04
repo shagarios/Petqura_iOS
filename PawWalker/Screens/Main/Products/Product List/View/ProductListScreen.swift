@@ -8,6 +8,7 @@
 import SwiftUI
 struct ProductListScreen: View {
     @StateObject var viewModel = ProductListViewModel()
+    @EnvironmentObject var appCoordinator: AppCoordinator
     @Binding var categoryId : String
     let colomns : [GridItem] = [GridItem(.flexible(minimum: 100, maximum: 160),spacing: 20),
                                 GridItem(.flexible(minimum: 100, maximum: 160))]
@@ -36,9 +37,12 @@ struct ProductListScreen: View {
             viewModel.searchText = ""
         }
         .task {
-            if viewModel.productList.isEmpty && self.categoryId.isEmpty {
+            if  self.categoryId.isEmpty {
                 viewModel.fetchPoductList(categoryId: "")
             }
+        }
+        .task {
+            viewModel.fetchCartList()
         }
         .makeWithLoader(isLoading: $viewModel.isLoading)
         .onChange(of: categoryId, perform: { newValue in
@@ -46,7 +50,8 @@ struct ProductListScreen: View {
         })
         .navigationDestination(isPresented: $viewModel.navigateToProductDetail) {
            // if let productData = viewModel.selectedProduct {
-            ProductDetailsScreen(viewModel:ProductDetailsViewModel(product: viewModel.selectedProduct!))
+            ProductDetailsScreen(viewModel:ProductDetailsViewModel(product: viewModel.selectedProduct, productMoreUseCase: ProductMoreUseCase(productDetailRepository: ProductDetailRepositoryImplentation())
+                ))
             //}
             }
         .bottomSheet(isPresented: $viewModel.showFilterList) {
@@ -56,6 +61,25 @@ struct ProductListScreen: View {
               //  viewModel.fetchPoductList(categoryId: self.categoryId)
             })
                 .frame( height: UIScreen.screenHeight * 0.70)
+        }
+        .topBarView(titleView: appCoordinator.titleView(),
+                    rightButtons: ViewUtils.shared.cartButtonView(count: appCoordinator.cartItemCount, action: {
+            appCoordinator.navigateToCart = true
+                      }))
+        .alert(viewModel.alertMessage, isPresented: $viewModel.showAlert) {
+            Button(TextResource.cancel) {
+                viewModel.showAlert = false
+            }
+            Button(TextResource.update) {
+                Task{
+                    UserSessionManager.shared.productIdententiyArray = []
+                  try await viewModel.updateProductCart(action: CartAction.add,
+                                                productId: viewModel.selectedProductIdentiy?.productId ?? "",
+                                                productVariantId: viewModel.selectedProductIdentiy?.variantId ?? "",
+                                                forceAddToCart: true)
+                    viewModel.showAlert = false
+                }
+            }
         }
     }
     

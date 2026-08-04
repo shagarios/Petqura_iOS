@@ -34,6 +34,18 @@ final class Injection {
         container.register(NetworkMonitor.self) { _ in
             return AlamofireNetWorkMonitor()
         }
+        container.register(ServiceLayerProtocol.self) { _  in
+            return ServiceLayer()
+        }
+        container.register(HomeRepository.self) { _ in
+            return HomeRepositoryImplementation()
+        }
+        container.register(ProductCartUseCaseProtocol.self) { _ in
+            return ProductCartUseCase()
+        }
+        container.register(ProductRepository.self) { _ in
+            return ProductRepositoryImplementation()
+        }
     }
 }
 

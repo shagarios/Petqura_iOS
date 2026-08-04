@@ -5,6 +5,7 @@
 //  Created by shagar on 06/05/25.
 //
 import SwiftUI
+import Combine
 
 struct ProductItemView : View {
     var product : Product
@@ -12,9 +13,9 @@ struct ProductItemView : View {
     var productDetailCallBack: (Product) -> () = {_ in }
     var cartCallback: () -> () = {}
     var favoriteCallBack: (FavoriteActions,String,String) -> ()
-    var addToCartCallBack : (String,String) -> ()
+    var addToCartCallBack : (String,String,CartAction) -> ()
     var isSimilarProduct : Bool
-  
+    
     var body: some View {
         VStack(spacing: 0) {
             imageView
@@ -25,7 +26,7 @@ struct ProductItemView : View {
            
             priceView
                 .padding(.top,5)
-            addToCartButton
+           cartQuantityButton
                 .padding(.top,5)
                 
         }
@@ -36,10 +37,31 @@ struct ProductItemView : View {
             
         })
         .onAppear {
-            if product != nil {
+            if selectedVaiant == nil {
                 self.selectedVaiant = self.product.variants.first
+                let variant = UserSessionManager.shared.productIdententiyArray.first(where: {$0.variantId == selectedVaiant?.productVariantID})
+                if variant?.variantId == selectedVaiant?.productVariantID {
+                    selectedVaiant?.isInCart = variant?.isInCart
+                    selectedVaiant?.cartQuantity = variant?.cartQuantity
+                }
+                else {
+                    selectedVaiant?.isInCart = false
+                    selectedVaiant?.cartQuantity  = 0
+                }
             }
         }
+        .onChange(of: UserSessionManager.shared.productIdententiyArray) { productList in
+            let variant = productList.first(where: {$0.variantId == selectedVaiant?.productVariantID})
+            if variant?.variantId == selectedVaiant?.productVariantID {
+                selectedVaiant?.isInCart = variant?.isInCart
+                selectedVaiant?.cartQuantity = variant?.cartQuantity
+            }
+            else {
+                selectedVaiant?.isInCart = false
+                selectedVaiant?.cartQuantity  = 0
+            }
+        }
+       
     }
     var sellerView : some View {
         HStack {
@@ -82,7 +104,8 @@ struct ProductItemView : View {
                     Button(action: {
                         self.selectedVaiant = variant
                     }, label: {
-                        VariantWeightView(variant: variant,isSelected: (selectedVaiant?.productVariantID == variant.productVariantID))
+                        VariantWeightView(variant: variant,isSelected:
+                            (selectedVaiant?.productVariantID == variant.productVariantID))
                     })
                 }
             }
@@ -133,7 +156,7 @@ struct ProductItemView : View {
     @ViewBuilder
     private var addToCartButton : some View {
         Button {
-            addToCartCallBack(product.productID,self.selectedVaiant?.productVariantID ?? TextResource.empty)
+            addToCartCallBack(product.productID,self.selectedVaiant?.productVariantID ?? TextResource.empty, .add)
             
         } label: {
                 Text(TextResource.addToCart)
@@ -141,6 +164,18 @@ struct ProductItemView : View {
            
         }
     }
+    @ViewBuilder
+    private var cartQuantityButton : some View {
+        if selectedVaiant?.isInCart == true {
+            QuantityView(quantity: selectedVaiant?.cartQuantity ?? 0, buttonPressAction: {action in
+                addToCartCallBack(product.productID,self.selectedVaiant?.productVariantID ?? TextResource.empty, action)
+            })
+        }
+        else {
+            addToCartButton
+        }
+    }
+   
     
 }
 
@@ -170,4 +205,36 @@ struct VariantWeightView : View {
 enum FavoriteActions : String {
     case addFavorite
     case deleteFavorite
+}
+
+struct QuantityView :  View {
+    var quantity : Int
+    var buttonPressAction : (CartAction) -> ()
+    var body : some View {
+        HStack() {
+            Button(action: {
+                buttonPressAction(.less)
+            }, label: {
+                Image(ImageResource.minusIcon)
+            })
+            Text(quantity.stringValue())
+                .font(FontConstants.primaryMediumTitle11)
+                .makeBackgroundView(color: ColorContants.inAciveGray,horizontalPadding: 10,
+                                    verticalPadding: 2,radius: 5)
+                .padding(.leading,15)
+            Button(action: {
+                buttonPressAction(.add)
+            }, label: {
+                Image(ImageResource.plusIcon)
+            })
+            .padding(.leading,15)
+        }
+        .frame(maxWidth: .infinity)
+        .background(
+            RoundedRectangle(cornerRadius: 15)
+                .stroke(style: StrokeStyle(lineWidth: 1))
+                .foregroundStyle(Color.primaryButton)
+                .frame(height: 30)
+        )
+    }
 }

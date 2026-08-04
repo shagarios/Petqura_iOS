@@ -34,10 +34,16 @@ class ProductListViewModel : ObservableObject {
     @Published var shouldShowEmptyView : Bool = false
     @Published var shouldShowEmptySearchView : Bool = false
     @Published var isLoading : Bool = false
+    @Injected var productCartUseCase : ProductCartUseCaseProtocol
+    @Published var showAlert : Bool = false
+    @Published var alertMessage : String = ""
+    @Published var selectedProductIdentiy : ProductIdentity?
+    @Published var selectedProductVariant : Variant?
     init() {
         setupSearchPublisher()
-    }
 
+    }
+   
     func setupSearchPublisher() {
         searchSubject
             .debounce(for: .seconds(1.5), scheduler: DispatchQueue.main)
@@ -86,7 +92,6 @@ class ProductListViewModel : ObservableObject {
                             self?.shouldShowEmptyView = true
                         }
                     }
-                  
                 }
                 .store(in: &cancellables)
         }
@@ -137,8 +142,9 @@ class ProductListViewModel : ObservableObject {
                     }
                 } receiveValue: { response in
                     if let result = response.result {
-                        let cartCount = result.cart.count
-                        EventHandler.cartCountSubject.send(cartCount)
+                        self.isLoading = false
+                        let cartCount = result.cart?.count
+                        EventHandler.cartCountSubject.send(cartCount ?? 0)
                         ToastCenter.shared.showToast(TextResource.addedToCartAlert,type: .success)
                     }
                 }
@@ -228,6 +234,85 @@ class ProductListViewModel : ObservableObject {
                     self.shouldSearch = false
                 }
                 .store(in: &cancellables)
+        }
+        else {
+            ToastCenter.shared.showToast(TextResource.noInternet,type: .error)
+        }
+    }
+    
+    @MainActor
+    func updateProductCart(action : CartAction, productId : String,
+                           productVariantId : String,forceAddToCart:Bool) async  throws {
+        self.isLoading = true
+        do {
+            let response : AddToCartModel = try await productCartUseCase.execute(action: action, productId: productId, productVariantId: productVariantId, forceAddToCart: forceAddToCart)
+            self.isLoading = false
+            let canAddToCart = response.result?.canAddToCart
+            if canAddToCart == false {
+                self.alertMessage = response.message
+                self.selectedProductIdentiy = ProductIdentity(productId: productId, variantId: productVariantId,isInCart: false,cartQuantity: 0)
+                self.showAlert = true
+            }
+            else {
+                guard let cartList : [CartElement] = response.result?.cart else {
+                    return
+                }
+                let cartElement = cartList.filter { cartElement in
+                    return cartElement.productVariant?.productVariantID == productVariantId
+                }
+                if cartElement.isNotEmpty {
+                    guard let productVariant : Variant = cartElement.first?.productVariant else {return}
+                    selectedVariant = productVariant
+                    guard let quantity = productVariant.cartQuantity else {return}
+                    if let index = UserSessionManager.shared.productIdententiyArray.firstIndex(where: {$0.variantId == productVariant.productVariantID}) {
+                        UserSessionManager.shared.productIdententiyArray[index].cartQuantity = quantity
+                        let cartCount = cartList.count
+                        EventHandler.cartCountSubject.send(cartCount)
+                    }
+                    else {
+                        UserSessionManager.shared.productIdententiyArray.append(
+                            ProductIdentity(productId: productId,
+                                            variantId: productVariantId,
+                                            isInCart: productVariant.isInCart ?? false,
+                                            cartQuantity: productVariant.cartQuantity ?? 0)
+                        )
+                        let cartCount = cartList.count
+                        EventHandler.cartCountSubject.send(cartCount)
+                        ToastCenter.shared.showToast(TextResource.addedToCartAlert,type: .success)
+                    }
+                }
+                else {
+                    UserSessionManager.shared.productIdententiyArray.removeAll(where: {$0.variantId == productVariantId})
+                    let cartCount = cartList.count
+                    EventHandler.cartCountSubject.send(cartCount)
+                }
+            }
+        }
+        catch let error {
+            self.isLoading = false
+        }
+    }
+    func fetchCartList() {
+        if Connectivity.isConnectedToInternet {
+            apiClient.APIRequest(router: .viewCart, responseType: AddToCartModel.self).sink { completion in
+                switch completion {
+                case .finished:
+                    break
+                case .failure(_):
+                    self.isLoading = false
+                }
+            } receiveValue: { [weak self] response in
+                if let result = response.result {
+                    let cartList = result.cart ?? []
+                    UserSessionManager.shared.productIdententiyArray.removeAll()
+                    for cartItem in cartList {
+                        UserSessionManager.shared.productIdententiyArray.append(ProductIdentity(productId: "",
+                        variantId: cartItem.productVariant?.productVariantID ?? "",
+                    isInCart: true, cartQuantity: cartItem.quantity ?? 0))
+                    }
+                }
+            }
+            .store(in: &cancellables)
         }
         else {
             ToastCenter.shared.showToast(TextResource.noInternet,type: .error)

@@ -24,9 +24,11 @@ class AppCoordinator: ObservableObject {
     @Published var selectedAccountPage : AccountPages = .myAccount
     @Published var selectedClinicId : String = ""
     @Published var serviceList : [Service] = []
+    @Published var navigateToCart : Bool = false
     init() {
         //self.flow = UserSessionManager.shared.isMapCompleted ? .dashboard : .auth
         self.flow = .dashboard
+        handleCartCountUpdate()
     }
     func handleCartCountUpdate() {
         EventHandler.cartCountSubject.sink { completion in
@@ -56,7 +58,7 @@ class AppCoordinator: ObservableObject {
                     }
                 } receiveValue: {  reponse in
                     if let result = reponse.result {
-                        let  count = result.cart.count
+                        guard let count = result.cart?.count else {return}
                         EventHandler.cartCountSubject.send(count)
                     }
                 }

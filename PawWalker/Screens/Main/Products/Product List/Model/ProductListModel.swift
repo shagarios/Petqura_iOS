@@ -29,7 +29,7 @@ struct Product : Codable {
     let isFoodItem: Bool?
     let productDescription, productID: String
     let productName: String?
-    let variants: [Variant]
+    var variants: [Variant]
     enum CodingKeys: String, CodingKey {
            case active
            case addedBy = "added_by"
@@ -46,7 +46,7 @@ struct Product : Codable {
        }
 }
 
-struct Variant : Codable {
+struct Variant : Codable,Hashable {
      let active, customDelivery: Bool?
        let customDeliveryDays: Int?
        let deliveryIn24, deliveryIn72: Bool?
@@ -67,6 +67,8 @@ struct Variant : Codable {
        let stock, variantName: String?
        let favoriteId : String?
        var isFavorite : Bool?
+       var isInCart: Bool?
+       var cartQuantity: Int?
     enum CodingKeys: String, CodingKey {
             case active
             case customDelivery = "custom_delivery"
@@ -94,5 +96,7 @@ struct Variant : Codable {
             case variantName = "variant_name"
             case favoriteId =  "favourite_id"
             case isFavorite = "is_favourite"
+            case isInCart = "is_in_cart"
+            case cartQuantity = "cart_quantity"
         }
 }

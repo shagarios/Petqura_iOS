@@ -76,7 +76,7 @@ class CartDetailsViewModel : ProductListViewModel {
     
 
     
-    func fetchCartList() {
+    override func fetchCartList() {
         if Connectivity.isConnectedToInternet {
             isLoading = true
             apiClient.APIRequest(router: .viewCart, responseType: AddToCartModel.self).sink { completion in
@@ -91,8 +91,8 @@ class CartDetailsViewModel : ProductListViewModel {
                     self?.billData.removeAll()
                     self?.isLoading = true
                     self?.cartDetails = result
-                    self?.cartList = result.cart
-                    self?.cartCount = result.cart.count
+                    self?.cartList = result.cart ?? []
+                    self?.cartCount = result.cart?.count ?? 0
                     EventHandler.cartCountSubject.send(self?.cartCount ?? 0)
                 }
             }
@@ -118,9 +118,10 @@ class CartDetailsViewModel : ProductListViewModel {
                     self.isLoading = false
                     if let result = response.result {
                         self.cartDetails = result
-                        self.cartList = result.cart
+                        guard let cart = result.cart else {return}
+                        self.cartList = cart
                         ToastCenter.shared.showToast(response.message,type: .success)
-                        self.cartCount = result.cart.count
+                        self.cartCount = cart.count
                         EventHandler.cartCountSubject.send(self.cartCount)
                     }
                 }

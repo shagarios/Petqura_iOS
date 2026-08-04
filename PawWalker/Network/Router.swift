@@ -48,6 +48,8 @@ enum Router {
     case clinicFilters
     case favoriteClinicSuggetions(page : Int)
     case closeClinicReview
+    case productMoreOptions(productId: String,variantId: String,page: Int,latitude : String = "",
+                            lontitude: String = "")
     private var baseUrl:  String {
         return Bundle.main.apiBaseUrl
     }
@@ -140,6 +142,9 @@ enum Router {
             return baseUrl + "/favourite-suggestions?favourited_item=clinic&page=\(page)"
         case .closeClinicReview:
             return baseUrl + "/remove_from_pending_review"
+        case .productMoreOptions(let productId, let variantId, let page, let latitude, let lontitude):
+            return baseUrl + "/get_similar_products?product_id=\(productId)&variant_id=\(variantId)&page=\(page)&latitude=\(latitude)&longitude=\(lontitude)"
+            
         }
     }
     
@@ -232,7 +237,45 @@ enum Router {
             return .get
         case .closeClinicReview:
             return .delete
+        case .productMoreOptions:
+            return .get
         }
     }
-    
+    var httpMethod : HTTPSMethods {
+        switch self {
+        case .registerMobile:
+            fallthrough
+        case .addClinicReview:
+         return .post
+        case .productMoreOptions:
+            return .get
+        case .updateCart:
+            return .put
+      default:
+         return .get
+        }
+       
+    }
+    var httpsMethod : HTTPMethod {
+        switch self{
+        case .registerMobile:
+            fallthrough
+        case .addClinicReview:
+         return .post
+        case .productMoreOptions:
+            return .get
+        case .updateCart:
+            return .put
+      default:
+         return .get
+        }
+        }
+}
+
+enum HTTPSMethods: String {
+    case get = "GET"
+    case post = "POST"
+    case put = "PUT"
+    case delete = "DELETE"
+    case patch = "PATCH"
 }

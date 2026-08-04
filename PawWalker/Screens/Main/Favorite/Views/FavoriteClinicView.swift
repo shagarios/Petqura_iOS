@@ -36,7 +36,7 @@ struct FavoriteClinicView : View {
             HStack{
                 Spacer()
                 Button(action: {
-                    appointmentCallBack(clinic.clinicID ?? "")
+                    appointmentCallBack(clinic.clinicID)
                 }, label: {
                     Text(TextResource.bookAppointment)
                         .foregroundStyle(.white)

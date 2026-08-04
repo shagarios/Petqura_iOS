@@ -8,8 +8,9 @@
 import SwiftUI
 import Combine
 
-class HomeScreenViewModel : ObservableObject {
+class HomeScreenViewModel : ObservableObject,ErrorHandable {
     @Injected var apiClient : ApiClientProtocol
+    @Injected var serviceLayer : ServiceLayerProtocol
      var cancellables = Set<AnyCancellable>()
     @Published var bannerImages : [String] = []
     @Published var services : [Services] = []
@@ -30,73 +31,68 @@ class HomeScreenViewModel : ObservableObject {
     @Published var clinicRating : Int = 0
     weak var appCoordinator: AppCoordinator?
     @Published var pendingReview : PendingReview?
-    @Injected var coreDataService : CoreDataServiceProtocol
+    @Injected var homeRepository : HomeRepository
+    
     @Published var showClinicReviewBottomSheet : Bool = false
     @Published var clinicReviewText: String = ""
-    init() {
-        fetchUser()
+    private let getHomeUseCase : GetHomeUseCase
+    private let getBlogUseCase : GetBlogUseCase
+    init(getHomeUseCase : GetHomeUseCase,getBlogUseCase : GetBlogUseCase) {
+        self.getHomeUseCase = getHomeUseCase
+        self.getBlogUseCase = getBlogUseCase
+        self.homeRepository.fetchUser()
     }
-    func fetchHomePageData() {
-        guard Connectivity.isConnectedToInternet else {
-            ToastCenter.shared.showToast(TextResource.noInternet, type: .error)
-            return
+    
+    @MainActor
+    func fetchHomeDetails() async {
+        defer{
+            isLoading = false
         }
-        
         isLoading = true
-        apiClient.APIRequest(router: .home, responseType: HomeModel.self)
-            .sink { [weak self] completion in
-                self?.isLoading = false
-            } receiveValue: { [weak self] response in
-                guard let self = self else { return }
-                if let result = response.result {
-                    self.bannerImages = result.banners.compactMap { $0.bannerImageMobile }
-                    self.services = result.services
-                    self.categories = result.categories
-                    UserSessionManager.shared.services = result.services
-                    UserSessionManager.shared.categories = result.categories
-                    if  result.pendingReviews.count >= 1{
-                        pendingReview = result.pendingReviews.first
-                        showClinicReviewBottomSheet = true
-                    }
-                }
+        do {
+            let home : HomeData = try await getHomeUseCase.execute()
+            self.bannerImages = home.banners.compactMap { $0.bannerImageMobile }
+            self.services = home.services
+            self.categories = home.categories
+            if home.pendingReviews.count >= 1 {
+                pendingReview = home.pendingReviews.first
+                showClinicReviewBottomSheet = true
             }
-            .store(in: &cancellables)
-    }
-
-    func fetchBlogList() async {
-        guard internet.isConnectedToInternet else {
-            ToastCenter.shared.showToast(TextResource.noInternet, type: .error)
-            return
         }
-
-        apiClient.APIRequest(router: .blogList, responseType: BlogListModel.self)
-            .receive(on: DispatchQueue.main)
-            .sink {  completion in
-                switch completion {
-                case .finished:
-                    break
-                case .failure(let error):
-                    ToastCenter.shared.showToast(error.backendError?.message ?? error.localizedDescription, type: .error)
-                }
-            } receiveValue: { [weak self] response in
-                guard let self = self else { return }
-                if let result = response.result {
-                    self.blogList = result.blogs
-                } else {
-                    self.blogList = []
-                }
-            }
-            .store(in: &cancellables)
+        catch let error as AppError {
+            showError(error.errorDescription)
+        }
+        catch {
+            showError(TextResource.apiError)
+        }
     }
-    func fetchUser()  {
-            let result:Result<[User],Error> = coreDataService.fetch(tableName: TableNames.user,
-                sort: nil, predicate: nil, limit: nil)
-            switch result {
-            case .success(let users):
-                UserSessionManager.shared.user =  users.last
-            case .failure(_):
-                break
-            }
+    @MainActor
+    func fetchBlogList() async {
+        defer {
+            isLoading = false
+        }
+        do {
+            isLoading = true
+            self.blogList = try await getBlogUseCase.execute()
+        }
+        catch let error as AppError {
+            showError(error.errorDescription)
+        }
+        catch {
+            showError(TextResource.apiError)
+        }
     }
+    
+    func fetchData() async {
+        await withTaskGroup { group in
+            group.addTask {
+                await self.fetchHomeDetails()
+            }
+            group.addTask {
+                await self.fetchBlogList()
+            }
+        }
+    }
+    
    
 }

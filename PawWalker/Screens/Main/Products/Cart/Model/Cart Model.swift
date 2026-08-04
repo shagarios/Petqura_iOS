@@ -12,11 +12,12 @@ struct AddToCartModel : Codable {
 }
 
 struct CartResult : Codable {
-    let cart : [CartElement]
+    let cart : [CartElement]?
     var gst, orderAmount, orderTotalWithShipping: Double?
     var pointsAvailable, pointsRedeemable, shippingCharge, total: Double?
     var totalAmount: Double?
     var netAmount : Double?
+    var canAddToCart : Bool?
     enum CodingKeys: String, CodingKey {
         case cart, gst
         case orderAmount = "order_amount"
@@ -27,14 +28,15 @@ struct CartResult : Codable {
         case total
         case totalAmount = "total_amount"
         case netAmount = "net_price"
+        case canAddToCart
+        
     }
 }
 
 struct CartElement : Codable {
     let cartID: String
-   // let product : Product
     let productVariant : Variant?
-    let quantity: Int
+    let quantity: Int?
     let totalPrice: Double?
     
     enum CodingKeys: String, CodingKey {

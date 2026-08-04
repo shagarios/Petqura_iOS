@@ -33,12 +33,12 @@ extension ProductListScreen {
    var productListView : some View {
         ScrollView(showsIndicators: false) {
             LazyVGrid(columns: colomns,spacing: 20) {
-                ForEach(viewModel.searchText.isEmpty ? viewModel.productList : viewModel.filteredProductList,
-                    id: \.productID) { product in
-                    ProductItemView(product: product,productDetailCallBack: {product in
+                ForEach(viewModel.searchText.isEmpty ? viewModel.productList : viewModel.filteredProductList,id: \.productID) { product in
+                    ProductItemView(product: product,
+                                    productDetailCallBack: {product in
                         self.viewModel.selectedProduct = product
                         self.viewModel.navigateToProductDetail = true
-                    },favoriteCallBack: { action, productId, variantId in
+                    }, cartCallback: {},favoriteCallBack: { action, productId, variantId in
                         if action == FavoriteActions.addFavorite {
                             viewModel.addToFavorite(productId: productId,
                                                     variantId: variantId) { status in
@@ -49,13 +49,17 @@ extension ProductListScreen {
                                                                  variantId: variantId) { status in
                             }
                         }
-                    },addToCartCallBack: { productId, variantId in
+                    },addToCartCallBack: { productId, variantId,action  in
                         Task{
-                            await viewModel.postToCart(
-                                productId: productId,
-                                varaintId: variantId,
-                                quantity: 1
-                            )
+//                            await viewModel.postToCart(
+//                                productId: productId,
+//                                varaintId: variantId,
+//                                quantity: 1
+//                            )
+                            try await viewModel.updateProductCart(action: action,
+                                                              productId: productId,
+                                                                  productVariantId: variantId, forceAddToCart: false)
+                            
                         }
                     },isSimilarProduct: false)
                     .onAppear{
@@ -78,6 +82,10 @@ extension ProductListScreen {
                     }
                 }
             }
+        }
+        .safeAreaInset(edge: .bottom) {
+            Color.clear
+                .frame(height: 70)
         }
     }
     var emptyProductView : some View {

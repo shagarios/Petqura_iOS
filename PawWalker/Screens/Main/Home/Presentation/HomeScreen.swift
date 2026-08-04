@@ -27,11 +27,11 @@ struct HomeScreen: View {
                 .padding(.top,20)
                serviceListView
 
-//                SectionTitleView(title: TextResource.product.uppercased()) {
-//                    viewModel.showCategoryViewAll = true
-//                }
-//                .padding(.top,20)
-//               categoryListView
+                SectionTitleView(title: TextResource.product.uppercased()) {
+                    viewModel.showCategoryViewAll = true
+                }
+                .padding(.top,20)
+               categoryListView
                 
                 SectionTitleView(title: TextResource.blogs.uppercased()) {
                     coordinator?.push(.blogList)
@@ -41,23 +41,26 @@ struct HomeScreen: View {
                     .padding(.bottom,20)
                     
             }
-            .padding(.horizontal,10)
-//            .onAppear{
-//                viewModel.isLoading = false
-//                if tabBarIndex == .home {
-//                    categoryId = ""
+            .onAppear{
+  //              viewModel.isLoading = false
+//                if appCoordinator.selectedTab == .home {
+//                     categoryId = ""
 //                    selectedServiceId = ""
 //                }
-//            }
+            }
             .task {
                 viewModel.appCoordinator = appCoordinator
                 viewModel.appCoordinator?.selectedServiceId = ""
                 if viewModel.appCoordinator?.selectedTab == .home {
-                    viewModel.fetchHomePageData()
-                    await viewModel.fetchBlogList()
+                    await viewModel.fetchData()
                 }
             
             }
+            
+        }
+        .safeAreaInset(edge: .bottom) {
+            Color.clear
+                .frame(height: 60)
         }
         .bottomSheet(isPresented: $viewModel.showServiceViewAll) {
             ServiceBottomSheet(services: viewModel.services, completion: { service in
@@ -77,15 +80,22 @@ struct HomeScreen: View {
                 .frame( height: UIScreen.screenHeight * 0.70)
         }
         .makeWithLoader(isLoading: $viewModel.isLoading)
-//        .topBarView(titleView: appCoordinator.titleView(),
-//        rightButtons: ViewUtils.shared.cartButtonView(count: appCoordinator.cartItemCount, action: {
-//           // viewModel.navigateToCart = true
-//        }))
-        .topBarView(titleView: appCoordinator.titleView())
+        .topBarView(titleView: appCoordinator.titleView(),
+        rightButtons: ViewUtils.shared.cartButtonView(count: appCoordinator.cartItemCount, action: {
+            appCoordinator.navigateToCart = true
+        }))
         .bottomSheet(isPresented: $viewModel.showClinicReviewBottomSheet) {
             ClinicRatingBottomSheet(viewModel: viewModel)
                 .padding(.bottom,100)
         }
+//        .navigationDestination(isPresented: $appCoordinator.navigateToCart) {
+//            CartDeatilsScreen
+//        }
+        .fullScreenCover(isPresented: $appCoordinator.navigateToCart) {
+            CartDeatilsScreen(browseCompletion: {}, payementCompletion: {})
+        }
+        .padding(.horizontal,5)
+        
     }
     
     private var serviceListView : some View {

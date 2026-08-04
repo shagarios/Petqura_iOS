@@ -51,7 +51,9 @@ struct CartDeatilsScreen: View {
         .navigationDestination(isPresented: $viewModel.navigateToProductDetail,
                                destination: {
             if let productData = viewModel.selectedProduct {
-                ProductDetailsScreen(viewModel:ProductDetailsViewModel(product: productData))
+                ProductDetailsScreen(viewModel:ProductDetailsViewModel(
+                    product: productData,
+                productMoreUseCase: ProductMoreUseCase(productDetailRepository: ProductDetailRepositoryImplentation())))
             }
         })
         
@@ -180,7 +182,7 @@ struct CartItemView : View {
             }, label: {
                 Image(ImageResource.minusIcon)
             })
-            Text(String(cart.quantity))
+            Text(String(cart.quantity ?? 0))
                 .font(FontConstants.primaryMediumTitle11)
                 .makeBackgroundView(color: ColorContants.inAciveGray,horizontalPadding: 10,
                                     verticalPadding: 2,radius: 5)
@@ -214,7 +216,7 @@ struct CartItemView : View {
     
     func price() -> String {
         let price = cart.productVariant?.price ?? 0
-        let quantity = Double(cart.quantity)
+        let quantity = Double(cart.quantity ?? 0)
         let totalPrice = price * quantity
         return totalPrice.stringValue()
     }

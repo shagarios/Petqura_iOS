@@ -72,6 +72,7 @@ struct ClinicDetailScreen : View {
             cancellCallBack(serviceId)
         }))
         .makeWithLoader(isLoading: $viewModel.isLoading)
+       
     
 }
     private var headerView : some View {

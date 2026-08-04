@@ -67,13 +67,12 @@ struct ClinicListScreen: View {
 //            })
                 .frame(height: UIScreen.screenHeight * 0.70)
         }
-//        .topBarView(titleView: viewModel.coordinator?.appCoordinator?.titleView(),
-//                    rightButtons:
-//                ViewUtils.shared.cartButtonView(count: viewModel.coordinator?.appCoordinator?.cartItemCount ?? 0,
-//                            action: {
-//           // viewModel.navigateToCart = true
-//        }))
-        .topBarView(titleView: viewModel.coordinator?.appCoordinator?.titleView())
+        .topBarView(titleView: viewModel.coordinator?.appCoordinator?.titleView(),
+                    rightButtons:
+                ViewUtils.shared.cartButtonView(count: viewModel.coordinator?.appCoordinator?.cartItemCount ?? 0,
+                            action: {
+            viewModel.coordinator?.appCoordinator?.navigateToCart = true
+        }))
         .alert(TextResource.autheticationRequired,
                isPresented: $viewModel.showLoginRequiredAlert, actions: {
             Button(TextResource.signIn) {
@@ -86,6 +85,7 @@ struct ClinicListScreen: View {
         },message: {
             Text(TextResource.loginAlertMessage)
         })
+       
     }
     private var searchView : some View {
         TextField(TextResource.clinicSearchPlaceholder, text: $viewModel.searchText)

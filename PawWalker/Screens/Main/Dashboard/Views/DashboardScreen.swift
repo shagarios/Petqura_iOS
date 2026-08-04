@@ -25,19 +25,19 @@ struct DashboardScreen: View {
                 
             }
         }
-//        .task {
-//            await viewModel.fetchBasicInfo()
-//        }
-//        .navigationDestination(isPresented: $viewModel.navigateToCart) {
-//            CartDeatilsScreen {
-//                viewModel.navigateToCart = false
-//                viewModel.selection = .store
-//            } payementCompletion: {
-//                viewModel.navigateToCart = false
-//                viewModel.selection = .account
-//                viewModel.navigateToMyorder = true
-//            }
-//        }
+        .task {
+            await appCoordinator.fetchBasicInfo()
+        }
+        .fullScreenCover(isPresented: $viewModel.navigateToCart) {
+            CartDeatilsScreen {
+                viewModel.navigateToCart = false
+                viewModel.selection = .store
+            } payementCompletion: {
+                viewModel.navigateToCart = false
+                viewModel.selection = .account
+                viewModel.navigateToMyorder = true
+            }
+        }
     }
 
     private var tabView : some View {
@@ -65,15 +65,18 @@ struct DashboardScreen: View {
                     }
                     .tag(TabBarItems.favourites)
                     .environmentObject(appCoordinator)
-           
-       //     ProductListScreen(categoryId: $viewModel.selectedCategoryId)
-            productComingSoonView
+          
+            NavigationStack {
+                ProductListScreen(categoryId: $viewModel.selectedCategoryId)
+            }
+          //productComingSoonView
                 .tabItem {
                     Image(ImageResource.storeIcon)
                     Text(TextResource.store)
                         .font(FontConstants.primaryMediumTitle14)
                 }
                 .tag(TabBarItems.store)
+                .environmentObject(appCoordinator)
          
             AccountCoordinatorView()
                 .tabItem {

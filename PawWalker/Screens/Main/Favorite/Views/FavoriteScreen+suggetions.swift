@@ -46,7 +46,7 @@ extension FavoriteScreen {
                         //self.viewModel.coordinator?.push(.clinicDetail(clinic: clinic))
                     }
                     .onAppear {
-                        if viewModel.suggetionClinicList.last?.clinicID == clinic.clinicID
+                        if let lastClinicId = viewModel.suggetionClinicList.last?.clinicID, lastClinicId == clinic.clinicID
                             && viewModel.hasNextClinicSuggention {
                             self.viewModel.suggetionsPage += 1
                             viewModel.fetchClinicSuggetions()

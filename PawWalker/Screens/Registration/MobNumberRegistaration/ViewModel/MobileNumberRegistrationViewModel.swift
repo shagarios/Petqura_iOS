@@ -9,7 +9,7 @@ import Foundation
 import ProgressHUD
 import Combine
 
-class MobileNumberRegistrationViewModel : ObservableObject {
+class MobileNumberRegistrationViewModel : ObservableObject,ErrorHandable {
     @Injected var encryptionService : EncryptionManagerProtocol
     @Injected var apiClient : ApiClientProtocol
     @Published var mobileNumber : String = TextResource.empty
@@ -19,8 +19,10 @@ class MobileNumberRegistrationViewModel : ObservableObject {
     @Published var isLoading: Bool = false
     let key = "MduiQTgMNZCWUY,VhnmM2cKXDLVFvHFo"
     weak var coordinator : AccountCoordinator?
-    init(coordinator : AccountCoordinator) {
+    var registerUserCase : RegisterMobileUseCase
+    init(coordinator : AccountCoordinator,registerUserCase : RegisterMobileUseCase) {
         self.coordinator = coordinator
+        self.registerUserCase = registerUserCase
     }
     func checkprogressHud() {
         ToastCenter.shared.showToast("Please enter mobile number",type: .error)
@@ -32,37 +34,29 @@ class MobileNumberRegistrationViewModel : ObservableObject {
         }
         
     }
-    func registerWithMobileNumber() {
-        if Connectivity.isConnectedToInternet {
-            let phoneNumber = ApiParameters.countryCode + mobileNumber
-            var params : [String : String] = [ApiParameters.phone : phoneNumber, ApiParameters.source : ApiParameters.mobile]
-            params[ApiParameters.firstName] = self.name.trimmingCharacters(in: .whitespacesAndNewlines)
-            params[ApiParameters.email] = self.email
-            print(params)
-            self.isLoading = true
-            apiClient.APIRequest(router: .registerMobile, parameters: params, responseType: MobileRegistrationModel.self)
-                .sink { completion in
-                    switch completion {
-                    case .finished:
-                        self.isLoading = false
-                    case .failure(let error):
-                        ToastCenter.shared.showToast(error.backendError?.message ?? TextResource.apiError,type: .error)
-                    }
-                } receiveValue: { response in
-                    self.isLoading = false
-                    //  if let phoneNumber = response.result?.phone {
-                        ToastCenter.shared.showToast(response.message,type: .success)
-                    self.coordinator?.push(.otp(mobileNo: self.mobileNumber,
-                                                firstName: self.name,email: self.email))
-                    
-                    //   }
-                }
-                .store(in: &cancellables)
+    @MainActor
+    func registerMobileNumber() async {
+        let userDetails = UserRegisterDetails(name: name.trimmed,
+                                              phone: mobileNumber, email: email)
+        self.isLoading = true
+        do {
+            let response = try await registerUserCase.execute(user: userDetails)
+            self.isLoading = false
+            ToastCenter.shared.showToast(response.message,type: .success)
+            self.coordinator?.push(.otp(mobileNo: self.mobileNumber,
+                                        firstName: self.name,email: self.email))
         }
-        else {
-            ToastCenter.shared.showToast(TextResource.noInternet,type: .error)
+        catch let error as AppError {
+            self.isLoading = false
+            showError(error.errorDescription)
         }
+        catch {
+            self.isLoading = false
+            showError(TextResource.apiError)
+        }
+      
     }
+ 
     func isValidMobileNumber(number : String) -> Bool {
         let predicate = NSPredicate(format: "SELF MATCHES %@", RegexStrings.mobileNumberValidation)
         return predicate.evaluate(with: number)
@@ -77,7 +71,9 @@ class MobileNumberRegistrationViewModel : ObservableObject {
     func handleMobileNumberValidation() {
         if isValidMobileNumber(number: self.mobileNumber) &&
             isValidName(name: self.name) && isEmailValid(){
-            registerWithMobileNumber()
+            Task {
+                await registerMobileNumber()
+            }
         }
         else if isValidName(name: self.name) == false {
             ToastCenter.shared.showToast(TextResource.nameNotValidText)

@@ -13,6 +13,7 @@ class BlogDetailViewModel : ObservableObject {
     @Published var blogId : String = ""
     @Injected var apiClient : ApiClientProtocol
     @Injected var internet : NetworkMonitor
+    @Injected var serviceLayer : ServiceLayerProtocol
     private var cancellable = Set<AnyCancellable>()
     @Published var isLoading : Bool = false
     
@@ -40,5 +41,19 @@ class BlogDetailViewModel : ObservableObject {
                 }
                 .store(in: &cancellable)
         }
+    }
+    @MainActor
+    func fetchBlogDetail() async {
+    if internet.isConnectedToInternet {
+            isLoading = true
+            do {
+                let result : BlogDetailModel = try await serviceLayer.makeRequest(endpoint: .blogDetail(blogId: blogId), parameters: nil)
+                self.blog = result.result
+            }
+            catch(let error) {
+                self.isLoading = false
+                ToastCenter.shared.showToast(error.localizedDescription)
+            }
+            }
     }
 }

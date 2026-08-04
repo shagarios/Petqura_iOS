@@ -30,13 +30,18 @@ extension ClinicListScreen {
                         self.viewModel.coordinator?.push(.clinicDetail(clinic: clinic))
                     }
                     .onAppear {
-                        if viewModel.clinicList.last?.clinicID == clinic.clinicID && viewModel.hasNext {
+                        if let lastClinicId = viewModel.clinicList.last?.clinicID,
+                           lastClinicId == clinic.clinicID && viewModel.hasNext {
                             self.viewModel.page += 1
                             viewModel.fetchClinicList(serviceId: "")
                         }
                     }
                 }
             }
+        }
+        .safeAreaInset(edge: .bottom) {
+            Color.clear
+                .frame(height: 80)
         }
     }
 }

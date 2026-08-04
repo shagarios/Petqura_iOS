@@ -138,7 +138,7 @@ class AppointmentDetailsViewModel : ObservableObject {
                 } receiveValue: { response in
                     self.isLoading = false
                     if let result = response.result {
-                        let cartCount = result.cart.count
+                        guard let cartCount = result.cart?.count else {return}
                         EventHandler.cartCountSubject.send(cartCount)
                         ToastCenter.shared.showToast(TextResource.addedToCartAlert)
                     }

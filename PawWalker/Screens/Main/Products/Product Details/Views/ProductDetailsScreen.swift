@@ -24,6 +24,7 @@ struct ProductDetailsScreen: View {
                         priceView
                         Spacer()
                         moreOptionsView
+                            .isRemove(viewModel.moreProductList.isEmpty)
                     }
                     addToCartButton
                     discriptionView
@@ -37,6 +38,7 @@ struct ProductDetailsScreen: View {
             }
             .padding(.horizontal,15)
         }
+        .toolbar(.hidden, for: .tabBar)
 //        .topBarView(titleView: ViewUtils.shared.titleView(title: TextResource.productDetails),
 //                     leftButtons: ViewUtils.shared.backButtonView {
 //            self.mode.wrappedValue.dismiss()
@@ -59,7 +61,9 @@ struct ProductDetailsScreen: View {
             CartDeatilsScreen(browseCompletion: {}, payementCompletion: {})
         }
         .navigationDestination(isPresented: $viewModel.navigateToDetailScreen) {
-            ProductDetailsScreen(viewModel: ProductDetailsViewModel(product: self.viewModel.product!))
+            ProductDetailsScreen(viewModel:
+            ProductDetailsViewModel(product: self.viewModel.product!,
+                productMoreUseCase: ProductMoreUseCase(productDetailRepository: ProductDetailRepositoryImplentation())))
         }
         .customPopupAlertView(
             alertView: ProductReviewAlert(
@@ -76,15 +80,18 @@ struct ProductDetailsScreen: View {
             showAlert: $viewModel.showReviewBottomSheet
         )
         .task {
-                await viewModel.fetchSimilarProducts()
-                await viewModel.fetchReviews()
+            await viewModel.loadData()
         }
         .makeWithLoader(isLoading: $viewModel.isLoading)
+        .bottomSheet(isPresented: $viewModel.showMoreView) {
+            MoreProductListView(viewModel: viewModel)
+                .frame( height: UIScreen.screenHeight * 0.60)
+        }
     }
     
     private var moreOptionsView : some View {
         Button(action: {
-            
+            viewModel.showMoreView = true
         }, label: {
             Text(TextResource.moreOption)
                 .foregroundStyle(.primaryButton)
@@ -217,4 +224,5 @@ struct ProductDetailsScreen: View {
                 .padding(.top,10)
         }
     }
+    
 }

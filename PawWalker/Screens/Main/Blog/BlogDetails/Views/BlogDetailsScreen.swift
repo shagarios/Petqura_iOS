@@ -32,7 +32,7 @@ struct BlogDetailsScreen : View {
         })
         .makeWithLoader(isLoading: $viewModel.isLoading)
         .task {
-            viewModel.fetchBlogData()
+            await viewModel.fetchBlogDetail()
         }
     }
  

@@ -29,7 +29,9 @@ extension HomeScreenViewModel {
                     self?.clinicRating = 0
                     self?.clinicReviewText = ""
                     ToastCenter.shared.showToast(response.message ?? TextResource.empty,type: .success)
-                    self?.fetchHomePageData()
+                    Task {
+                      await self?.fetchHomeDetails()
+                    }
                 }
                 .store(in: &cancellables)
         }
@@ -55,7 +57,9 @@ extension HomeScreenViewModel {
                     print(response)
                     self?.clinicRating = 0
                     self?.clinicReviewText = ""
-                    self?.fetchHomePageData()
+                    Task {
+                        await self?.fetchHomeDetails()
+                    }
                 }
                 .store(in: &cancellables)
 

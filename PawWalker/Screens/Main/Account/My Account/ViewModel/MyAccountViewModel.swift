@@ -111,16 +111,6 @@ class MyAccountViewModel : ObservableObject {
             ToastCenter.shared.showToast(TextResource.noInternet)
         }
     }
-//    func fetchAccessToken()  {
-//            let result:Result<[User],Error> = coreDataService.fetch(tableName: TableNames.user,
-//                sort: nil, predicate: nil, limit: nil)
-//            switch result {
-//            case .success(let users):
-//                return users.last?.accessToken ?? TextResource.empty
-//            case .failure(_):
-//                return TextResource.empty
-//            }
-//    }
     func logout() {
         if network.isConnectedToInternet {
             self.isLoading = true

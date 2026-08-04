@@ -37,3 +37,9 @@ extension Collection {
         !isEmpty
     }
 }
+
+extension String {
+    var trimmed: String {
+        trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+}

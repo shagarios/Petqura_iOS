@@ -16,7 +16,9 @@ class HomeCoordinator : ObservableObject {
         @Published var path = NavigationPath()
         weak var appCoordinator: AppCoordinator?
        @Published var showSheet : Bool = false
-       @Published var homeViewModel = HomeScreenViewModel()
+       @Published var homeViewModel = HomeScreenViewModel(getHomeUseCase:
+       GetHomeUseCase(repository: HomeRepositoryImplementation()),
+        getBlogUseCase: GetBlogUseCase(blogRepository: HomeRepositoryImplementation()))
         func push(_ page: HomePages) {
             path.append(page)
         }

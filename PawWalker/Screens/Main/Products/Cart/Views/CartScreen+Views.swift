@@ -222,11 +222,12 @@ extension CartDeatilsScreen {
          ScrollView(.horizontal,showsIndicators: false) {
              LazyHStack {
                  ForEach(viewModel.productList,id: \.productID) {product in
-                     ProductItemView(product: product,productDetailCallBack: {product in
+                     ProductItemView(product: product,
+                                     productDetailCallBack: {product in
                          self.viewModel.selectedProduct = product
                          self.viewModel.selectedVariant = product.variants.first
                          self.viewModel.navigateToProductDetail = true
-                     },favoriteCallBack: { action, productId, variantId in
+                     }, cartCallback: {},favoriteCallBack: { action, productId, variantId in
                          if action == FavoriteActions.addFavorite {
                              viewModel.addToFavorite(productId: productId,
                                                      variantId: variantId) { status in
@@ -237,7 +238,7 @@ extension CartDeatilsScreen {
                                                                   variantId: variantId) { status in
                              }
                          }
-                     },addToCartCallBack: { productId, variantId in
+                     },addToCartCallBack: { productId, variantId,action  in
                          Task {
                              await viewModel.postToCart(
                                 productId: productId,

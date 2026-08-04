@@ -9,7 +9,8 @@ import Foundation
 import Alamofire
 
 struct NetworkError : Error {
-    let initialError : AFError
+    
+    let initialError : AFError?
     let backendError : BackendError?
 }
 
@@ -17,4 +18,7 @@ struct BackendError : Codable, Error {
     let message : String
     let status : String?
 }
+
+
+
 

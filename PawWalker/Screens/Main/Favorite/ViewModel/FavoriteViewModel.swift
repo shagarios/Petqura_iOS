@@ -161,7 +161,7 @@ class FavoriteViewModel : ClinicListViewModel {
                     }
                 } receiveValue: { response in
                     if let result = response.result {
-                        let cartCount = result.cart.count
+                        guard let cartCount = result.cart?.count else {return}
                         EventHandler.cartCountSubject.send(cartCount)
                         self.isLoading = false
                         ToastCenter.shared.showToast(TextResource.addedToCartAlert,type: .success)

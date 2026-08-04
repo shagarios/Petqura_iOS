@@ -59,10 +59,10 @@ struct MyAccountScreen: View {
                 }, count: viewModel.appoinmentCount)
                     .padding(.top,20)
                 
-//                AccountItemView(title: TextResource.myOrders,contentView: myOrderContentView,completiion: {
-//                    coordinator?.push(.myOrders)
-//                }, count: viewModel.orderCount)
-//                    .padding(.top,20)
+                AccountItemView(title: TextResource.myOrders,contentView: myOrderContentView,completiion: {
+                    coordinator?.push(.myOrders)
+                }, count: viewModel.orderCount)
+                    .padding(.top,20)
                 
                 if UserSessionManager.shared.accessToken.isNotEmpty {
                     Button(action: {
@@ -83,6 +83,10 @@ struct MyAccountScreen: View {
                 }
                                 
             }
+        }
+        .safeAreaInset(edge: .bottom) {
+            Color.clear
+                .frame(height: 70)
         }
         .makeWithLoader(isLoading: $viewModel.isLoading)
         .alert("\(TextResource.deleteAccount)?",
@@ -110,12 +114,11 @@ struct MyAccountScreen: View {
             }
         }
         .makeWithLoader(isLoading: $viewModel.isLoading)
-//        .topBarView(titleView: coordinator?.appCoordinator?.titleView(),
-//                    rightButtons: ViewUtils.shared.cartButtonView(count: coordinator?.appCoordinator?.cartItemCount ?? 0,
-//                                                                  action: {
-//            //viewModel.navigateToCart = true
-//        }))
-        .topBarView(titleView: coordinator?.appCoordinator?.titleView())
+        .topBarView(titleView: coordinator?.appCoordinator?.titleView(),
+                    rightButtons: ViewUtils.shared.cartButtonView(count: coordinator?.appCoordinator?.cartItemCount ?? 0,
+                                                                  action: {
+            coordinator?.appCoordinator?.navigateToCart = true
+        }))
         .onAppear {
             DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: {
                 viewModel.checkIfMapIsShowed()
@@ -133,6 +136,7 @@ struct MyAccountScreen: View {
         },message: {
             Text(TextResource.loginAlertMessage)
         })
+        
         
     }
     
