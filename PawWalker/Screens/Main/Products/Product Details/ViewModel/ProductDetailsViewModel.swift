@@ -68,7 +68,7 @@ class ProductDetailsViewModel  : ObservableObject {
     func getDiscountPrice() -> Int {
         return Int(selectedVariant?.discountedPrice ?? 0)
     }
-    func fetchSimilarProducts() async {
+    func fetchSimilarProducts()  {
         if Connectivity.isConnectedToInternet {
             apiClient.APIRequest(router: .similarProducts(seller: self.product?.addedByID ?? ""),
                                  responseType: ProductListModel.self)
@@ -87,7 +87,7 @@ class ProductDetailsViewModel  : ObservableObject {
                 .store(in: &cancellables)
         }
     }
-    func fetchReviews() async {
+    func fetchReviews()  {
         if Connectivity.isConnectedToInternet {
             apiClient.APIRequest(router: .productReview(productId: product?.productID ?? ""),
                                  responseType: ProductReviewModel.self)
@@ -235,11 +235,12 @@ class ProductDetailsViewModel  : ObservableObject {
             
         }
     }
-    func loadData() async {
-        async let similiarProducts =  await fetchSimilarProducts()
-        async let reviews = await fetchReviews()
-        async let moreProduct = await fetchMoreProduct()
-        _ = await (similiarProducts,reviews,moreProduct)
+    func loadData()  {
+         fetchSimilarProducts()
+         fetchReviews()
+        Task {
+            await fetchMoreProduct()
+        }
     }
     func updateData() {
         let variant =  UserSessionManager.shared.productIdententiyArray
