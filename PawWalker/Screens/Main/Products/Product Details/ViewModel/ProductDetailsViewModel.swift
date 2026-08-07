@@ -33,12 +33,19 @@ class ProductDetailsViewModel  : ObservableObject {
     var productMoreUseCase : ProductMoreUseCase
     @Published var showAlert : Bool = false
     @Published var selectedMoreProduct: MoreProduct?
-    @Published var selectedProductVariant : Variant?
+    @Published var Quantity : Int = 0
+    @Published var isInCart : Bool = false
+    @Published var selectedProductIdentity : ProductIdentity?
+    @Published var alertMessage : String = ""
+    @Published var showAlertForCart : Bool = false
+    private var productDetailUseCase : ProductDetailUseCase
     
-    
-    init(product : Product?,productMoreUseCase : ProductMoreUseCase) {
+    init(product : Product?,
+         productMoreUseCase : ProductMoreUseCase,
+         productDetailUseCase : ProductDetailUseCase) {
         self.product = product
         self.productMoreUseCase = productMoreUseCase
+        self.productDetailUseCase = productDetailUseCase
         self.selectedVariant = self.product?.variants.first
         self.handleCartCountUpdate()
         
@@ -72,9 +79,9 @@ class ProductDetailsViewModel  : ObservableObject {
                     case .failure(_):
                         break
                     }
-                } receiveValue: {[unowned self] response in
+                } receiveValue: {[weak self] response in
                     if let products = response.result?.products {
-                        self.productList = products
+                        self?.productList = products
                     }
                 }
                 .store(in: &cancellables)
@@ -212,10 +219,6 @@ class ProductDetailsViewModel  : ObservableObject {
             ToastCenter.shared.showToast(TextResource.noInternet,type: .error)
         }
     }
-    func updateProductCart(action : CartAction, productId : String,productVariantId : String,forceAddToCart: Bool) async  throws {
-      let result = try await productCartUseCase.execute(action: action, productId: productId,
-                                                        productVariantId: productVariantId, forceAddToCart: forceAddToCart)
-    }
     @MainActor
     func fetchMoreProduct() async  {
         guard let productId = product?.productID,let variantId = selectedVariant?.productVariantID else {
@@ -238,5 +241,62 @@ class ProductDetailsViewModel  : ObservableObject {
         async let moreProduct = await fetchMoreProduct()
         _ = await (similiarProducts,reviews,moreProduct)
     }
-    
+    func updateData() {
+        let variant =  UserSessionManager.shared.productIdententiyArray
+            .filter({$0.variantId == selectedVariant?.productVariantID})
+        if variant.isNotEmpty {
+            selectedVariant?.isInCart = variant.first?.isInCart
+            selectedVariant?.cartQuantity = variant.first?.cartQuantity
+        }
+    }
+    @MainActor
+    func updateProductCart(action: CartAction, productId: String,
+                           productVariantId: String, forceAddToCart: Bool) async {
+        isLoading = true
+        defer { isLoading = false }
+        do {
+            let result = try await productCartUseCase.execute(
+                action: action,
+                productId: productId,
+                productVariantId: productVariantId,
+                forceAddToCart: forceAddToCart
+            )
+            switch result {
+            case .blocked(let message):
+                alertMessage = message ?? ""
+                self.selectedProductIdentity = ProductIdentity(productId: productId,
+                                                        variantId: productVariantId,
+                                                               isInCart: false, cartQuantity: 0)
+                showAlertForCart = true
+            case .updated(let variant, _, let cartCount, let isNew):
+                selectedVariant = variant
+                EventHandler.cartCountSubject.send(cartCount)
+                if isNew {
+                    ToastCenter.shared.showToast(TextResource.addedToCartAlert, type: .success)
+                }
+
+            case .removed(let cartCount):
+                EventHandler.cartCountSubject.send(cartCount)
+                if cartCount == 0 {
+                    self.selectedVariant?.isInCart = false
+                    self.selectedVariant?.cartQuantity = 0
+                }
+            }
+        }
+        catch let error {
+            print(error)
+        }
+    }
+    @MainActor
+    func fetchProductDetails(productId : String) async {
+        do {
+            self.isLoading = true
+            let result = try await productDetailUseCase.execute(productId: productId)
+            self.isLoading = false
+            self.product = result
+            await self.loadData()
+        }
+        catch {
+        }
+    }
 }

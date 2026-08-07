@@ -18,6 +18,7 @@ struct CartResult : Codable {
     var totalAmount: Double?
     var netAmount : Double?
     var canAddToCart : Bool?
+    var guestId : String?
     enum CodingKeys: String, CodingKey {
         case cart, gst
         case orderAmount = "order_amount"
@@ -29,6 +30,7 @@ struct CartResult : Codable {
         case totalAmount = "total_amount"
         case netAmount = "net_price"
         case canAddToCart
+        case guestId = "guest_id"
         
     }
 }

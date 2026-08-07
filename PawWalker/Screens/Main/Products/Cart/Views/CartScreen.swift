@@ -35,6 +35,8 @@ struct CartDeatilsScreen: View {
             
         }))
         .task {
+            await viewModel.fetchCart()
+            viewModel.fetchSimilarProducts()
             viewModel.getAddressList()
         }
         .onTapGestureForced {
@@ -53,7 +55,9 @@ struct CartDeatilsScreen: View {
             if let productData = viewModel.selectedProduct {
                 ProductDetailsScreen(viewModel:ProductDetailsViewModel(
                     product: productData,
-                productMoreUseCase: ProductMoreUseCase(productDetailRepository: ProductDetailRepositoryImplentation())))
+                productMoreUseCase: ProductMoreUseCase(productDetailRepository:
+                                                        ProductDetailRepositoryImplentation()),
+                productDetailUseCase: ProductDetailUseCase(repository: ProductDetailRepositoryImplentation())))
             }
         })
         

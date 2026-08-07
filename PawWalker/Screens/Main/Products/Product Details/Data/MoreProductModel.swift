@@ -43,6 +43,7 @@ struct MoreProduct: Codable {
     let productName: String?
     let variantID: String
     let productStore: String?
+    let productId: String?
 
     enum CodingKeys: String, CodingKey {
         case distanceKM = "distance_km"
@@ -50,5 +51,6 @@ struct MoreProduct: Codable {
         case productName = "product_name"
         case variantID = "variant_id"
         case productStore = "store_name"
+        case productId = "product_id"
     }
 }

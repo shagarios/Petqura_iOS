@@ -10,7 +10,7 @@ import SwiftUI
 struct ProductDetailsScreen: View {
     @StateObject var viewModel : ProductDetailsViewModel
     @Environment(\.presentationMode) var mode: Binding<PresentationMode>
-  //  var cancelCallBack : (String) -> ()
+    //  var cancelCallBack : (String) -> ()
     var body: some View {
         VStack {
             ScrollView(showsIndicators: false) {
@@ -26,7 +26,9 @@ struct ProductDetailsScreen: View {
                         moreOptionsView
                             .isRemove(viewModel.moreProductList.isEmpty)
                     }
-                    addToCartButton
+                    productCartView
+                        .padding(.top,30)
+                        .padding(.horizontal,20)
                     discriptionView
                     reviewView
                         .padding(.top,20)
@@ -39,31 +41,27 @@ struct ProductDetailsScreen: View {
             .padding(.horizontal,15)
         }
         .toolbar(.hidden, for: .tabBar)
-//        .topBarView(titleView: ViewUtils.shared.titleView(title: TextResource.productDetails),
-//                     leftButtons: ViewUtils.shared.backButtonView {
-//            self.mode.wrappedValue.dismiss()
-//            //cancelCallBack(categoryId)
-//        },rightButtons:
-//              ViewUtils.shared.cartButtonView(count: viewModel.cartCount, action: {
-//            viewModel.showCartPage = true
-//        })
-//        )
+        .onAppear(perform: {
+            viewModel.updateData()
+        })
+        .makeWithLoader(isLoading: $viewModel.isLoading)
         .topBarView(titleView: ViewUtils.shared.titleView(title: TextResource.productDetails),
-                     leftButtons: ViewUtils.shared.backButtonView {
+                    leftButtons: ViewUtils.shared.backButtonView {
             self.mode.wrappedValue.dismiss()
             //cancelCallBack(categoryId)
         })
         .navigationDestination(isPresented: $viewModel.showReviewPage, destination: {
-                ProductReviewScreen()
-                    .environmentObject(viewModel)
-            })
+            ProductReviewScreen()
+                .environmentObject(viewModel)
+        })
         .navigationDestination(isPresented: $viewModel.showCartPage) {
             CartDeatilsScreen(browseCompletion: {}, payementCompletion: {})
         }
         .navigationDestination(isPresented: $viewModel.navigateToDetailScreen) {
             ProductDetailsScreen(viewModel:
-            ProductDetailsViewModel(product: self.viewModel.product!,
-                productMoreUseCase: ProductMoreUseCase(productDetailRepository: ProductDetailRepositoryImplentation())))
+                                    ProductDetailsViewModel(product: self.viewModel.product!,
+                                    productMoreUseCase: ProductMoreUseCase(productDetailRepository: ProductDetailRepositoryImplentation()),
+                                        productDetailUseCase: ProductDetailUseCase(repository: ProductDetailRepositoryImplentation())))
         }
         .customPopupAlertView(
             alertView: ProductReviewAlert(
@@ -82,10 +80,24 @@ struct ProductDetailsScreen: View {
         .task {
             await viewModel.loadData()
         }
-        .makeWithLoader(isLoading: $viewModel.isLoading)
         .bottomSheet(isPresented: $viewModel.showMoreView) {
             MoreProductListView(viewModel: viewModel)
                 .frame( height: UIScreen.screenHeight * 0.60)
+        }
+        .alert(viewModel.alertMessage, isPresented: $viewModel.showAlertForCart) {
+            Button(TextResource.cancel) {
+                viewModel.showAlertForCart = false
+            }
+            Button(TextResource.update) {
+                Task{
+                    UserSessionManager.shared.productIdententiyArray = []
+                   await viewModel.updateProductCart(action: CartAction.add,
+                                                productId: viewModel.selectedProductIdentity?.productId ?? "",
+                                                productVariantId: viewModel.selectedProductIdentity?.variantId ?? "",
+                                                forceAddToCart: true)
+                    viewModel.showAlertForCart = false
+                }
+            }
         }
     }
     
@@ -127,7 +139,7 @@ struct ProductDetailsScreen: View {
                 .padding(.top,20)
         }
     }
-
+    
     var variantsView : some View {
         ScrollView(.horizontal,showsIndicators: false) {
             LazyHStack {
@@ -142,7 +154,7 @@ struct ProductDetailsScreen: View {
         }
         .frame(height : 80)
     }
-
+    
     private var priceView : some View {
         HStack(spacing: 5) {
             Text(TextResource.mrp)
@@ -160,7 +172,7 @@ struct ProductDetailsScreen: View {
             Text("\(viewModel.selectedVariant?.dispalyDiscountPercentage ?? 0)% Off")
                 .font(FontConstants.primaryMediumTitle16)
                 .foregroundStyle(Color.green)
-                
+            
             Spacer()
         }
         .padding(.top,10)
@@ -169,34 +181,54 @@ struct ProductDetailsScreen: View {
     private var addToCartButton : some View {
         Button {
             Task{
-                await viewModel.postToCart(
-                    productId: self.viewModel.product?.productID ?? "",
-                    varaintId: self.viewModel.selectedVariant?.productVariantID ?? "",
-                    quantity: 1
-                )
+                await viewModel.updateProductCart(action: .add,
+                                                  productId: self.viewModel.product?.productID ?? "",
+                                                  productVariantId: self.viewModel.selectedVariant?.productVariantID ?? "",
+                                                  forceAddToCart: false)
             }
         } label: {
             Text(TextResource.addToCart)
                 .primaryButtonStyle(height: 48,font: FontConstants.primaryMediumTitle16,fullWidth: true,cornerRadius: 12)
         }
-        .padding(.top,30)
-        .padding(.horizontal,20)
+        
     }
+    
+    private var quantityView : some View {
+        QuantityView(quantity: viewModel.selectedVariant?.cartQuantity ?? 0,
+                     buttonPressAction: { action in
+            Task {
+                await viewModel.updateProductCart(action: action,
+                                                  productId: viewModel.product?.productID ?? "",
+                                                  productVariantId: viewModel.selectedVariant?.productVariantID ?? "",
+                                                  forceAddToCart: false)
+            }
+        }, isFullScreen: true)
+    }
+    @ViewBuilder
+    private var productCartView : some View {
+        if viewModel.selectedVariant?.isInCart == true {
+            quantityView
+        }
+        else {
+            addToCartButton
+        }
+    }
+    
     private var discriptionView: some View {
         VStack(alignment: .leading,spacing: 0) {
-                Button(action: {
-                    viewModel.showMore.toggle()
-                }, label: {
-                    HStack{
-                        Text(TextResource.productDescription)
-                            .font(FontConstants.primaryMediumTitle14)
-                            .foregroundStyle(Color.black)
-                        Spacer()
-                        Image(viewModel.showMore ? ImageResource.upArrowIcon : ImageResource.downArrowIcon)
-                            .resizable()
-                            .frame(width:20,height: 20)
-                    }
-                })
+            Button(action: {
+                viewModel.showMore.toggle()
+            }, label: {
+                HStack{
+                    Text(TextResource.productDescription)
+                        .font(FontConstants.primaryMediumTitle14)
+                        .foregroundStyle(Color.black)
+                    Spacer()
+                    Image(viewModel.showMore ? ImageResource.upArrowIcon : ImageResource.downArrowIcon)
+                        .resizable()
+                        .frame(width:20,height: 20)
+                }
+            })
             
             if viewModel.showMore {
                 discriptionDetailView

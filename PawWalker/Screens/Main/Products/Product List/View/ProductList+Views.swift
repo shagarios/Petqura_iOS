@@ -51,14 +51,10 @@ extension ProductListScreen {
                         }
                     },addToCartCallBack: { productId, variantId,action  in
                         Task{
-//                            await viewModel.postToCart(
-//                                productId: productId,
-//                                varaintId: variantId,
-//                                quantity: 1
-//                            )
                             try await viewModel.updateProductCart(action: action,
                                                               productId: productId,
-                                                                  productVariantId: variantId, forceAddToCart: false)
+                                                                  productVariantId: variantId,
+                                                                forceAddToCart: false)
                             
                         }
                     },isSimilarProduct: false)

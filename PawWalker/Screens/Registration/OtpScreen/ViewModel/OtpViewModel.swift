@@ -30,11 +30,15 @@ class OtpViewModel : ObservableObject {
     @Published var firstName : String = TextResource.empty
     @Published var email : String = TextResource.empty
     weak var coordinator : AccountCoordinator?
-    init(mobileNumber : String,coordinator : AccountCoordinator,firstName: String,email: String) {
+    var guestSessionRepository : GuestSessionRepository
+    init(mobileNumber : String,coordinator : AccountCoordinator,
+         firstName: String,email: String,
+         guestSessionRepository : GuestSessionRepository) {
         self.mobileNumber = mobileNumber
         self.coordinator = coordinator
         self.email = email
         self.firstName = firstName
+        self.guestSessionRepository = guestSessionRepository
     }
     func verifyOtp() {
         if isOtpValidated {
@@ -51,6 +55,9 @@ class OtpViewModel : ObservableObject {
             param[ApiParameters.deviceToken] = UserSessionManager.shared.deviceToken
             param[ApiParameters.deviceType] = "ios"
             param[ApiParameters.device_id] = UIDevice.current.identifierForVendor!.uuidString
+            if UserSessionManager.shared.guestId.isNotEmpty {
+            param[ApiParameters.guestId] = UserSessionManager.shared.guestId
+            }
             isLoading = true
             apiClient.APIRequest(router: .verifyOtp, parameters: param, responseType: OtpModel.self)
                 .sink { response in
@@ -65,6 +72,8 @@ class OtpViewModel : ObservableObject {
                     guard let self = self else {return}
                     if let result = response.result {
                         self.saveUserDetailsToLocalStorage(result: result)
+                        self.guestSessionRepository.deleteGuestId()
+                        EventHandler.cartCountSubject.send(0)
                         if  let location = getLocationData() {
                             saveLocationToServer(location: location) {
                                 self.coordinator?.popToRoot()

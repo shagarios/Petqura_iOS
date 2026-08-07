@@ -12,9 +12,14 @@ struct OtpScreen: View {
     @Environment(\.dismiss) var dismiss
     @StateObject var viewModel : OtpViewModel
     init(mobileNumber: String,coordinator : AccountCoordinator,firstName: String,email: String) {
-        self._viewModel = StateObject(wrappedValue: OtpViewModel(mobileNumber: mobileNumber,
-                                                                 coordinator: coordinator
-                                                                 ,firstName: firstName,email: email))
+        self._viewModel = StateObject(wrappedValue:
+                    OtpViewModel(mobileNumber: mobileNumber,
+                        coordinator: coordinator
+                        ,firstName: firstName,
+                            email: email,
+                            guestSessionRepository:
+                            GuestSessionRepositoryImplementation(userSessionRespository:
+                        UserSessionRepostoryImplentation())))
     }
     var body: some View {
         VStack (spacing : 0){

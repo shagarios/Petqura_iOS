@@ -24,12 +24,14 @@ class UserSessionManager : ObservableObject{
     @Published var showMapScreen: Bool = false
     @Published var appointmentId : String = ""
     @Published var productIdententiyArray : [ProductIdentity] = []
+    @Published var guestId: String = ""
     @Published var user : User? {
         didSet {
             self.accessToken = user?.accessToken ?? ""
             self.refreshToken = user?.refreshToken ?? ""
             self.isMapCompleted = user?.isMapCompleted ?? false
             self.name = user?.name ?? TextResource.empty
+            self.guestId = user?.guestId ?? ""
         }
     }
     init() {

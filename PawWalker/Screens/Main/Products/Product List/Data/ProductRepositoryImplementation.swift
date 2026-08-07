@@ -10,12 +10,17 @@ import Foundation
 class ProductRepositoryImplementation : ProductRepository {
     @Injected var serviceLayer : ServiceLayerProtocol
     @Injected var internet : NetworkMonitor
-    func updateProductCart(action: String,productId : String,productVariantId : String,forceAddToCart: Bool) async throws -> AddToCartModel {
-        let param : [String : Any] = [ApiParameters.productId : productId,
+    func updateProductCart(action: String,productId : String,
+                           productVariantId : String,forceAddToCart: Bool,guestId: String) async throws -> AddToCartModel {
+        var param : [String : Any] = [ApiParameters.productId : productId,
                                       ApiParameters.productVariantId: productVariantId,
                                       ApiParameters.action : action,
-                                      ApiParameters.forceAddToCart : forceAddToCart
+                                      ApiParameters.forceAddToCart : forceAddToCart,
+                
         ]
+        if guestId.isNotEmpty {
+            param[ApiParameters.guestId] = guestId
+        }
         guard internet.isConnectedToInternet else {
             throw AppError.noInternet
         }

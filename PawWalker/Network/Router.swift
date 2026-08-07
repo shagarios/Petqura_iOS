@@ -17,7 +17,7 @@ enum Router {
     case slotListing(clinicId: String, day : String,time : String)
     case addTocat
     case home
-    case viewCart
+    case viewCart(guestId : String)
     case updateCart
     case location
     case saveAddress
@@ -50,6 +50,7 @@ enum Router {
     case closeClinicReview
     case productMoreOptions(productId: String,variantId: String,page: Int,latitude : String = "",
                             lontitude: String = "")
+    case productDetail(productId: String)
     private var baseUrl:  String {
         return Bundle.main.apiBaseUrl
     }
@@ -80,8 +81,14 @@ enum Router {
             return baseUrl + "/add_to_cart"
         case .home:
             return baseUrl + "/home"
-        case .viewCart:
-            return baseUrl + "/view_cart"
+        case .viewCart(let guestId):
+            if guestId.isNotEmpty {
+                return baseUrl + "/view_cart?guest_id=\(guestId)"
+            }
+            else {
+                return baseUrl + "/view_cart"
+            }
+            
         case .updateCart:
             return baseUrl + "/change_quantity_cart"
         case .location:
@@ -144,6 +151,8 @@ enum Router {
             return baseUrl + "/remove_from_pending_review"
         case .productMoreOptions(let productId, let variantId, let page, let latitude, let lontitude):
             return baseUrl + "/get_similar_products?product_id=\(productId)&variant_id=\(variantId)&page=\(page)&latitude=\(latitude)&longitude=\(lontitude)"
+        case .productDetail(let productId):
+            return baseUrl + "/view_product?pid=\(productId)"
             
         }
     }
@@ -239,6 +248,8 @@ enum Router {
             return .delete
         case .productMoreOptions:
             return .get
+        default:
+           return .get
         }
     }
     var httpMethod : HTTPSMethods {

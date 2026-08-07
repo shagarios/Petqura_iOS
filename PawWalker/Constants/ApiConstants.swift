@@ -60,4 +60,5 @@ struct ApiParameters {
     static let serviceId = "service_id"
     static let pendingReviewId = "pending_review_id"
     static let forceAddToCart = "forceAddToCart"
+    static let guestId = "guest_id"
 }

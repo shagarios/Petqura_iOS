@@ -45,9 +45,11 @@ class AppCoordinator: ObservableObject {
     func fetchBasicInfo() async {
        await fetchCartCount()
     }
+    @MainActor
     func fetchCartCount()  async {
         if Connectivity.isConnectedToInternet {
-            apiClient.APIRequest(router: .viewCart, responseType: AddToCartModel.self)
+            apiClient.APIRequest(router: .viewCart(guestId: UserSessionManager.shared.guestId),
+                                 responseType: AddToCartModel.self)
                 .subscribe(on: DispatchQueue.global(qos: .background))
                 .sink {  completion in
                     switch completion {

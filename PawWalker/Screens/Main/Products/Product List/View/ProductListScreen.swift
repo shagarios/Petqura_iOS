@@ -7,7 +7,11 @@
 
 import SwiftUI
 struct ProductListScreen: View {
-    @StateObject var viewModel = ProductListViewModel()
+    @StateObject var viewModel = ProductListViewModel(cartDetailUseCase:
+                        CartDetailsUsecase(repository:
+                                CartRepositroyImplementation(),
+                                guestReposiotry: GuestSessionRepositoryImplementation(
+                                userSessionRespository: UserSessionRepostoryImplentation())))
     @EnvironmentObject var appCoordinator: AppCoordinator
     @Binding var categoryId : String
     let colomns : [GridItem] = [GridItem(.flexible(minimum: 100, maximum: 160),spacing: 20),
@@ -41,8 +45,8 @@ struct ProductListScreen: View {
                 viewModel.fetchPoductList(categoryId: "")
             }
         }
-        .task {
-            viewModel.fetchCartList()
+        .task(priority: .background) {
+            await viewModel.fetchCartDetails()
         }
         .makeWithLoader(isLoading: $viewModel.isLoading)
         .onChange(of: categoryId, perform: { newValue in
@@ -50,8 +54,8 @@ struct ProductListScreen: View {
         })
         .navigationDestination(isPresented: $viewModel.navigateToProductDetail) {
            // if let productData = viewModel.selectedProduct {
-            ProductDetailsScreen(viewModel:ProductDetailsViewModel(product: viewModel.selectedProduct, productMoreUseCase: ProductMoreUseCase(productDetailRepository: ProductDetailRepositoryImplentation())
-                ))
+            ProductDetailsScreen(viewModel:ProductDetailsViewModel(product: viewModel.selectedProduct, productMoreUseCase: ProductMoreUseCase(productDetailRepository: ProductDetailRepositoryImplentation()),
+            productDetailUseCase: ProductDetailUseCase(repository: ProductDetailRepositoryImplentation())))
             //}
             }
         .bottomSheet(isPresented: $viewModel.showFilterList) {
@@ -86,7 +90,6 @@ struct ProductListScreen: View {
 }
 
 struct ActivityIndicator: UIViewRepresentable {
-    
     @Binding var isAnimating: Bool
     var color: UIColor = UIColor.gray
     let style: UIActivityIndicatorView.Style

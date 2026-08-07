@@ -54,7 +54,6 @@ struct HomeScreen: View {
                 if viewModel.appCoordinator?.selectedTab == .home {
                     await viewModel.fetchData()
                 }
-            
             }
             
         }

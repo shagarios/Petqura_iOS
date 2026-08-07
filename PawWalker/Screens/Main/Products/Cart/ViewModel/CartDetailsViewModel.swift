@@ -59,10 +59,12 @@ class CartDetailsViewModel : ProductListViewModel {
         }
     }
     @Published var deliveryTipValue : Double = 0
-    override init() {
-        super.init()
-       fetchCartList()
-        fetchSimilarProducts()
+     init() {
+    super.init(cartDetailUseCase:
+                CartDetailsUsecase(repository:
+                                    CartRepositroyImplementation(),
+                                    guestReposiotry: GuestSessionRepositoryImplementation(
+                                    userSessionRespository: UserSessionRepostoryImplentation())))
         CashFreeBroker.cashFreeCompletion
             .sink { status in
                 self.showCashfreePage = false
@@ -76,10 +78,10 @@ class CartDetailsViewModel : ProductListViewModel {
     
 
     
-    override func fetchCartList() {
+     func fetchCartList() {
         if Connectivity.isConnectedToInternet {
             isLoading = true
-            apiClient.APIRequest(router: .viewCart, responseType: AddToCartModel.self).sink { completion in
+            apiClient.APIRequest(router: .viewCart(guestId: UserSessionManager.shared.guestId), responseType: AddToCartModel.self).sink { completion in
                 switch completion {
                 case .finished:
                     break
@@ -101,6 +103,23 @@ class CartDetailsViewModel : ProductListViewModel {
         else {
             ToastCenter.shared.showToast(TextResource.noInternet,type: .error)
         }
+    }
+    @MainActor
+    func fetchCart() async {
+        do {
+            isLoading = true
+            let result = try await cartDetailUseCase?.execute()
+            self.isLoading = false
+            self.billData.removeAll()
+            self.cartDetails = result
+            self.cartList = result?.cart ?? []
+            self.cartCount = result?.cart?.count ?? 0
+            EventHandler.cartCountSubject.send(self.cartCount)
+        }
+        catch {
+            self.isLoading = false
+        }
+        
     }
     func updateCartItem(action : CartAction,cartId : String) {
         if Connectivity.isConnectedToInternet {

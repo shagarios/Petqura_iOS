@@ -50,7 +50,6 @@ class ServiceLayer: ServiceLayerProtocol {
                 case .success(let value):
                     continuation.resume(returning: value)
                 case .failure(let error):
-                    // ✅ pass both AFError and response data
                     let networkError = self.mapError(error, response.data)
                     continuation.resume(throwing: networkError)
                 }

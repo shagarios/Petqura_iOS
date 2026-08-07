@@ -39,8 +39,10 @@ class ProductListViewModel : ObservableObject {
     @Published var alertMessage : String = ""
     @Published var selectedProductIdentiy : ProductIdentity?
     @Published var selectedProductVariant : Variant?
-    init() {
+     var cartDetailUseCase : CartDetailsUsecase?
+    init(cartDetailUseCase : CartDetailsUsecase? = nil) {
         setupSearchPublisher()
+        self.cartDetailUseCase = cartDetailUseCase
 
     }
    
@@ -232,6 +234,7 @@ class ProductListViewModel : ObservableObject {
                     }
                     self.isLoading = false
                     self.shouldSearch = false
+                   
                 }
                 .store(in: &cancellables)
         }
@@ -239,83 +242,48 @@ class ProductListViewModel : ObservableObject {
             ToastCenter.shared.showToast(TextResource.noInternet,type: .error)
         }
     }
-    
     @MainActor
-    func updateProductCart(action : CartAction, productId : String,
-                           productVariantId : String,forceAddToCart:Bool) async  throws {
-        self.isLoading = true
-        do {
-            let response : AddToCartModel = try await productCartUseCase.execute(action: action, productId: productId, productVariantId: productVariantId, forceAddToCart: forceAddToCart)
-            self.isLoading = false
-            let canAddToCart = response.result?.canAddToCart
-            if canAddToCart == false {
-                self.alertMessage = response.message
-                self.selectedProductIdentiy = ProductIdentity(productId: productId, variantId: productVariantId,isInCart: false,cartQuantity: 0)
-                self.showAlert = true
+    func updateProductCart(action: CartAction, productId: String,
+                           productVariantId: String, forceAddToCart: Bool) async throws {
+        isLoading = true
+        defer { isLoading = false }
+
+        let result = try await productCartUseCase.execute(
+            action: action,
+            productId: productId,
+            productVariantId: productVariantId,
+            forceAddToCart: forceAddToCart
+        )
+
+        switch result {
+        case .blocked(let message):
+            alertMessage = message ?? ""
+            self.selectedProductIdentiy = ProductIdentity(productId: productId, variantId: productVariantId, isInCart: false, cartQuantity: 0)
+            showAlert = true
+
+        case .updated(let variant, _, let cartCount, let isNew):
+            selectedVariant = variant
+            EventHandler.cartCountSubject.send(cartCount)
+            if isNew {
+                ToastCenter.shared.showToast(TextResource.addedToCartAlert, type: .success)
             }
-            else {
-                guard let cartList : [CartElement] = response.result?.cart else {
-                    return
-                }
-                let cartElement = cartList.filter { cartElement in
-                    return cartElement.productVariant?.productVariantID == productVariantId
-                }
-                if cartElement.isNotEmpty {
-                    guard let productVariant : Variant = cartElement.first?.productVariant else {return}
-                    selectedVariant = productVariant
-                    guard let quantity = productVariant.cartQuantity else {return}
-                    if let index = UserSessionManager.shared.productIdententiyArray.firstIndex(where: {$0.variantId == productVariant.productVariantID}) {
-                        UserSessionManager.shared.productIdententiyArray[index].cartQuantity = quantity
-                        let cartCount = cartList.count
-                        EventHandler.cartCountSubject.send(cartCount)
-                    }
-                    else {
-                        UserSessionManager.shared.productIdententiyArray.append(
-                            ProductIdentity(productId: productId,
-                                            variantId: productVariantId,
-                                            isInCart: productVariant.isInCart ?? false,
-                                            cartQuantity: productVariant.cartQuantity ?? 0)
-                        )
-                        let cartCount = cartList.count
-                        EventHandler.cartCountSubject.send(cartCount)
-                        ToastCenter.shared.showToast(TextResource.addedToCartAlert,type: .success)
-                    }
-                }
-                else {
-                    UserSessionManager.shared.productIdententiyArray.removeAll(where: {$0.variantId == productVariantId})
-                    let cartCount = cartList.count
-                    EventHandler.cartCountSubject.send(cartCount)
-                }
-            }
-        }
-        catch let error {
-            self.isLoading = false
+
+        case .removed(let cartCount):
+            EventHandler.cartCountSubject.send(cartCount)
         }
     }
-    func fetchCartList() {
-        if Connectivity.isConnectedToInternet {
-            apiClient.APIRequest(router: .viewCart, responseType: AddToCartModel.self).sink { completion in
-                switch completion {
-                case .finished:
-                    break
-                case .failure(_):
-                    self.isLoading = false
+
+    func fetchCartDetails() async {
+        if UserSessionManager.shared.productIdententiyArray.isEmpty {
+            do {
+                guard let cartDetailUseCase else {
+                    return
                 }
-            } receiveValue: { [weak self] response in
-                if let result = response.result {
-                    let cartList = result.cart ?? []
-                    UserSessionManager.shared.productIdententiyArray.removeAll()
-                    for cartItem in cartList {
-                        UserSessionManager.shared.productIdententiyArray.append(ProductIdentity(productId: "",
-                        variantId: cartItem.productVariant?.productVariantID ?? "",
-                    isInCart: true, cartQuantity: cartItem.quantity ?? 0))
-                    }
-                }
+                _ = try await cartDetailUseCase.execute()
             }
-            .store(in: &cancellables)
-        }
-        else {
-            ToastCenter.shared.showToast(TextResource.noInternet,type: .error)
+            catch {
+                
+            }
         }
     }
 }

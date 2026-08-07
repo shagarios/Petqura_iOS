@@ -9,5 +9,6 @@ import Foundation
 
 protocol ProductRepository {
     func updateProductCart(action: String,productId : String,
-            productVariantId : String,forceAddToCart: Bool) async throws -> AddToCartModel
+                           productVariantId : String,forceAddToCart: Bool,
+                           guestId: String) async throws -> AddToCartModel
 }

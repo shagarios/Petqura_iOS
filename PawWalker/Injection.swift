@@ -41,7 +41,8 @@ final class Injection {
             return HomeRepositoryImplementation()
         }
         container.register(ProductCartUseCaseProtocol.self) { _ in
-            return ProductCartUseCase()
+            return ProductCartUseCase(repository: ProductRepositoryImplementation(),
+                    guestSessionRepository: GuestSessionRepositoryImplementation(userSessionRespository: UserSessionRepostoryImplentation()))
         }
         container.register(ProductRepository.self) { _ in
             return ProductRepositoryImplementation()

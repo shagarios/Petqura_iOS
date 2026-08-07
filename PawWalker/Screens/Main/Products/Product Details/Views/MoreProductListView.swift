@@ -11,7 +11,7 @@ struct MoreProductListView: View {
     @ObservedObject var viewModel : ProductDetailsViewModel
     var body: some View {
         VStack{
-         headerView
+            headerView
             Divider()
             colomnView
             listView
@@ -25,16 +25,6 @@ struct MoreProductListView: View {
                 }
             ,alignment: .topTrailing
         )
-        .alert(TextResource.changeCartAlert("",viewModel.selectedMoreProduct?.productStore ?? ""),
-               isPresented: $viewModel.showAlert) {
-            Button(TextResource.cancel) {
-                viewModel.showAlert = false
-            }
-            Button(TextResource.update) {
-                
-            }
-        }
-
     }
     
     private var headerView : some View {
@@ -45,8 +35,10 @@ struct MoreProductListView: View {
     private var colomnView : some View {
         HStack{
             productName(name: TextResource.seller)
+                .frame(width: 120,alignment: .leading)
             Spacer()
             productName(name: TextResource.distance)
+                .frame(width: 120,alignment: .leading)
             Spacer()
             productName(name: TextResource.price)
             
@@ -63,10 +55,13 @@ struct MoreProductListView: View {
         ScrollView{
             LazyVStack{
                 ForEach(viewModel.moreProductList,id: \.variantID) {product in
-                   MoreProductView(product: product)
+                    MoreProductView(product: product)
                         .onTapGestureForced {
                             viewModel.selectedMoreProduct = product
-                            viewModel.showAlert = true
+                            viewModel.showMoreView = false
+                            Task {
+                                await viewModel.fetchProductDetails(productId: product.productId ?? "")
+                            }
                         }
                 }
             }
@@ -79,13 +74,12 @@ struct MoreProductView : View {
     var body: some View {
         HStack(spacing: 0){
             Text(product.productStore ?? "")
-                .frame(width: 120)
+                .frame(width: 120,alignment: .leading)
             Spacer()
             Text(product.distanceKM ?? "")
-                .frame(width: 120)
+                .frame(width: 120,alignment: .leading)
             Spacer()
-            Text(String(product.price ?? 0))
-               
+            Text("₹\(product.price ?? 0)")
         }
         .font(FontConstants.primaryRegularTitle12)
     }

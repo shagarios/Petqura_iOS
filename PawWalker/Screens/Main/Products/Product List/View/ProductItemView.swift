@@ -160,7 +160,9 @@ struct ProductItemView : View {
             
         } label: {
                 Text(TextResource.addToCart)
-                    .primaryButtonStyle(height: 33,font: FontConstants.primaryMediumTitle12,fullWidth: true,cornerRadius: 15)
+                    .primaryButtonStyle(height: 33,
+                                        font: FontConstants.primaryMediumTitle12,
+                                        fullWidth: true,cornerRadius: 15)
            
         }
     }
@@ -170,6 +172,7 @@ struct ProductItemView : View {
             QuantityView(quantity: selectedVaiant?.cartQuantity ?? 0, buttonPressAction: {action in
                 addToCartCallBack(product.productID,self.selectedVaiant?.productVariantID ?? TextResource.empty, action)
             })
+            .frame(height: 33)
         }
         else {
             addToCartButton
@@ -210,31 +213,37 @@ enum FavoriteActions : String {
 struct QuantityView :  View {
     var quantity : Int
     var buttonPressAction : (CartAction) -> ()
+    var isFullScreen: Bool = false
     var body : some View {
         HStack() {
             Button(action: {
                 buttonPressAction(.less)
             }, label: {
-                Image(ImageResource.minusIcon)
+                Image(ImageResource.cartMinus)
+                    .resizable()
+                    .frame(width: isFullScreen ? 35 : 28,height:isFullScreen ? 35 : 28)
             })
             Text(quantity.stringValue())
-                .font(FontConstants.primaryMediumTitle11)
+                .font(isFullScreen ? FontConstants.primaryMediumTitle16 : FontConstants.primaryMediumTitle11)
                 .makeBackgroundView(color: ColorContants.inAciveGray,horizontalPadding: 10,
                                     verticalPadding: 2,radius: 5)
-                .padding(.leading,15)
+           
+                .padding(.leading,isFullScreen ? 25 : 15)
             Button(action: {
                 buttonPressAction(.add)
             }, label: {
-                Image(ImageResource.plusIcon)
+                Image(ImageResource.cartPlus)
+                    .resizable()
+                    .frame(width: isFullScreen ? 35 : 28,height:isFullScreen ? 35 : 28)
             })
-            .padding(.leading,15)
+            .padding(.leading,isFullScreen ? 25 : 15)
         }
         .frame(maxWidth: .infinity)
-        .background(
-            RoundedRectangle(cornerRadius: 15)
-                .stroke(style: StrokeStyle(lineWidth: 1))
-                .foregroundStyle(Color.primaryButton)
-                .frame(height: 30)
-        )
+//        .background(
+//            RoundedRectangle(cornerRadius: isFullScreen ? 20 : 15)
+//                .stroke(style: StrokeStyle(lineWidth: 1))
+//                .foregroundStyle(Color.lightGray)
+//                .frame(height: isFullScreen ? 45 : 30)
+//        )
     }
 }
