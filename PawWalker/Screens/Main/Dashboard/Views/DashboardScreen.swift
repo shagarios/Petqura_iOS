@@ -28,16 +28,16 @@ struct DashboardScreen: View {
         .task {
             await appCoordinator.fetchBasicInfo()
         }
-        .fullScreenCover(isPresented: $viewModel.navigateToCart) {
-            CartDeatilsScreen {
-                viewModel.navigateToCart = false
-                viewModel.selection = .store
-            } payementCompletion: {
-                viewModel.navigateToCart = false
-                viewModel.selection = .account
-                viewModel.navigateToMyorder = true
-            }
-        }
+//        .fullScreenCover(isPresented: $viewModel.navigateToCart) {
+//            CartDeatilsScreen {
+//                viewModel.navigateToCart = false
+//                viewModel.selection = .store
+//            } payementCompletion: {
+//                viewModel.navigateToCart = false
+//                viewModel.selection = .account
+//                viewModel.navigateToMyorder = true
+//            }
+//        }
     }
 
     private var tabView : some View {

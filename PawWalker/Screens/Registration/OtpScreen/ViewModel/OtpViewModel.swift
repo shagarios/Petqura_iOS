@@ -74,6 +74,7 @@ class OtpViewModel : ObservableObject {
                         self.saveUserDetailsToLocalStorage(result: result)
                         self.guestSessionRepository.deleteGuestId()
                         EventHandler.cartCountSubject.send(0)
+                        UserSessionManager.shared.productIdententiyArray.removeAll()
                         if  let location = getLocationData() {
                             saveLocationToServer(location: location) {
                                 self.coordinator?.popToRoot()

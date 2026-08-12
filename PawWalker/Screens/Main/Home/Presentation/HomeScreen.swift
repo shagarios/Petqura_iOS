@@ -90,7 +90,7 @@ struct HomeScreen: View {
 //        .navigationDestination(isPresented: $appCoordinator.navigateToCart) {
 //            CartDeatilsScreen
 //        }
-        .fullScreenCover(isPresented: $appCoordinator.navigateToCart) {
+        .navigationDestination(isPresented: $appCoordinator.navigateToCart) {
             CartDeatilsScreen(browseCompletion: {}, payementCompletion: {})
         }
         .padding(.horizontal,5)

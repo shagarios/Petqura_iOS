@@ -10,6 +10,7 @@ import SwiftUI
 struct CartDeatilsScreen: View {
     @StateObject var viewModel = CartDetailsViewModel()
     @Environment(\.presentationMode) var mode: Binding<PresentationMode>
+    @EnvironmentObject var appCoodinator: AppCoordinator
     var browseCompletion : () -> ()
     var payementCompletion : () -> ()
     var body: some View {
@@ -31,9 +32,7 @@ struct CartDeatilsScreen: View {
         .topBarView(titleView: ViewUtils.shared.titleView(title: TextResource.cart),
                     leftButtons: ViewUtils.shared.backButtonView {
             mode.wrappedValue.dismiss()
-        },rightButtons: ViewUtils.shared.cartButtonView(count: viewModel.cartCount, action: {
-            
-        }))
+        })
         .task {
             await viewModel.fetchCart()
             viewModel.fetchSimilarProducts()
@@ -60,6 +59,22 @@ struct CartDeatilsScreen: View {
                 productDetailUseCase: ProductDetailUseCase(repository: ProductDetailRepositoryImplentation())))
             }
         })
+        .alert("\(TextResource.loginRequiredTitle)!",
+               isPresented: $viewModel.loginRequiredAlert, actions: {
+            Button(TextResource.cancel) {
+                viewModel.loginRequiredAlert = false
+            }
+            Button(TextResource.login) {
+                self.mode.wrappedValue.dismiss()
+                appCoodinator.selectedAccountPage = .register
+                appCoodinator.selectedTab = .account
+            }
+        },message: {
+            Text(TextResource.loginRquiredMessageForProduct)
+        })
+        .toolbar(.hidden, for: .tabBar)
+        
+
         
     }
     private var cartDataView : some View {

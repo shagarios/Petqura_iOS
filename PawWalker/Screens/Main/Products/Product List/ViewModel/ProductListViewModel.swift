@@ -39,6 +39,7 @@ class ProductListViewModel : ObservableObject {
     @Published var alertMessage : String = ""
     @Published var selectedProductIdentiy : ProductIdentity?
     @Published var selectedProductVariant : Variant?
+    @Published var showCartPage : Bool = false
      var cartDetailUseCase : CartDetailsUsecase?
     init(cartDetailUseCase : CartDetailsUsecase? = nil) {
         setupSearchPublisher()

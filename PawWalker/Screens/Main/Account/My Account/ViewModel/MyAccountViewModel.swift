@@ -28,9 +28,12 @@ class MyAccountViewModel : ObservableObject {
     @Published var showMapScreen: Bool = false
     @Published var showLoginRequiredAlert: Bool = false
     @Published var showAlertMakePrimary : Bool = false
+    @Published var showCart : Bool = false
+    var cartDetailUseCase : CartDetailsUsecase
     var cancellable = Set<AnyCancellable>()
-    init() {
+    init(cartDetailUseCase : CartDetailsUsecase) {
        // getAppointmentData()
+        self.cartDetailUseCase = cartDetailUseCase
     }
     func getAddressList() {
         if Connectivity.isConnectedToInternet {
@@ -165,6 +168,8 @@ class MyAccountViewModel : ObservableObject {
         }
         UserSessionManager.shared.user = nil
         UserSessionManager.shared.accessToken = ""
+        UserSessionManager.shared.productIdententiyArray.removeAll()
+        EventHandler.cartCountSubject.send(0)
         self.appoinmentCount = 0
         self.myAppointmentData = nil
         self.addressCount = 0
@@ -185,6 +190,18 @@ class MyAccountViewModel : ObservableObject {
             let mapShowed  = UserDefaults.standard.bool(forKey: UserDefaultConstants.mapShowed.rawValue)
             if mapShowed == false {
                 self.showMapScreen = true
+            }
+        }
+    }
+    func fetchCartDetails() async {
+        if UserSessionManager.shared.productIdententiyArray.isEmpty {
+            do {
+                let cartResult = try await cartDetailUseCase.execute()
+                let count = cartResult.cart?.count ?? 0
+                EventHandler.cartCountSubject.send(count)
+            }
+            catch {
+                
             }
         }
     }

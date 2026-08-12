@@ -6,6 +6,9 @@
 //
 
 struct TextResource {
+    static let loginRequiredTitle = "Login Required"
+    static let loginRquiredMessageForProduct = "Please log in to continue to checkout and complete your payment"
+    static let login = "Login"
     static let welcomeMessage = "Welcome to PetQura"
     static let mobileNumber = "Mobile Number"
     static let enterMobileNumber = "Enter your mobile number"
@@ -166,6 +169,7 @@ struct TextResource {
     static let distance = "Distance"
     static var  changeCartAlert : (_ sellerName: String,_ newSellerName: String) -> String =  {sellerName, newSellerName in
         return String(format: "Your cart contains products from \(sellerName). Do you want to discard the selection and add products from \(newSellerName)?", sellerName,newSellerName)
+        
         
     }
 }

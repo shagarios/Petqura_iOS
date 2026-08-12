@@ -113,7 +113,10 @@ extension CartDeatilsScreen {
             textColor: Color.white,
             iconName: ImageName.slideArrowIcon,
             didReachEndAction: { view  in
-                if viewModel.addressList.isNotEmpty {
+                if UserSessionManager.shared.accessToken.isEmpty {
+                    viewModel.loginRequiredAlert = true
+                }
+                else if viewModel.addressList.isNotEmpty {
                     viewModel.productPayment()
                 }
                 else {

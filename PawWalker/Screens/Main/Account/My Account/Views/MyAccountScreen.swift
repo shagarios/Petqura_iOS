@@ -8,7 +8,9 @@
 import SwiftUI
 
 struct MyAccountScreen: View {
-    @StateObject var viewModel = MyAccountViewModel()
+    @StateObject var viewModel = MyAccountViewModel(
+        cartDetailUseCase: CartDetailsUsecase(repository: CartRepositroyImplementation(),
+                                              guestReposiotry: GuestSessionRepositoryImplementation(userSessionRespository: UserSessionRepostoryImplentation())))
     @EnvironmentObject var appCoordinator: AppCoordinator
     weak var coordinator : AccountCoordinator?
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
@@ -102,6 +104,7 @@ struct MyAccountScreen: View {
             viewModel.getAddressList()
             viewModel.getAppointments()
             viewModel.fetchMyordersList()
+            await viewModel.fetchCartDetails()
         }
         .onChange(of: appCoordinator.navigateToMyOrders) { newValue in
             if newValue {
@@ -117,7 +120,7 @@ struct MyAccountScreen: View {
         .topBarView(titleView: coordinator?.appCoordinator?.titleView(),
                     rightButtons: ViewUtils.shared.cartButtonView(count: coordinator?.appCoordinator?.cartItemCount ?? 0,
                                                                   action: {
-            coordinator?.appCoordinator?.navigateToCart = true
+            viewModel.showCart = true
         }))
         .onAppear {
             DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: {
@@ -136,6 +139,9 @@ struct MyAccountScreen: View {
         },message: {
             Text(TextResource.loginAlertMessage)
         })
+        .navigationDestination(isPresented: $viewModel.showCart) {
+            CartDeatilsScreen(browseCompletion: {}, payementCompletion: {})
+        }
         
         
     }

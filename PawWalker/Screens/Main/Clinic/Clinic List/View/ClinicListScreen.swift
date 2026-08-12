@@ -67,12 +67,7 @@ struct ClinicListScreen: View {
 //            })
                 .frame(height: UIScreen.screenHeight * 0.70)
         }
-        .topBarView(titleView: viewModel.coordinator?.appCoordinator?.titleView(),
-                    rightButtons:
-                ViewUtils.shared.cartButtonView(count: viewModel.coordinator?.appCoordinator?.cartItemCount ?? 0,
-                            action: {
-            viewModel.coordinator?.appCoordinator?.navigateToCart = true
-        }))
+        .topBarView(titleView: viewModel.coordinator?.appCoordinator?.titleView())
         .alert(TextResource.autheticationRequired,
                isPresented: $viewModel.showLoginRequiredAlert, actions: {
             Button(TextResource.signIn) {

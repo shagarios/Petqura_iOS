@@ -68,7 +68,7 @@ struct ProductListScreen: View {
         }
         .topBarView(titleView: appCoordinator.titleView(),
                     rightButtons: ViewUtils.shared.cartButtonView(count: appCoordinator.cartItemCount, action: {
-            appCoordinator.navigateToCart = true
+            viewModel.showCartPage = true
                       }))
         .alert(viewModel.alertMessage, isPresented: $viewModel.showAlert) {
             Button(TextResource.cancel) {
@@ -84,6 +84,9 @@ struct ProductListScreen: View {
                     viewModel.showAlert = false
                 }
             }
+        }
+        .navigationDestination(isPresented: $viewModel.showCartPage) {
+            CartDeatilsScreen(browseCompletion: {}, payementCompletion: {})
         }
     }
     

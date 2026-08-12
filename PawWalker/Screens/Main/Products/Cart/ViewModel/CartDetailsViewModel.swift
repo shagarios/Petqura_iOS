@@ -26,6 +26,7 @@ class CartDetailsViewModel : ProductListViewModel {
     @Published var navigateToMyorders : Bool = false
     @Published var showFullBill : Bool = false
     @Published var isUseCoins : Bool = false
+    @Published var loginRequiredAlert : Bool = false
     @Published var addressList : [Address] = [] {
         didSet {
             if addressList.count > 0 {

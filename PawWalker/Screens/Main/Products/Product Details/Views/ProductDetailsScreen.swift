@@ -10,6 +10,7 @@ import SwiftUI
 struct ProductDetailsScreen: View {
     @StateObject var viewModel : ProductDetailsViewModel
     @Environment(\.presentationMode) var mode: Binding<PresentationMode>
+    @EnvironmentObject var appCoordinator: AppCoordinator
     //  var cancelCallBack : (String) -> ()
     var body: some View {
         VStack {
@@ -49,7 +50,9 @@ struct ProductDetailsScreen: View {
                     leftButtons: ViewUtils.shared.backButtonView {
             self.mode.wrappedValue.dismiss()
             //cancelCallBack(categoryId)
-        })
+        },rightButtons: ViewUtils.shared.cartButtonView(count: appCoordinator.cartItemCount, action: {
+            viewModel.showCartPage = true
+        }))
         .navigationDestination(isPresented: $viewModel.showReviewPage, destination: {
             ProductReviewScreen()
                 .environmentObject(viewModel)

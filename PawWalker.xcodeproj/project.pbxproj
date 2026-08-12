@@ -2836,7 +2836,7 @@
 				CODE_SIGN_ENTITLEMENTS = PawWalker/PawWalker.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_ASSET_PATHS = "\"PawWalker/Preview Content\"";
 				DEVELOPMENT_TEAM = V69Z2XQ5GM;
 				ENABLE_PREVIEWS = YES;
@@ -2884,7 +2884,7 @@
 				CODE_SIGN_ENTITLEMENTS = PawWalker/PawWalker.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_ASSET_PATHS = "\"PawWalker/Preview Content\"";
 				DEVELOPMENT_TEAM = V69Z2XQ5GM;
 				ENABLE_PREVIEWS = YES;
@@ -3088,7 +3088,7 @@
 				CODE_SIGN_ENTITLEMENTS = PawWalker/PawWalker.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_ASSET_PATHS = "\"PawWalker/Preview Content\"";
 				DEVELOPMENT_TEAM = V69Z2XQ5GM;
 				ENABLE_PREVIEWS = YES;
@@ -3238,7 +3238,7 @@
 				CODE_SIGN_ENTITLEMENTS = PawWalker/PawWalker.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_ASSET_PATHS = "\"PawWalker/Preview Content\"";
 				DEVELOPMENT_TEAM = V69Z2XQ5GM;
 				ENABLE_PREVIEWS = YES;
