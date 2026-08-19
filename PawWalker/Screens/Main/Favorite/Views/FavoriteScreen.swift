@@ -40,8 +40,13 @@ struct FavoriteScreen : View {
                     rightButtons:
                 ViewUtils.shared.cartButtonView(count: coordinator?.appCoordinator?.cartItemCount ?? 0,
                             action: {
-            coordinator?.appCoordinator?.navigateToCart = true
+            viewModel.showCartPage = true
         }))
+        .navigationDestination(isPresented: $viewModel.showCartPage) {
+            CartDeatilsScreen(browseCompletion: {
+                viewModel.showCartPage = false
+            }, payementCompletion: {})
+        }
         
     }
     

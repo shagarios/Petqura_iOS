@@ -27,6 +27,7 @@ class CartDetailsViewModel : ProductListViewModel {
     @Published var showFullBill : Bool = false
     @Published var isUseCoins : Bool = false
     @Published var loginRequiredAlert : Bool = false
+    var cartAdditionUseCase : CartAdditionUseCase
     @Published var addressList : [Address] = [] {
         didSet {
             if addressList.count > 0 {
@@ -60,7 +61,8 @@ class CartDetailsViewModel : ProductListViewModel {
         }
     }
     @Published var deliveryTipValue : Double = 0
-     init() {
+     init(cartAdditionUseCase : CartAdditionUseCase) {
+         self.cartAdditionUseCase = cartAdditionUseCase
     super.init(cartDetailUseCase:
                 CartDetailsUsecase(repository:
                                     CartRepositroyImplementation(),
@@ -149,6 +151,36 @@ class CartDetailsViewModel : ProductListViewModel {
         }
         else {
             ToastCenter.shared.showToast(TextResource.noInternet,type: .error)
+        }
+    }
+    
+    func updateCartDetails(action : CartAction,cartId : String) async {
+        do {
+            self.isLoading = true
+            let response : AddToCartModel = try await cartAdditionUseCase.execute(action: action,
+                                                                                 productId: "",
+                                                                                 productVariantId: "",
+                                                                                 forceAddToCart: false,
+                                                                                 cartId: cartId)
+            self.isLoading = false
+            if let result = response.result {
+                self.cartDetails = result
+                guard let cart = result.cart else {return}
+                self.cartList = cart
+                ToastCenter.shared.showToast(response.message,type: .success)
+                self.cartCount = cart.count
+                EventHandler.cartCountSubject.send(self.cartCount)
+            }
+           
+           
+        }
+        catch let error as AppError {
+            self.isLoading = false
+            ToastCenter.shared.showToast(error.errorDescription ?? "Something went wrong",type: .error)
+        }
+        catch {
+            self.isLoading = false
+            ToastCenter.shared.showToast(error.localizedDescription,type: .error)
         }
     }
     

@@ -260,7 +260,8 @@ class ProductDetailsViewModel  : ObservableObject {
                 action: action,
                 productId: productId,
                 productVariantId: productVariantId,
-                forceAddToCart: forceAddToCart
+                forceAddToCart: forceAddToCart,
+                cartId: ""
             )
             switch result {
             case .blocked(let message):

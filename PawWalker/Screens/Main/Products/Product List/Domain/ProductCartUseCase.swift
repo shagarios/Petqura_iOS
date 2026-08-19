@@ -19,9 +19,10 @@ final class ProductCartUseCase: ProductCartUseCaseProtocol {
 
     func execute(
         action: CartAction,
-        productId: String,
+        productId: String = "",
         productVariantId: String,
-        forceAddToCart: Bool
+        forceAddToCart: Bool,
+        cartId: String = ""
     ) async throws -> CartUpdateResult {
         if UserSessionManager.shared.accessToken.isEmpty {
             self.guestId = UserSessionManager.shared.guestId
@@ -29,19 +30,21 @@ final class ProductCartUseCase: ProductCartUseCaseProtocol {
         else if UserSessionManager.shared.guestId.isEmpty {
             self.guestId = self.guestSessionRepository.fetchGuestId()
         }
-        
         let response: AddToCartModel = try await repository.updateProductCart(
             action: action.rawValue,
             productId: productId,
             productVariantId: productVariantId,
             forceAddToCart: forceAddToCart,
-            guestId: guestId
+            guestId: guestId,
+            cartId : cartId
         )
-
-        if let guestID = response.result?.guestId, self.guestId.isEmpty {
+        guard let result = response.result else {
+            throw AppError.notFound
+        }
+        if let guestID = result.guestId, self.guestId.isEmpty {
             self.guestSessionRepository.updateGuestId(guestId: guestID)
         }
-        if response.result?.canAddToCart == false {
+        if result.canAddToCart == false {
             return .blocked(message: response.message)
         }
     
@@ -89,7 +92,8 @@ protocol ProductCartUseCaseProtocol {
         action: CartAction,
         productId: String,
         productVariantId: String,
-        forceAddToCart: Bool
+        forceAddToCart: Bool,
+        cartId : String
     ) async throws -> CartUpdateResult
 }
 

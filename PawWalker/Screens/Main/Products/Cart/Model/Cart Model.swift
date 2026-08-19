@@ -31,7 +31,6 @@ struct CartResult : Codable {
         case netAmount = "net_price"
         case canAddToCart
         case guestId = "guest_id"
-        
     }
 }
 

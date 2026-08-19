@@ -13,12 +13,7 @@ class RegisterMobileUseCase {
         self.registerRepostory = registerRepostory
     }
     func execute(user : UserRegisterDetails) async throws -> MobileRegistrationModel {
-        do {
             let response : MobileRegistrationModel  = try await registerRepostory.registerMobileNumber(user: user)
             return response
-        }
-        catch let error as RequestError {
-           throw AppError(requestError: error)
-        }
     }
 }

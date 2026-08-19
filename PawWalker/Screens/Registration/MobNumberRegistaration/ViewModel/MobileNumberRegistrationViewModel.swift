@@ -48,7 +48,7 @@ class MobileNumberRegistrationViewModel : ObservableObject,ErrorHandable {
         }
         catch let error as AppError {
             self.isLoading = false
-            showError(error.errorDescription)
+            showError(error.errorDescription ?? "Something went wrong")
         }
         catch {
             self.isLoading = false

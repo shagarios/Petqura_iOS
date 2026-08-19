@@ -54,6 +54,8 @@
 		D32A676B3025835D0056CBF6 /* GuestSessionRepositoryImplementation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D32A676A3025834C0056CBF6 /* GuestSessionRepositoryImplementation.swift */; };
 		D32A676F302586450056CBF6 /* UserSessionRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = D32A676E302586310056CBF6 /* UserSessionRepository.swift */; };
 		D32A6771302586580056CBF6 /* UserSessionRepostoryImplentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D32A67703025864B0056CBF6 /* UserSessionRepostoryImplentation.swift */; };
+		D32A677630316C0E0056CBF6 /* ShimmerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D32A677530316C040056CBF6 /* ShimmerView.swift */; };
+		D32A6778303475370056CBF6 /* CartAdditionUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = D32A67773034752F0056CBF6 /* CartAdditionUseCase.swift */; };
 		D340C2892D2D6D78004902E6 /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D340C2882D2D6D72004902E6 /* CoreDataManager.swift */; };
 		D340C28B2D2D774B004902E6 /* CoreDataServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = D340C28A2D2D772D004902E6 /* CoreDataServiceProtocol.swift */; };
 		D3427CF52EBFDA5500154238 /* ClinicCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3427CF22EBFDA5500154238 /* ClinicCoordinator.swift */; };
@@ -369,6 +371,8 @@
 		D32A676A3025834C0056CBF6 /* GuestSessionRepositoryImplementation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuestSessionRepositoryImplementation.swift; sourceTree = "<group>"; };
 		D32A676E302586310056CBF6 /* UserSessionRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSessionRepository.swift; sourceTree = "<group>"; };
 		D32A67703025864B0056CBF6 /* UserSessionRepostoryImplentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSessionRepostoryImplentation.swift; sourceTree = "<group>"; };
+		D32A677530316C040056CBF6 /* ShimmerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShimmerView.swift; sourceTree = "<group>"; };
+		D32A67773034752F0056CBF6 /* CartAdditionUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartAdditionUseCase.swift; sourceTree = "<group>"; };
 		D340C2882D2D6D72004902E6 /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
 		D340C28A2D2D772D004902E6 /* CoreDataServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataServiceProtocol.swift; sourceTree = "<group>"; };
 		D3427CF22EBFDA5500154238 /* ClinicCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClinicCoordinator.swift; sourceTree = "<group>"; };
@@ -885,6 +889,7 @@
 		D32A6753302489FD0056CBF6 /* Domain */ = {
 			isa = PBXGroup;
 			children = (
+				D32A67773034752F0056CBF6 /* CartAdditionUseCase.swift */,
 				D32A675730248A1D0056CBF6 /* CartDetailsUsecase.swift */,
 				D32A675530248A0E0056CBF6 /* CartRepoistory.swift */,
 			);
@@ -1730,6 +1735,7 @@
 		D3E2C48F2D3B49CE00F64F7D /* View */ = {
 			isa = PBXGroup;
 			children = (
+				D32A677530316C040056CBF6 /* ShimmerView.swift */,
 				D3A7EC812DEA2C8800621003 /* ProductList+Views.swift */,
 				D3C0E1EB2DC9F84C00945F88 /* ProductItemView.swift */,
 				D3E2C4902D3B49F400F64F7D /* ProductListScreen.swift */,
@@ -2471,6 +2477,7 @@
 				D3A232C02E450FA8001FCDA7 /* ReviewScreen.swift in Sources */,
 				59A065392F51B4E3009FC337 /* FilterScreen.swift in Sources */,
 				D36B1A452CD13740005EA763 /* BundleExtension.swift in Sources */,
+				D32A677630316C0E0056CBF6 /* ShimmerView.swift in Sources */,
 				D3C88B982FFFC92B00D2FAE9 /* SubmitReviewRequest.swift in Sources */,
 				D3C0E20B2DCFA39C00945F88 /* ProductDetail+SimilarProduct.swift in Sources */,
 				D3427D0C2EC2587300154238 /* FavoriteCoordinator.swift in Sources */,
@@ -2663,6 +2670,7 @@
 				40593A472C91F74200C05574 /* Router.swift in Sources */,
 				D3C88BA12FFFD3CD00D2FAE9 /* MobileRegRepository.swift in Sources */,
 				D3E7F3302D5A6975001A4149 /* CartScreen.swift in Sources */,
+				D32A6778303475370056CBF6 /* CartAdditionUseCase.swift in Sources */,
 				D3E856832CE4EFBB0017EED7 /* LocationManager.swift in Sources */,
 				D35421A82D64E04D00EECA56 /* DashboardModel.swift in Sources */,
 				D3F533A22D05E190002122AF /* DashboardScreen.swift in Sources */,
@@ -2836,7 +2844,7 @@
 				CODE_SIGN_ENTITLEMENTS = PawWalker/PawWalker.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_ASSET_PATHS = "\"PawWalker/Preview Content\"";
 				DEVELOPMENT_TEAM = V69Z2XQ5GM;
 				ENABLE_PREVIEWS = YES;
@@ -2884,7 +2892,7 @@
 				CODE_SIGN_ENTITLEMENTS = PawWalker/PawWalker.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_ASSET_PATHS = "\"PawWalker/Preview Content\"";
 				DEVELOPMENT_TEAM = V69Z2XQ5GM;
 				ENABLE_PREVIEWS = YES;
@@ -3088,7 +3096,7 @@
 				CODE_SIGN_ENTITLEMENTS = PawWalker/PawWalker.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_ASSET_PATHS = "\"PawWalker/Preview Content\"";
 				DEVELOPMENT_TEAM = V69Z2XQ5GM;
 				ENABLE_PREVIEWS = YES;
@@ -3238,7 +3246,7 @@
 				CODE_SIGN_ENTITLEMENTS = PawWalker/PawWalker.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_ASSET_PATHS = "\"PawWalker/Preview Content\"";
 				DEVELOPMENT_TEAM = V69Z2XQ5GM;
 				ENABLE_PREVIEWS = YES;

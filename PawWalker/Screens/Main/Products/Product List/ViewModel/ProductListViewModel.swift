@@ -61,9 +61,6 @@ class ProductListViewModel : ObservableObject {
                 if self.searchText.isNotEmpty {
                     self.searchProductList()
                 }
-                else {
-                    UIApplication.shared.endEditing()
-                }
             }
             .store(in: &cancellables)
     }
@@ -253,7 +250,8 @@ class ProductListViewModel : ObservableObject {
             action: action,
             productId: productId,
             productVariantId: productVariantId,
-            forceAddToCart: forceAddToCart
+            forceAddToCart: forceAddToCart,
+            cartId: ""
         )
 
         switch result {

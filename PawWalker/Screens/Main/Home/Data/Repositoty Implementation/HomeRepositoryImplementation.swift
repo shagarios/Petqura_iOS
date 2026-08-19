@@ -19,9 +19,17 @@ class HomeRepositoryImplementation : HomeRepository {
         do {
             return try await serviceLayer.makeRequest(endpoint: .home)
         }
-        catch let error as RequestError {
-             throw AppError(requestError: error)
-        }
+        catch let error as NetworkError {
+             if let backendError = error.backendError  {
+                 throw AppError.unknown(backendError.message)
+             }
+             else if let afError = error.initialError {
+                 throw AppError(afError: afError)
+             }
+             else {
+                 throw AppError.unknown(error.localizedDescription)
+             }
+         }
     }
     func fetchBlog() async throws -> BlogListModel {
         guard internet.isConnectedToInternet else {
@@ -30,9 +38,17 @@ class HomeRepositoryImplementation : HomeRepository {
         do {
             return try await serviceLayer.makeRequest(endpoint: .blogList)
         }
-        catch let error as RequestError {
-            throw AppError(requestError: error)
-        }
+        catch let error as NetworkError {
+             if let backendError = error.backendError  {
+                 throw AppError.unknown(backendError.message)
+             }
+             else if let afError = error.initialError  {
+                 throw AppError(afError: afError)
+             }
+             else {
+                 throw AppError.unknown(error.localizedDescription)
+             }
+         }
     }
     func fetchUser()  {
             let result:Result<[User],Error> = coreDataService.fetch(tableName: TableNames.user,

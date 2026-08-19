@@ -10,4 +10,5 @@ import Combine
 class EventHandler {
     static var cartCountSubject = PassthroughSubject<Int,Never>()
     static var productIdentitySubject = PassthroughSubject<ProductIdentity,Never>()
+    static var productListNavigationSubject = PassthroughSubject<Bool,Never>()
 }

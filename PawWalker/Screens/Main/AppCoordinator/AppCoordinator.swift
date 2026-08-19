@@ -29,7 +29,9 @@ class AppCoordinator: ObservableObject {
         //self.flow = UserSessionManager.shared.isMapCompleted ? .dashboard : .auth
         self.flow = .dashboard
         handleCartCountUpdate()
+        handleBrowseProduct()
     }
+
     func handleCartCountUpdate() {
         EventHandler.cartCountSubject.sink { completion in
             switch completion {
@@ -37,11 +39,27 @@ class AppCoordinator: ObservableObject {
                 break
             }
         } receiveValue: { count in
-            self.cartItemCount = count
-            UserSessionManager.shared.cartItemCount = count
+            DispatchQueue.main.async {
+                self.cartItemCount = count
+                UserSessionManager.shared.cartItemCount = count
+            }
         }
         .store(in: &cancellable)
     }
+    func handleBrowseProduct() {
+        EventHandler.productListNavigationSubject.sink { completion in
+            switch completion {
+            case .finished:
+                break
+            }
+        } receiveValue: { isNavigate in
+            if isNavigate {
+                self.selectedTab = .store
+            }
+        }
+        .store(in: &cancellable)
+    }
+    
     func fetchBasicInfo() async {
        await fetchCartCount()
     }

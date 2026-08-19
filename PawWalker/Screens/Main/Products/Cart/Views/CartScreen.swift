@@ -8,7 +8,9 @@
 import SwiftUI
 
 struct CartDeatilsScreen: View {
-    @StateObject var viewModel = CartDetailsViewModel()
+    @StateObject var viewModel = CartDetailsViewModel(cartAdditionUseCase:
+                                                        CartAdditionUseCase(repository:
+                                                        ProductRepositoryImplementation(), guestSessionRepository: GuestSessionRepositoryImplementation(userSessionRespository: UserSessionRepostoryImplentation())))
     @Environment(\.presentationMode) var mode: Binding<PresentationMode>
     @EnvironmentObject var appCoodinator: AppCoordinator
     var browseCompletion : () -> ()
@@ -99,7 +101,9 @@ struct CartDeatilsScreen: View {
                 .font(FontConstants.primaryMediumTitle16)
                 .padding(.top,20)
             Button(action: {
-                browseCompletion()
+             //   browseCompletion()
+                mode.wrappedValue.dismiss()
+                EventHandler.productListNavigationSubject.send(true)
             }, label: {
                 Text(TextResource.browseProduct)
                     .primaryButtonStyle(fullWidth : true)
@@ -140,9 +144,15 @@ struct CartDeatilsScreen: View {
     func buttonActions(action : CartAction,cartId : String) {
         switch action {
         case .add:
-            viewModel.updateCartItem(action: .add, cartId: cartId)
+           // viewModel.updateCartItem(action: .add, cartId: cartId)
+            Task{
+                await viewModel.updateCartDetails(action: .add, cartId: cartId)
+            }
         case .less:
-            viewModel.updateCartItem(action: .less, cartId: cartId)
+          //  viewModel.updateCartItem(action: .less, cartId: cartId)
+            Task {
+               await viewModel.updateCartDetails(action: .less, cartId: cartId)
+            }
         }
     }
     

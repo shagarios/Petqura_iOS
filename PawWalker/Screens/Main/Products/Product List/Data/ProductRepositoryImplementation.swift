@@ -11,11 +11,12 @@ class ProductRepositoryImplementation : ProductRepository {
     @Injected var serviceLayer : ServiceLayerProtocol
     @Injected var internet : NetworkMonitor
     func updateProductCart(action: String,productId : String,
-                           productVariantId : String,forceAddToCart: Bool,guestId: String) async throws -> AddToCartModel {
+                           productVariantId : String,forceAddToCart: Bool,guestId: String,cartId : String) async throws -> AddToCartModel {
         var param : [String : Any] = [ApiParameters.productId : productId,
                                       ApiParameters.productVariantId: productVariantId,
                                       ApiParameters.action : action,
                                       ApiParameters.forceAddToCart : forceAddToCart,
+                                      ApiParameters.cartId : cartId
                 
         ]
         if guestId.isNotEmpty {
@@ -27,10 +28,18 @@ class ProductRepositoryImplementation : ProductRepository {
         do {
             return try await serviceLayer.makeRequest(endpoint: .updateCart, parameters: param)
         }
-        catch let error as RequestError {
-             throw AppError(requestError: error)
+        catch let error as NetworkError {
+            if let error = error.backendError {
+                throw AppError.unknown(error.message)
+            }
+            else if let networkError = error.initialError  {
+                throw AppError(afError: networkError)
+            }
+            else {
+                throw AppError.unknown(error.localizedDescription)
+            }
+           
         }
-        
     }
     
 }

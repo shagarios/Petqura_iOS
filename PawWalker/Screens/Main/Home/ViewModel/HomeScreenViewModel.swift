@@ -60,7 +60,7 @@ class HomeScreenViewModel : ObservableObject,ErrorHandable {
             }
         }
         catch let error as AppError {
-            showError(error.errorDescription)
+            showError(error.errorDescription ?? "Something went wrong")
         }
         catch {
             showError(TextResource.apiError)
@@ -76,7 +76,7 @@ class HomeScreenViewModel : ObservableObject,ErrorHandable {
             self.blogList = try await getBlogUseCase.execute()
         }
         catch let error as AppError {
-            showError(error.errorDescription)
+            showError(error.errorDescription ?? "Something went wrong")
         }
         catch {
             showError(TextResource.apiError)

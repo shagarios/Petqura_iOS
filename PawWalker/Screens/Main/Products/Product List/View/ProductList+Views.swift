@@ -31,54 +31,55 @@ extension ProductListScreen {
     }
     
    var productListView : some View {
-        ScrollView(showsIndicators: false) {
-            LazyVGrid(columns: colomns,spacing: 20) {
-                ForEach(viewModel.searchText.isEmpty ? viewModel.productList : viewModel.filteredProductList,id: \.productID) { product in
-                    ProductItemView(product: product,
-                                    productDetailCallBack: {product in
-                        self.viewModel.selectedProduct = product
-                        self.viewModel.navigateToProductDetail = true
-                    }, cartCallback: {},favoriteCallBack: { action, productId, variantId in
-                        if action == FavoriteActions.addFavorite {
-                            viewModel.addToFavorite(productId: productId,
-                                                    variantId: variantId) { status in
-                            }
-                        }
-                        else {
-                            viewModel.deleteProductFromFavorites(productId: productId,
-                                                                 variantId: variantId) { status in
-                            }
-                        }
-                    },addToCartCallBack: { productId, variantId,action  in
-                        Task{
-                            try await viewModel.updateProductCart(action: action,
-                                                              productId: productId,
-                                                                  productVariantId: variantId,
-                                                                forceAddToCart: false)
-                            
-                        }
-                    },isSimilarProduct: false)
-                    .onAppear{
-                        if viewModel.searchText.isEmpty {
-                            if viewModel.productList.last?.productID == product.productID {
-                                if viewModel.hasNext {
-                                    viewModel.page += 1
-                                    viewModel.fetchPoductList(categoryId: self.categoryId)
-                                }
-                            }
-                        }
-                        else {
-                            if viewModel.filteredProductList.last?.productID == product.productID {
-                                if viewModel.searchHasNext {
-                                    viewModel.searchPage += 1
-                                    viewModel.searchProductList()
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+       ScrollView(showsIndicators: false) {
+           LazyVGrid(columns: colomns,spacing: 20) {
+               ForEach(viewModel.searchText.isEmpty ?
+                       viewModel.productList : viewModel.filteredProductList,id: \.productID) { product in
+                   ProductItemView(product: product,
+                                   productDetailCallBack: {product in
+                       self.viewModel.selectedProduct = product
+                       self.viewModel.navigateToProductDetail = true
+                   }, cartCallback: {},favoriteCallBack: { action, productId, variantId in
+                       if action == FavoriteActions.addFavorite {
+                           viewModel.addToFavorite(productId: productId,
+                                                   variantId: variantId) { status in
+                           }
+                       }
+                       else {
+                           viewModel.deleteProductFromFavorites(productId: productId,
+                                                                variantId: variantId) { status in
+                           }
+                       }
+                   },addToCartCallBack: { productId, variantId,action  in
+                       Task{
+                           try await viewModel.updateProductCart(action: action,
+                                                                 productId: productId,
+                                                                 productVariantId: variantId,
+                                                                 forceAddToCart: false)
+                           
+                       }
+                   },isSimilarProduct: false)
+                   .onAppear{
+                       if viewModel.searchText.isEmpty {
+                           if viewModel.productList.last?.productID == product.productID {
+                               if viewModel.hasNext {
+                                   viewModel.page += 1
+                                   viewModel.fetchPoductList(categoryId: self.categoryId)
+                               }
+                           }
+                       }
+                       else {
+                           if viewModel.filteredProductList.last?.productID == product.productID {
+                               if viewModel.searchHasNext {
+                                   viewModel.searchPage += 1
+                                   viewModel.searchProductList()
+                               }
+                           }
+                       }
+                   }
+               }
+           }
+       }
         .safeAreaInset(edge: .bottom) {
             Color.clear
                 .frame(height: 70)

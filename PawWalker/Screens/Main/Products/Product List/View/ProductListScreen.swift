@@ -24,6 +24,9 @@ struct ProductListScreen: View {
                 if viewModel.shouldShowEmptyView {
                     emptyProductView
                 }
+                else if viewModel.isLoading {
+                    ProductListSkeletonView(columns: colomns)
+                }
                 else {
                     if viewModel.shouldShowEmptySearchView {
                         emptyProductViewForSearch
@@ -48,7 +51,7 @@ struct ProductListScreen: View {
         .task(priority: .background) {
             await viewModel.fetchCartDetails()
         }
-        .makeWithLoader(isLoading: $viewModel.isLoading)
+//        .makeWithLoader(isLoading: $viewModel.isLoading)
         .onChange(of: categoryId, perform: { newValue in
             viewModel.fetchPoductList(categoryId: self.categoryId)
         })
@@ -86,7 +89,9 @@ struct ProductListScreen: View {
             }
         }
         .navigationDestination(isPresented: $viewModel.showCartPage) {
-            CartDeatilsScreen(browseCompletion: {}, payementCompletion: {})
+            CartDeatilsScreen(browseCompletion: {
+                viewModel.showCartPage = false
+            }, payementCompletion: {})
         }
     }
     

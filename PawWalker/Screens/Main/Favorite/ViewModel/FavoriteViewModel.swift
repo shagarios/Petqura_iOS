@@ -31,6 +31,7 @@ class FavoriteViewModel : ClinicListViewModel {
     @Published var hasNextClinicSuggention : Bool = false
     @Published var suggetionsPage: Int = 1
     @Published var suggetionClinicList: [Clinic] = []
+    @Published var showCartPage : Bool = false
     func fetchProductFavorites() {
         if Connectivity.isConnectedToInternet {
            isLoading = true
@@ -39,9 +40,8 @@ class FavoriteViewModel : ClinicListViewModel {
                     switch completion {
                     case .finished:
                         break
-                    case .failure(let error):
+                    case .failure(_):
                         self?.isLoading = false
-                        ToastCenter.shared.showToast(error.backendError?.message ?? error.localizedDescription)
                     }
                 } receiveValue: { response in
                     self.isLoading = false
