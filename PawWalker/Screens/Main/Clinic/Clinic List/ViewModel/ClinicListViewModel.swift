@@ -73,7 +73,25 @@ class ClinicListViewModel : ObservableObject {
             }
             .store(in: &cancellables)
     }
-    
+    func makeClearAllTemporary() {
+        UserSessionManager.shared.selectedItems = selectedItems
+        UserSessionManager.shared.filersApiData = filersApiData
+        selectedItems.removeAll()
+        filersApiData.removeAll()
+        filters = filters.map { filter in
+            var updatedFilter = filter
+            updatedFilter.hasDot = false
+            return updatedFilter
+        }
+    }
+    func checkInitialData() {
+        if UserSessionManager.shared.selectedItems.isNotEmpty {
+            selectedItems = UserSessionManager.shared.selectedItems
+        }
+        if UserSessionManager.shared.filersApiData.isNotEmpty {
+            filersApiData = UserSessionManager.shared.filersApiData
+        }
+    }
     func fetchClinicList(serviceId: String) {
         let latitude = self.locationData?.latitude ?? ""
         let longitude = self.locationData?.longitude ?? ""

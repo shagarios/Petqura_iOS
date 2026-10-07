@@ -97,7 +97,13 @@ extension CartDeatilsScreen {
     }
     private var addressChangeButton : some View {
         Button(action: {
-            viewModel.navigateToAddressList = true
+            if UserSessionManager.shared.accessToken.isEmpty {
+                viewModel.loginRequiredAlert = true
+            }
+            else {
+                dismiss()
+                EventHandler.MyAddressListNavigationSubject.send()
+            }
         }, label: {
             Text(viewModel.addressList.isEmpty ? TextResource.addNewAddress : TextResource.change)
                 .font(FontConstants.primaryMediumTitle12)

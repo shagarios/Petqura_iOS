@@ -11,7 +11,10 @@ struct CartDeatilsScreen: View {
     @StateObject var viewModel = CartDetailsViewModel(cartAdditionUseCase:
                                                         CartAdditionUseCase(repository:
                                                         ProductRepositoryImplementation(), guestSessionRepository: GuestSessionRepositoryImplementation(userSessionRespository: UserSessionRepostoryImplentation())))
-    @Environment(\.presentationMode) var mode: Binding<PresentationMode>
+    
+    
+    
+    @Environment(\.dismiss) var dismiss
     @EnvironmentObject var appCoodinator: AppCoordinator
     var browseCompletion : () -> ()
     var payementCompletion : () -> ()
@@ -33,7 +36,7 @@ struct CartDeatilsScreen: View {
         }
         .topBarView(titleView: ViewUtils.shared.titleView(title: TextResource.cart),
                     leftButtons: ViewUtils.shared.backButtonView {
-            mode.wrappedValue.dismiss()
+            dismiss()
         })
         .task {
             await viewModel.fetchCart()
@@ -61,13 +64,14 @@ struct CartDeatilsScreen: View {
                 productDetailUseCase: ProductDetailUseCase(repository: ProductDetailRepositoryImplentation())))
             }
         })
+
         .alert("\(TextResource.loginRequiredTitle)!",
                isPresented: $viewModel.loginRequiredAlert, actions: {
             Button(TextResource.cancel) {
                 viewModel.loginRequiredAlert = false
             }
             Button(TextResource.login) {
-                self.mode.wrappedValue.dismiss()
+               dismiss()
                 appCoodinator.selectedAccountPage = .register
                 appCoodinator.selectedTab = .account
             }
@@ -75,6 +79,11 @@ struct CartDeatilsScreen: View {
             Text(TextResource.loginRquiredMessageForProduct)
         })
         .toolbar(.hidden, for: .tabBar)
+        .onChange(of: viewModel.shouldDismiss) { newValue in
+            if newValue {
+                dismiss()
+            }
+        }
         
 
         
@@ -102,7 +111,7 @@ struct CartDeatilsScreen: View {
                 .padding(.top,20)
             Button(action: {
              //   browseCompletion()
-                mode.wrappedValue.dismiss()
+                dismiss()
                 EventHandler.productListNavigationSubject.send(true)
             }, label: {
                 Text(TextResource.browseProduct)

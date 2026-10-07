@@ -40,15 +40,20 @@ extension ProductListScreen {
                        self.viewModel.selectedProduct = product
                        self.viewModel.navigateToProductDetail = true
                    }, cartCallback: {},favoriteCallBack: { action, productId, variantId in
-                       if action == FavoriteActions.addFavorite {
-                           viewModel.addToFavorite(productId: productId,
-                                                   variantId: variantId) { status in
+                       if productId.isNotEmpty {
+                           if action == FavoriteActions.addFavorite {
+                               viewModel.addToFavorite(productId: productId,
+                                                       variantId: variantId) { status in
+                               }
+                           }
+                           else {
+                               viewModel.deleteProductFromFavorites(productId: productId,
+                                                                    variantId: variantId) { status in
+                               }
                            }
                        }
                        else {
-                           viewModel.deleteProductFromFavorites(productId: productId,
-                                                                variantId: variantId) { status in
-                           }
+                           viewModel.showLoginRequiredAlert = true
                        }
                    },addToCartCallBack: { productId, variantId,action  in
                        Task{

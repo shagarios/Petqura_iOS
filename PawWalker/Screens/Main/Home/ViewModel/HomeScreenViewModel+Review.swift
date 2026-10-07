@@ -8,7 +8,8 @@
 extension HomeScreenViewModel {
     func submitReviewToServer() {
         if Connectivity.isConnectedToInternet {
-            var param : [String: Any] = [ApiParameters.clinicId : self.pendingReview?.entityId ?? TextResource.empty]
+            var param : [String: Any] = [ApiParameters.pendingReviewId :  self.pendingReview?.id ?? TextResource.empty]
+            param[ApiParameters.clinicId] = self.pendingReview?.entityId ?? TextResource.empty
             param[ApiParameters.reviewContent] = self.clinicReviewText
             param[ApiParameters.reviewStarCount] = self.clinicRating
             param[ApiParameters.pendingReviewId] = self.pendingReview?.id ?? TextResource.empty
@@ -30,7 +31,41 @@ extension HomeScreenViewModel {
                     self?.clinicReviewText = ""
                     ToastCenter.shared.showToast(response.message ?? TextResource.empty,type: .success)
                     Task {
-                      await self?.fetchHomeDetails()
+                        await self?.fetchHomeDetails()
+                    }
+                }
+                .store(in: &cancellables)
+        }
+        else {
+            ToastCenter.shared.showToast(TextResource.noInternet,type: .error)
+        }
+    }
+    
+    func submitProductReviewToServer() {
+        if Connectivity.isConnectedToInternet {
+            var param : [String: Any] = [ApiParameters.pid : self.pendingReview?.entityId ?? TextResource.empty]
+            param[ApiParameters.reviewContent] = self.productReviewText
+            param[ApiParameters.reviewStarCount] = self.productRating
+            param[ApiParameters.pendingReviewId] = self.pendingReview?.id ?? TextResource.empty
+            self.isLoading = false
+            apiClient.APIRequest(router: .addProductReview, parameters: param, responseType: SimpleResponse.self)
+                .sink { completion in
+                    switch completion {
+                    case .finished:
+                        break
+                    case .failure(let error):
+                        self.isLoading = false
+                        ToastCenter.shared.showToast(error.backendError?.message ?? "There is an error occured while adding review",type: .error)
+                        break
+                    }
+                } receiveValue: { response in
+                    self.isLoading = false
+                    self.showProductReviewBottomSheet = false
+                    self.productRating = 0
+                    self.productReviewText = ""
+                    ToastCenter.shared.showToast(response.message ?? TextResource.empty,type: .success)
+                    Task {
+                        await self.fetchHomeDetails()
                     }
                 }
                 .store(in: &cancellables)
@@ -41,7 +76,7 @@ extension HomeScreenViewModel {
     }
     func closeReviewSheet() {
         if Connectivity.isConnectedToInternet {
-            self.showClinicReviewBottomSheet = false
+            self.showProductReviewBottomSheet = false
             guard let id = self.pendingReview?.id else {return}
             let param : [String: Any] = [ApiParameters.id : id]
             apiClient.APIRequest(router: .closeClinicReview,parameters: param ,responseType: SimpleResponse.self)
@@ -65,4 +100,35 @@ extension HomeScreenViewModel {
 
         }
     }
+    func closeProductReviewSheet() {
+        if Connectivity.isConnectedToInternet {
+            self.showProductReviewBottomSheet = false
+            guard let id = self.pendingReview?.id else {return}
+            let param : [String: Any] = [ApiParameters.id : id]
+            apiClient.APIRequest(router: .closeClinicReview,parameters: param ,responseType: SimpleResponse.self)
+                .sink { completion in
+                    switch completion {
+                    case .finished:
+                        break
+                    case .failure(let error):
+                        ToastCenter.shared.showToast(error.backendError?.message ?? "There is an error occured while adding review",type: .error)
+                        break
+                    }
+                } receiveValue: { [weak self] response in
+                    print(response)
+                    self?.productRating = 0
+                    self?.productReviewText = ""
+                    Task {
+                        await self?.fetchHomeDetails()
+                    }
+                }
+                .store(in: &cancellables)
+
+        }
+    }
 }
+enum EntityType  {
+    case product
+    case clinic
+}
+

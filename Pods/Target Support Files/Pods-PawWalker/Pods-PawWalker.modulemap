@@ -1,6 +1,0 @@
-framework module Pods_PawWalker {
-  umbrella header "Pods-PawWalker-umbrella.h"
-
-  export *
-  module * { export * }
-}

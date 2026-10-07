@@ -24,7 +24,7 @@ class FavoriteViewModel : ClinicListViewModel {
         super.init(coordinator: ClinicCoordinator())
     }
     private var cancellables = Set<AnyCancellable>()
-    @Published var favoritesProductList : [FavoiteProduct] = []
+    @Published var favoritesProductList : [FavoriteProduct] = []
     @Published var favoritesClinicList : [FavoriteClinic] = []
     @Published var clinicPage : Int = 1
     @Injected var connectivity : NetworkMonitor
@@ -35,7 +35,7 @@ class FavoriteViewModel : ClinicListViewModel {
     func fetchProductFavorites() {
         if Connectivity.isConnectedToInternet {
            isLoading = true
-            apiClient.APIRequest(router: .getProductFavorite, responseType: FavoriteProductModel.self)
+            apiClient.APIRequest(router: .getProductFavorite, responseType: FavouritesResponse.self)
                 .sink { [weak self] completion in
                     switch completion {
                     case .finished:
@@ -46,7 +46,7 @@ class FavoriteViewModel : ClinicListViewModel {
                 } receiveValue: { response in
                     self.isLoading = false
                     if let result = response.result {
-                        self.favoritesProductList = result
+                        self.favoritesProductList = result.favourites
                     }
                     else {
                         self.favoritesProductList.removeAll()

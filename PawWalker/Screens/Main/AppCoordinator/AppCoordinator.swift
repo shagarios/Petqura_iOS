@@ -25,11 +25,16 @@ class AppCoordinator: ObservableObject {
     @Published var selectedClinicId : String = ""
     @Published var serviceList : [Service] = []
     @Published var navigateToCart : Bool = false
+    @Published var navigateTologin: Bool = false
+    @Published var navigateToMyAddress : Bool = false
     init() {
         //self.flow = UserSessionManager.shared.isMapCompleted ? .dashboard : .auth
         self.flow = .dashboard
         handleCartCountUpdate()
         handleBrowseProduct()
+        handleLoginNavigation()
+        handleMyAddressNavigation()
+        handleMyOrdersNavigation()
     }
 
     func handleCartCountUpdate() {
@@ -59,6 +64,51 @@ class AppCoordinator: ObservableObject {
         }
         .store(in: &cancellable)
     }
+    func handleLoginNavigation() {
+        EventHandler.loginNavigationSubject.sink { completion in
+            switch completion {
+            case .finished:
+                break
+            }
+        } receiveValue: { _ in
+            self.selectedTab = .account
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
+                self.navigateTologin = true
+            })
+        }
+        .store(in: &cancellable)
+        
+    }
+    func handleMyAddressNavigation() {
+        EventHandler.MyAddressListNavigationSubject.sink { completion in
+            switch completion {
+            case .finished:
+                break
+            }
+        } receiveValue: { _ in
+            self.selectedTab = .account
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
+                self.navigateToMyAddress = true
+            })
+        }
+        .store(in: &cancellable)
+        
+    }
+    func handleMyOrdersNavigation() {
+        EventHandler.myOrderNavigationSubject.sink { completion in
+            switch completion {
+            case .finished:
+                break
+            }
+        } receiveValue: { _ in
+            self.selectedTab = .account
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
+                self.navigateToMyOrders = true
+            })
+        }
+        .store(in: &cancellable)
+    }
+    
     
     func fetchBasicInfo() async {
        await fetchCartCount()

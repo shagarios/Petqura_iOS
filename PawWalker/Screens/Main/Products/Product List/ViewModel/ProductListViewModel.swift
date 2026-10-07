@@ -40,6 +40,8 @@ class ProductListViewModel : ObservableObject {
     @Published var selectedProductIdentiy : ProductIdentity?
     @Published var selectedProductVariant : Variant?
     @Published var showCartPage : Bool = false
+    @Published var showLoginRequiredAlert : Bool = false
+    @Published var shouldShowLoader : Bool = false
      var cartDetailUseCase : CartDetailsUsecase?
     init(cartDetailUseCase : CartDetailsUsecase? = nil) {
         setupSearchPublisher()
@@ -91,6 +93,7 @@ class ProductListViewModel : ObservableObject {
                         else {
                             self?.shouldShowEmptyView = true
                         }
+                        print("Api Hittting --->>>")
                     }
                 }
                 .store(in: &cancellables)
@@ -158,19 +161,19 @@ class ProductListViewModel : ObservableObject {
         let param : [String : Any] = [ApiParameters.id : productId,
                                       ApiParameters.favoriteItem: FavoriteType.product.rawValue,ApiParameters.variantId: variantId]
         if Connectivity.isConnectedToInternet {
-            self.isLoading = true
+            self.shouldShowLoader = true
             apiClient.APIRequest(router: .addToFavorite, parameters: param, responseType: SimpleResponse.self)
                 .sink { completion in
                     switch completion {
                     case .finished:
                         break
                     case .failure(let error):
-                        self.isLoading = false
+                        self.shouldShowLoader = false
                     ToastCenter.shared.showToast(error.backendError?.message ?? error.localizedDescription, type: .error)
                         break
                     }
                 } receiveValue: { response in
-                    self.isLoading = false
+                    self.shouldShowLoader = false
                     ToastCenter.shared.showToast(TextResource.addedTofavorite,type: .success)
                     completion(true)
                 }
@@ -183,7 +186,7 @@ class ProductListViewModel : ObservableObject {
     func deleteProductFromFavorites(productId : String,variantId : String,
                                     completion : @escaping (Bool) -> ()) {
         if Connectivity.isConnectedToInternet {
-            isLoading = true
+            shouldShowLoader = true
              
             let param : [String : Any] = [ApiParameters.id : productId,ApiParameters.variantId: variantId,ApiParameters.favoriteItem : FavoriteType.product.rawValue]
             apiClient.APIRequest(router: .deleteFavorite, parameters: param, responseType: SimpleResponse.self)
@@ -192,13 +195,13 @@ class ProductListViewModel : ObservableObject {
                     case .finished:
                         break
                     case .failure(let error):
-                        self.isLoading = false
+                        self.shouldShowLoader = false
                         ToastCenter.shared.showToast(error.backendError?.message ?? error.localizedDescription, type: .error)
                         break
                         
                     }
                 } receiveValue: { response in
-                    self.isLoading = false
+                    self.shouldShowLoader = false
                     ToastCenter.shared.showToast(response.message ?? TextResource.deleteFromFavoriteSuccessMessage,type: .success)
                     completion(true)
                 }

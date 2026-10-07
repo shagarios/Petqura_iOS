@@ -19,7 +19,7 @@ class MyAddressListViewModel : ObservableObject {
     @Injected var internet : NetworkMonitor
     weak var coordinator : AccountCoordinator?
     @Published var showMakeAsPrimaryAlert : Bool = false
-    init(coordinator : AccountCoordinator) {
+    init(coordinator : AccountCoordinator?) {
         self.coordinator = coordinator
     }
     
@@ -32,9 +32,6 @@ class MyAddressListViewModel : ObservableObject {
                     break
                 case .failure(let error):
                     self?.isLoading = false
-                    if let errorMessage = error.backendError?.message {
-                        ToastCenter.shared.showToast(errorMessage,type: .error)
-                    }
                     break
                 }
             } receiveValue: { [weak self] response in

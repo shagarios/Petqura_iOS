@@ -20,8 +20,7 @@ struct ClinicFilterBottomSheet: View {
                     .font(.headline)
                 Spacer()
                 Button("Clear All") {
-                    viewModel.selectedItems.removeAll()
-                    viewModel.filersApiData.removeAll()
+                    viewModel.makeClearAllTemporary()
                 }
                 .foregroundColor(.red)
             }
@@ -57,6 +56,7 @@ struct ClinicFilterBottomSheet: View {
         }
         .onAppear {
             viewModel.getFliterData()
+            viewModel.checkInitialData()
         }
     }
 }

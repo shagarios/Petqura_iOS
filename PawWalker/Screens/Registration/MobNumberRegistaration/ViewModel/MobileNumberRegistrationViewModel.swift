@@ -20,7 +20,7 @@ class MobileNumberRegistrationViewModel : ObservableObject,ErrorHandable {
     let key = "MduiQTgMNZCWUY,VhnmM2cKXDLVFvHFo"
     weak var coordinator : AccountCoordinator?
     var registerUserCase : RegisterMobileUseCase
-    init(coordinator : AccountCoordinator,registerUserCase : RegisterMobileUseCase) {
+    init(coordinator : AccountCoordinator?,registerUserCase : RegisterMobileUseCase) {
         self.coordinator = coordinator
         self.registerUserCase = registerUserCase
     }

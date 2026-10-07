@@ -51,7 +51,7 @@ struct ProductListScreen: View {
         .task(priority: .background) {
             await viewModel.fetchCartDetails()
         }
-//        .makeWithLoader(isLoading: $viewModel.isLoading)
+        .makeWithLoader(isLoading: $viewModel.shouldShowLoader)
         .onChange(of: categoryId, perform: { newValue in
             viewModel.fetchPoductList(categoryId: self.categoryId)
         })
@@ -93,6 +93,17 @@ struct ProductListScreen: View {
                 viewModel.showCartPage = false
             }, payementCompletion: {})
         }
+        .alert(TextResource.autheticationRequired,
+               isPresented: $viewModel.showLoginRequiredAlert, actions: {
+            Button(TextResource.signIn) {
+                EventHandler.loginNavigationSubject.send()
+            }
+            Button(TextResource.cancel) {
+                viewModel.showLoginRequiredAlert = false
+            }
+        },message: {
+            Text(TextResource.loginAlertMessage)
+        })
     }
     
 }

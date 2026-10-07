@@ -74,6 +74,7 @@ struct PendingReview: Codable {
     let referenceDoctor: String?
     let referenceTime: String?
     let type: String?
+    let entityQuantity : String?
     
     enum CodingKeys: String, CodingKey {
         case id
@@ -84,5 +85,9 @@ struct PendingReview: Codable {
         case referenceDoctor = "reference_doctor"
         case referenceTime = "reference_time"
         case type
+        case entityQuantity = "entity_qty"
+    }
+    var enityType : EntityType {
+        return entityQuantity == "clinic" ? .clinic : .product
     }
 }

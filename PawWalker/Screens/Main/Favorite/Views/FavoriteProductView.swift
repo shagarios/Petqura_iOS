@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct FavoriteProductView: View {
-    var product : FavoiteProduct
-    var deleteProductCallBack: (FavoiteProduct) -> ()
-    var cartCallBack: (FavoiteProduct) -> ()
+    var product : FavoriteProduct
+    var deleteProductCallBack: (FavoriteProduct) -> ()
+    var cartCallBack: (FavoriteProduct) -> ()
     var body: some View {
         HStack(spacing: 20){
             imageView

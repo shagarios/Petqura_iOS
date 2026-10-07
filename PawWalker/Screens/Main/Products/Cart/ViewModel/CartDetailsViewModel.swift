@@ -28,6 +28,7 @@ class CartDetailsViewModel : ProductListViewModel {
     @Published var isUseCoins : Bool = false
     @Published var loginRequiredAlert : Bool = false
     var cartAdditionUseCase : CartAdditionUseCase
+    @Published var shouldDismiss: Bool = false
     @Published var addressList : [Address] = [] {
         didSet {
             if addressList.count > 0 {
@@ -73,7 +74,12 @@ class CartDetailsViewModel : ProductListViewModel {
                 self.showCashfreePage = false
                 if status {
                     EventHandler.cartCountSubject.send(0)
-                    self.navigateToMyorders = true
+                    self.cartList.removeAll()
+                    self.shouldDismiss = true
+                    EventHandler.myOrderNavigationSubject.send()
+//                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
+//                                  EventHandler.myOrderNavigationSubject.send()
+//                              }
                 }
             }
             .store(in: &cancellables)

@@ -25,7 +25,7 @@ struct ClinicRatingBottomSheet: View {
                 detailView
             }
             textFieldView
-                .keyboardAware()
+                
           comfirmView
                 .padding(.top,20)
         }
@@ -33,6 +33,7 @@ struct ClinicRatingBottomSheet: View {
         .onTapGestureForced {
             UIApplication.shared.endEditing()
         }
+        .keyboardAware()
         
     }
     private var closeButton : some View {
@@ -99,6 +100,7 @@ struct ClinicRatingBottomSheet: View {
     }
     private var comfirmView : some View {
         Button(action: {
+            UIApplication.shared.endEditing()
             viewModel.submitReviewToServer()
         }, label: {
             Text(TextResource.confirm)

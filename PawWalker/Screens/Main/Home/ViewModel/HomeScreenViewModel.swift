@@ -29,12 +29,15 @@ class HomeScreenViewModel : ObservableObject,ErrorHandable {
     @Published var hasNext : Bool = false
     @Published var showMapScreen : Bool = false
     @Published var clinicRating : Int = 0
+    @Published var productRating : Int = 0
     weak var appCoordinator: AppCoordinator?
     @Published var pendingReview : PendingReview?
     @Injected var homeRepository : HomeRepository
     
     @Published var showClinicReviewBottomSheet : Bool = false
     @Published var clinicReviewText: String = ""
+    @Published var productReviewText : String = ""
+    @Published var showProductReviewBottomSheet : Bool = false
     private let getHomeUseCase : GetHomeUseCase
     private let getBlogUseCase : GetBlogUseCase
     init(getHomeUseCase : GetHomeUseCase,getBlogUseCase : GetBlogUseCase) {
@@ -56,7 +59,13 @@ class HomeScreenViewModel : ObservableObject,ErrorHandable {
             self.categories = home.categories
             if home.pendingReviews.count >= 1 {
                 pendingReview = home.pendingReviews.first
-                showClinicReviewBottomSheet = true
+                if pendingReview?.enityType == .clinic {
+                    showClinicReviewBottomSheet = true
+                }
+                else {
+                    showProductReviewBottomSheet = true
+                }
+             
             }
         }
         catch let error as AppError {

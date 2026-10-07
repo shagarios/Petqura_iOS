@@ -15,6 +15,7 @@ struct ProductItemView : View {
     var favoriteCallBack: (FavoriteActions,String,String) -> ()
     var addToCartCallBack : (String,String,CartAction) -> ()
     var isSimilarProduct : Bool
+    @State var isFavorite : Bool = false
     
     var body: some View {
         VStack(spacing: 0) {
@@ -48,6 +49,7 @@ struct ProductItemView : View {
                     selectedVaiant?.isInCart = false
                     selectedVaiant?.cartQuantity  = 0
                 }
+                    self.isFavorite = self.selectedVaiant?.isFavorite ?? false
             }
         }
         .onChange(of: UserSessionManager.shared.productIdententiyArray) { productList in
@@ -134,16 +136,23 @@ struct ProductItemView : View {
             Circle()
                 .foregroundStyle(Color(ColorResource.favoriteWhite))
                 .frame(width: 36,height: 36)
-            Image((selectedVaiant?.isFavorite ?? false) ? .favoriteFilledIcon : .favoriteIcon)
+            Image(isFavorite ? .favoriteFilledIcon : .favoriteIcon)
         }
         .onTapGesture {
-            if selectedVaiant?.isFavorite  == false {
-                selectedVaiant?.isFavorite = true
-                favoriteCallBack(.addFavorite,product.productID,selectedVaiant?.productVariantID ?? "")
+            if UserSessionManager.shared.accessToken.isNotEmpty {
+                if isFavorite == false {
+                   selectedVaiant?.isFavorite = true
+                    isFavorite = true
+                    favoriteCallBack(.addFavorite,product.productID,selectedVaiant?.productVariantID ?? "")
+                }
+                else {
+                   selectedVaiant?.isFavorite = false
+                    isFavorite = false
+                    favoriteCallBack(.deleteFavorite,product.productID,selectedVaiant?.productVariantID ?? "")
+                }
             }
             else {
-                selectedVaiant?.isFavorite = false
-                favoriteCallBack(.deleteFavorite,product.productID,selectedVaiant?.productVariantID ?? "")
+                favoriteCallBack(.addFavorite,"","")
             }
         }
     }

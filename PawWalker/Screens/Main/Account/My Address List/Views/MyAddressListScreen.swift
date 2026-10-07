@@ -9,7 +9,8 @@ import SwiftUI
 
 struct MyAddressListScreen: View {
     @StateObject var viewModel : MyAddressListViewModel
-    init(coordinator : AccountCoordinator) {
+    @Environment(\.dismiss) var dismiss
+    init(coordinator : AccountCoordinator?) {
         self._viewModel = StateObject(wrappedValue: MyAddressListViewModel(coordinator: coordinator))
     }
     var body: some View {
@@ -24,7 +25,7 @@ struct MyAddressListScreen: View {
         }
         .topBarView(titleView: ViewUtils.shared.titleView(title: TextResource.myAddress),
                     leftButtons: ViewUtils.shared.backButtonView {
-            viewModel.coordinator?.pop()
+            dismiss()
         })
         .alert(TextResource.makeThisAddressAsPrimary, isPresented: $viewModel.showMakeAsPrimaryAlert) {
             Button(TextResource.ok) {

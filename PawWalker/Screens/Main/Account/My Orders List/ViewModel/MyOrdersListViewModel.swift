@@ -13,6 +13,8 @@ class MyOrdersListViewModel : ObservableObject {
     @Injected var apiClient : ApiClientProtocol
     var cancellable = Set<AnyCancellable>()
     @Published var isLoading : Bool = false
+    @Published var selectedProductId : String = ""
+    @Published var navigateToProductDetail : Bool = false
     
     func fetchMyordersList() {
         if Connectivity.isConnectedToInternet {
@@ -22,7 +24,7 @@ class MyOrdersListViewModel : ObservableObject {
                     switch completion {
                     case .finished:
                         break
-                    case .failure(let error):
+                    case .failure(_):
                         self.isLoading = false
                         break
                     }

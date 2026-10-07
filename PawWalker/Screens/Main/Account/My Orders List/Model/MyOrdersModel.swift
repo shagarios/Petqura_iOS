@@ -15,14 +15,16 @@ struct MyOrdersResult : Codable {
 }
 
 struct MyOrder : Codable,Hashable {
-    let brandName: String
-    let quantity: Int
-    let variantName: String
-    let productName: String
-    let sellerName : String
-    let productImage: String
-    let orderPlacedDatetime : String
-    let orderStatus : String
+    let brandName: String?
+    let quantity: Int?
+    let variantName: String?
+    let productName: String?
+    let sellerName : String?
+    let productImage: String?
+    let orderPlacedDatetime : String?
+    let orderStatus : String?
+    let orderDetailID : String
+    let productId : String
     enum CodingKeys : String, CodingKey {
         case brandName = "brand_name"
         case quantity
@@ -32,5 +34,7 @@ struct MyOrder : Codable,Hashable {
         case productImage = "product_image"
         case orderPlacedDatetime = "order_placed_datetime"
         case orderStatus = "order_status"
+        case orderDetailID = "order_details_id"
+        case productId = "product_id"
     }
 }

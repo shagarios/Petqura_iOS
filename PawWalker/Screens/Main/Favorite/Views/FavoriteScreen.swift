@@ -19,20 +19,26 @@ struct FavoriteScreen : View {
                 .padding(.top,10)
             if viewModel.selectedCategory == .product {
                 productView
+                    .task {
+                        viewModel.fetchProductFavorites()
+                    }
             }
             else {
                 clinicView
+                    .task {
+                        viewModel.fetchClnicFavorites()
+                        viewModel.fetchClinicSuggetions()
+                    }
             }
             Spacer()
-            suggetionNameView
-                .padding(.bottom,10)
-                .isRemove(viewModel.suggetionClinicList.count == 0)
-            clinicSuggetionListView
-            .padding(.bottom,90)
-        }
-        .task{
-            viewModel.fetchClnicFavorites()
-            viewModel.fetchClinicSuggetions()
+            if viewModel.selectedCategory == .clinic {
+                suggetionNameView
+                    .padding(.bottom,10)
+                    .isRemove(viewModel.suggetionClinicList.count == 0)
+                clinicSuggetionListView
+                    .padding(.bottom,90)
+                
+            }
         }
         .makeWithLoader(isLoading: $viewModel.isLoading)
         .padding(.horizontal,20)
@@ -93,11 +99,11 @@ struct FavoriteScreen : View {
     private var favoriteProductListView : some View {
         ScrollView(showsIndicators: false){
             LazyVStack{
-                ForEach(viewModel.favoritesProductList,id: \.id) {item in
+                ForEach(viewModel.favoritesProductList) {item in
                     FavoriteProductView(product: item,deleteProductCallBack: { favorite in
-                        viewModel.deleteProductFromFavorites(productId: favorite.productID ?? "", variantId: favorite.variants?.productVariantID ?? "")
+                        viewModel.deleteProductFromFavorites(productId: favorite.productId, variantId: favorite.variants?.productVariantID ?? "")
                     },cartCallBack: { favorite in
-                        viewModel.postToCart(productId: favorite.productID ?? "", varaintId: favorite.variants?.productVariantID ?? "", quantity: 1)
+                        viewModel.postToCart(productId: favorite.productId, varaintId: favorite.variants?.productVariantID ?? "", quantity: 1)
                     })
                         .padding(.top,10)
                     Divider()

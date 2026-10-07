@@ -48,8 +48,20 @@ class ProductDetailsViewModel  : ObservableObject {
         self.productDetailUseCase = productDetailUseCase
         self.selectedVariant = self.product?.variants.first
         self.handleCartCountUpdate()
-        
     }
+    init(productId: String,
+            productMoreUseCase: ProductMoreUseCase,
+            productDetailUseCase: ProductDetailUseCase) {
+           self.product = nil
+           self.productMoreUseCase = productMoreUseCase
+           self.productDetailUseCase = productDetailUseCase
+           self.selectedVariant = nil
+           self.handleCartCountUpdate()
+
+           Task { [weak self] in
+               await self?.fetchProductDetails(productId:productId)
+           }
+       }
     func handleCartCountUpdate() {
         EventHandler.cartCountSubject.sink { completion in
             switch completion {
@@ -296,6 +308,7 @@ class ProductDetailsViewModel  : ObservableObject {
             let result = try await productDetailUseCase.execute(productId: productId)
             self.isLoading = false
             self.product = result
+            self.selectedVariant = product?.variants.first
             await self.loadData()
         }
         catch {

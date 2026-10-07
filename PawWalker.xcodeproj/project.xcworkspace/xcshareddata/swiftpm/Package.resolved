@@ -1,5 +1,5 @@
 {
-  "originHash" : "5e8318aa0eb21f2d136d55dc6090b806f349fcaa729e8f130f5d7f8c8f195e53",
+  "originHash" : "ae763c8024a0b1719d076bff303e10eb15391ddcef4ab0abbfe80b2061ccc961",
   "pins" : [
     {
       "identity" : "abseil-cpp-binary",
@@ -8,6 +8,15 @@
       "state" : {
         "revision" : "194a6706acbd25e4ef639bcaddea16e8758a3e27",
         "version" : "1.2024011602.0"
+      }
+    },
+    {
+      "identity" : "activityindicatorview",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/exyte/ActivityIndicatorView.git",
+      "state" : {
+        "revision" : "36140867802ae4a1d2b11490bcbbefe058001d14",
+        "version" : "1.2.1"
       }
     },
     {
@@ -38,6 +47,15 @@
       }
     },
     {
+      "identity" : "alerttoast",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/elai950/AlertToast.git",
+      "state" : {
+        "revision" : "b39252eacd159904afd7d718bba0afabb87f2f2f",
+        "version" : "1.3.9"
+      }
+    },
+    {
       "identity" : "app-check",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/google/app-check.git",
@@ -56,12 +74,30 @@
       }
     },
     {
+      "identity" : "core-ios-sdk",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/cashfree/core-ios-sdk.git",
+      "state" : {
+        "revision" : "bcf6be4a0d8a4da55600ab6a9ad1368039b31917",
+        "version" : "2.5.5"
+      }
+    },
+    {
       "identity" : "cryptoswift",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/krzyzanowskim/CryptoSwift.git",
       "state" : {
         "revision" : "678d442c6f7828def400a70ae15968aef67ef52d",
         "version" : "1.8.3"
+      }
+    },
+    {
+      "identity" : "ctrating",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/StewartLynch/CTRating",
+      "state" : {
+        "revision" : "858f77b580021dc895c6f988a0f0270ad08edb64",
+        "version" : "1.0.1"
       }
     },
     {
@@ -146,6 +182,15 @@
       }
     },
     {
+      "identity" : "ios-places-sdk",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/googlemaps/ios-places-sdk",
+      "state" : {
+        "revision" : "a6ac7dfeba7df305dca7ff89dfc485c41c35c4dc",
+        "version" : "10.15.0"
+      }
+    },
+    {
       "identity" : "keyboardawareswiftui",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/ralfebert/KeyboardAwareSwiftUI",
@@ -191,9 +236,9 @@
       }
     },
     {
-      "identity" : "popovers?tab=readme-ov-file",
+      "identity" : "popovers",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/aheze/Popovers?tab=readme-ov-file",
+      "location" : "https://github.com/aheze/Popovers",
       "state" : {
         "revision" : "de44c4dd7271ec6413fe350f7efadb14e5e18dce",
         "version" : "1.3.2"
@@ -233,6 +278,15 @@
       "state" : {
         "revision" : "451c6dfd5ecec2cf626d1d9ca81c2d4a60355172",
         "version" : "3.1.3"
+      }
+    },
+    {
+      "identity" : "shimmer-swiftui-modifier",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/0xYanis/Shimmer-SwiftUI-Modifier.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "61d5254fe54bac7acc318b80cde4c0bfc2a2b5c4"
       }
     },
     {

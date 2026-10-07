@@ -20,28 +20,59 @@ enum FavoriteType : String, CaseIterable,Hashable {
     }
 }
 
-struct FavoriteProductModel : Codable {
-    let message : String
-    let result : [FavoiteProduct]?
+struct FavouritesResponse: Codable {
+    let message: String
+    let result: FavoritesResult?
 }
-
-
-struct FavoiteProduct : Codable {
-    let id = UUID().uuidString
-    let brandName, categoryID, categoryName : String?
-        let isFoodItem: Bool?
-        let productDescription, productID, productName: String?
-        let variants : Variant?
-        enum CodingKeys: String, CodingKey {
-            case brandName = "brand_name"
-            case categoryID = "category_id"
-            case categoryName = "category_name"
-            case isFoodItem = "is_food_item"
-            case productDescription = "product_description"
-            case productID = "product_id"
-            case productName = "product_name"
-            case variants
-        }
+ 
+// MARK: - Result
+ 
+struct FavoritesResult: Codable {
+    let favourites: [FavoriteProduct]
+    let hasNext: Bool?
+    let hasPrev: Bool?
+    let page: Int?
+    let pages: Int?
+    let perPage: Int?
+    let total: Int?
+ 
+    enum CodingKeys: String, CodingKey {
+        case favourites
+        case hasNext = "has_next"
+        case hasPrev = "has_prev"
+        case page
+        case pages
+        case perPage = "per_page"
+        case total
+    }
+}
+struct FavoriteProduct: Codable, Identifiable {
+    let active: Bool?
+    let brandName: String?
+    let categoryId: String?
+    let categoryName: String?
+    let idealFor: String?
+    let isFoodItem: Bool?
+    let productDescription: String?
+    let productId: String
+    let productName: String?
+    let variants: Variant?
+ 
+    /// Convenience conformance to `Identifiable` using the product id.
+    var id: String { productId }
+ 
+    enum CodingKeys: String, CodingKey {
+        case active
+        case brandName = "brand_name"
+        case categoryId = "category_id"
+        case categoryName = "category_name"
+        case idealFor = "ideal_for"
+        case isFoodItem = "is_food_item"
+        case productDescription = "product_description"
+        case productId = "product_id"
+        case productName = "product_name"
+        case variants
+    }
 }
 
 struct FavoriteClinicModel : Codable {

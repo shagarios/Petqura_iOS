@@ -37,11 +37,12 @@ class MyAccountViewModel : ObservableObject {
     }
     func getAddressList() {
         if Connectivity.isConnectedToInternet {
-            apiClient.APIRequest(router: .getAddress, responseType: MyAdressListModel.self).sink { [weak self] completion in
+            apiClient.APIRequest(router: .getAddress,
+                                 responseType: MyAdressListModel.self).sink {  completion in
                 switch completion {
                 case .finished:
                     break
-                case .failure(let error):
+                case .failure(_):
                     break
                 }
             } receiveValue: { [weak self] response in
@@ -167,6 +168,7 @@ class MyAccountViewModel : ObservableObject {
             }
         }
         UserSessionManager.shared.user = nil
+        
         UserSessionManager.shared.accessToken = ""
         UserSessionManager.shared.productIdententiyArray.removeAll()
         EventHandler.cartCountSubject.send(0)
@@ -174,6 +176,9 @@ class MyAccountViewModel : ObservableObject {
         self.myAppointmentData = nil
         self.addressCount = 0
         self.myAddress = nil
+        self.myOrder = nil
+        self.orderCount = 0
+        
     }
     func fetchUser() -> User? {
         let result:Result<[User],Error> = coreDataService.fetch(tableName: TableNames.user,

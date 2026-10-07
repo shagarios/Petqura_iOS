@@ -9,15 +9,18 @@ import SwiftUI
 
 struct MobileNumberRegistrationView: View {
     @StateObject var viewModel : MobileNumberRegistrationViewModel
-    init(coordinator : AccountCoordinator) {
-        self._viewModel = StateObject(wrappedValue: MobileNumberRegistrationViewModel(coordinator: coordinator,
+    init(coordinator : AccountCoordinator?) {
+        self._viewModel = StateObject(wrappedValue:
+                MobileNumberRegistrationViewModel(coordinator: coordinator,
             registerUserCase: RegisterMobileUseCase(registerRepostory: MobileRegRepositoryImplementation())))
     }
     @State private var errorMessage: String?
     var body: some View {
         ScrollView(showsIndicators: false) {
             VStack(spacing : 0) {
-                RegistrationHeaderView()
+                RegistrationHeaderView(showBackButton: true) {
+                    viewModel.coordinator?.pop()
+                }
                 VStack(spacing : 0){
                     Text(TextResource.registerWithMobileNumber)
                         .font(FontConstants.primaryMediumTitle18)

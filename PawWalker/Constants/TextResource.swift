@@ -165,6 +165,7 @@ struct TextResource {
     static let makeThisAddressAsPrimary = "Do you want to make this address as Primary?"
     static let ok = "OK"
     static let clinicReviewDiscription = "How was your visit?"
+    static let productReviewDiscription = "How was this product?"
     static let otherSellers = "Other Sellers"
     static let distance = "Distance"
     static var  changeCartAlert : (_ sellerName: String,_ newSellerName: String) -> String =  {sellerName, newSellerName in

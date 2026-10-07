@@ -62,7 +62,12 @@ struct MyAccountScreen: View {
                     .padding(.top,20)
                 
                 AccountItemView(title: TextResource.myOrders,contentView: myOrderContentView,completiion: {
-                    coordinator?.push(.myOrders)
+                   if UserSessionManager.shared.accessToken.isNotEmpty {
+                        coordinator?.push(.myOrders)
+                    }
+                    else {
+                        viewModel.showLoginRequiredAlert = true
+                    }
                 }, count: viewModel.orderCount)
                     .padding(.top,20)
                 
@@ -142,7 +147,15 @@ struct MyAccountScreen: View {
         .navigationDestination(isPresented: $viewModel.showCart) {
             CartDeatilsScreen(browseCompletion: {}, payementCompletion: {})
         }
-        
+        .navigationDestination(isPresented: $appCoordinator.navigateTologin) {
+         MobileNumberRegistrationView(coordinator: coordinator)
+        }
+        .navigationDestination(isPresented: $appCoordinator.navigateToMyAddress) {
+            MyAddressListScreen(coordinator: coordinator)
+        }
+        .navigationDestination(isPresented: $appCoordinator.navigateToMyOrders) {
+            MyOrdersListScreen(coordinator: coordinator)
+        }
         
     }
     

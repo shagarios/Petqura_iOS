@@ -54,17 +54,12 @@ struct ClinicListScreen: View {
             ClinicFilterBottomSheet(
                 viewModel: viewModel,
                 onApply: {
+                    UserSessionManager.shared.selectedItems.removeAll()
+                    UserSessionManager.shared.filersApiData.removeAll()
                     viewModel.filterArrayString = viewModel.makeApiString()
                     viewModel.showFilterList = false
                 }
             )
-            
-//            ServiceBottomSheet(services: UserSessionManager.shared.services, completion: { service in
-//                viewModel.showFilterList = false
-//                viewModel.page = 1
-//                viewModel.clinicList.removeAll()
-//                viewModel.selctedServiceId = service.id
-//            })
                 .frame(height: UIScreen.screenHeight * 0.70)
         }
         .topBarView(titleView: viewModel.coordinator?.appCoordinator?.titleView())

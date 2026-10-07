@@ -87,6 +87,10 @@ struct HomeScreen: View {
             ClinicRatingBottomSheet(viewModel: viewModel)
                 .padding(.bottom,100)
         }
+        .bottomSheet(isPresented: $viewModel.showProductReviewBottomSheet) {
+            ProductRatingBottomSheet(viewModel: viewModel)
+                .padding(.bottom,100)
+        }
 //        .navigationDestination(isPresented: $appCoordinator.navigateToCart) {
 //            CartDeatilsScreen
 //        }
