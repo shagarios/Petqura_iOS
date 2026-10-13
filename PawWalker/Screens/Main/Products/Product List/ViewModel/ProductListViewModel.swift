@@ -52,7 +52,8 @@ class ProductListViewModel : ObservableObject {
     func setupSearchPublisher() {
         searchSubject
             .debounce(for: .seconds(1.5), scheduler: DispatchQueue.main)
-            .sink { searchText in
+            .sink {[weak self] searchText in
+                guard let self = self else {return}
                 guard self.shouldSearch else {
                     self.shouldSearch = true
                     return

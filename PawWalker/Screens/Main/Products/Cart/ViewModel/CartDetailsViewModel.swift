@@ -43,15 +43,11 @@ class CartDetailsViewModel : ProductListViewModel {
         }
     }
     func handleCartCountUpdate() {
-        EventHandler.cartCountSubject.sink { completion in
-            switch completion {
-            case .finished:
-                break
-            }
-        } receiveValue: { count in
-            self.cartCount = count
-            
-        }
+        EventHandler.cartCountSubject
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] count in
+                self?.cartCount = count
+            })
         .store(in: &cancellables)
     }
     @Published var deliveryTipList : [DeliveryTip] = [.tip10,.tip20,.tip30]
@@ -70,21 +66,22 @@ class CartDetailsViewModel : ProductListViewModel {
                                     guestReposiotry: GuestSessionRepositoryImplementation(
                                     userSessionRespository: UserSessionRepostoryImplentation())))
         CashFreeBroker.cashFreeCompletion
-            .sink { status in
+            .receive(on: DispatchQueue.main)
+            .sink {[weak self] status in
+                guard let self = self else {return}
                 self.showCashfreePage = false
                 if status {
                     EventHandler.cartCountSubject.send(0)
                     self.cartList.removeAll()
                     self.shouldDismiss = true
                     EventHandler.myOrderNavigationSubject.send()
-//                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
-//                                  EventHandler.myOrderNavigationSubject.send()
-//                              }
                 }
             }
             .store(in: &cancellables)
     }
-    
+    deinit {
+        print("CartDetailsViewModel deinit")
+    }
 
     
      func fetchCartList() {
@@ -135,14 +132,15 @@ class CartDetailsViewModel : ProductListViewModel {
             isLoading = true
             let param : [String : Any] = [ApiParameters.cartId : cartId, ApiParameters.action : action.rawValue]
             apiClient.APIRequest(router: .updateCart, parameters: param, responseType: AddToCartModel.self)
-                .sink { completion in
+                .sink { [weak self] completion in
                     switch completion {
                     case .finished:
                         break
                     case .failure(_):
-                        self.isLoading = false
+                        self?.isLoading = false
                     }
-                } receiveValue: { response in
+                } receiveValue: {[weak self] response in
+                    guard let self = self else {return}
                     self.isLoading = false
                     if let result = response.result {
                         self.cartDetails = result
@@ -242,8 +240,9 @@ class CartDetailsViewModel : ProductListViewModel {
                     case .failure(let error):
                         ToastCenter.shared.showToast(error.backendError?.message ?? TextResource.apiError,type: .error)
                     }
-                } receiveValue: { response in
+                } receiveValue: {[weak self] response in
                     ToastCenter.shared.showToast(TextResource.orderCreatedSuccessfully,type: .success)
+                    guard let self = self else {return}
                     self.orderID = response.response.orderID
                     self.sessionID = response.response.paymentSessionID
                     self.showCashfreePage = true
@@ -258,7 +257,7 @@ class CartDetailsViewModel : ProductListViewModel {
         if Connectivity.isConnectedToInternet {
             apiClient.APIRequest(router: .productForYou,
                                  responseType: ProductListModel.self)
-                .sink { [weak self] completion in
+                .sink {  completion in
                     switch completion {
                     case .finished:
                         break

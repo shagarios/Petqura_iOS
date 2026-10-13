@@ -54,9 +54,12 @@ class HomeScreenViewModel : ObservableObject,ErrorHandable {
         isLoading = true
         do {
             let home : HomeData = try await getHomeUseCase.execute()
+            print("viewModel --> \(Thread.isMainThread)")
             self.bannerImages = home.banners.compactMap { $0.bannerImageMobile }
             self.services = home.services
             self.categories = home.categories
+            UserSessionManager.shared.services = home.services
+            UserSessionManager.shared.categories = home.categories
             if home.pendingReviews.count >= 1 {
                 pendingReview = home.pendingReviews.first
                 if pendingReview?.enityType == .clinic {
@@ -67,6 +70,7 @@ class HomeScreenViewModel : ObservableObject,ErrorHandable {
                 }
              
             }
+           
         }
         catch let error as AppError {
             showError(error.errorDescription ?? "Something went wrong")
