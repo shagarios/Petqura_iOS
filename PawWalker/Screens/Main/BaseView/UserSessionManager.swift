@@ -9,6 +9,7 @@ import SwiftUI
 import Combine
 class UserSessionManager : ObservableObject{
     @Injected var coreDataService : CoreDataServiceProtocol
+    @Injected var tokenStore : TokenStoreProtocol
     static let shared  = UserSessionManager()
     @Published var accessToken : String = ""
     @Published var refreshToken : String = ""
@@ -29,8 +30,8 @@ class UserSessionManager : ObservableObject{
     @Published var guestId: String = ""
     @Published var user : User? {
         didSet {
-            self.accessToken = user?.accessToken ?? ""
-            self.refreshToken = user?.refreshToken ?? ""
+            self.accessToken = tokenStore.accessToken ?? ""
+            self.refreshToken = tokenStore.refreshToken ?? ""
             self.isMapCompleted = user?.isMapCompleted ?? false
             self.name = user?.name ?? TextResource.empty
             self.guestId = user?.guestId ?? ""

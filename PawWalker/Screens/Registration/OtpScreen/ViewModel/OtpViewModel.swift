@@ -12,6 +12,7 @@ class OtpViewModel : ObservableObject {
     @Published var navigateToMap : Bool = false
     @Injected var apiClient : ApiClientProtocol
     @Injected var coredataService : CoreDataServiceProtocol
+    @Injected var tokenStore : TokenStoreProtocol
     private var cancellables = Set<AnyCancellable>()
     var cancellable = Set<AnyCancellable>()
     @Published var otp : String = TextResource.empty {
@@ -71,6 +72,13 @@ class OtpViewModel : ObservableObject {
                 } receiveValue: {[weak self] response in
                     guard let self = self else {return}
                     if let result = response.result {
+                        do {
+                            try tokenStore.save(accessToken: result.accessToken,
+                                                refreshToken: result.refreshToken)
+                        }
+                        catch {
+                            ToastCenter.shared.showToast(TextResource.apiError,type: .error)
+                        }
                         self.saveUserDetailsToLocalStorage(result: result)
                         self.guestSessionRepository.deleteGuestId()
                         EventHandler.cartCountSubject.send(0)
@@ -98,8 +106,6 @@ class OtpViewModel : ObservableObject {
     func saveUserDetailsToLocalStorage(result : OtpResult) {
         let entity : Any? = fetchUser() ?? coredataService.createEntity(for: TableNames.user)
         guard let newUser = entity as? User else {return}
-        newUser.accessToken = result.accessToken
-        newUser.refreshToken = result.refreshToken
         newUser.mobileNumber = mobileNumber
         newUser.name = firstName
         newUser.email = email

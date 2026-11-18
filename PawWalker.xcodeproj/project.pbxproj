@@ -55,6 +55,9 @@
 		D32A677630316C0E0056CBF6 /* ShimmerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D32A677530316C040056CBF6 /* ShimmerView.swift */; };
 		D32A6778303475370056CBF6 /* CartAdditionUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = D32A67773034752F0056CBF6 /* CartAdditionUseCase.swift */; };
 		D32A677A303AB7470056CBF6 /* ProductRatingBottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = D32A6779303AB6BC0056CBF6 /* ProductRatingBottomSheet.swift */; };
+		D32CEA19307E1E4E00551ECC /* KeyChainStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = D32CEA18307E1E4700551ECC /* KeyChainStore.swift */; };
+		D32CEA1B307E1F2900551ECC /* KeyChainTokenStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = D32CEA1A307E1F2100551ECC /* KeyChainTokenStore.swift */; };
+		D32CEA1D307E8E6C00551ECC /* AuthInterceptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D32CEA1C307E8E6600551ECC /* AuthInterceptor.swift */; };
 		D340C2892D2D6D78004902E6 /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D340C2882D2D6D72004902E6 /* CoreDataManager.swift */; };
 		D340C28B2D2D774B004902E6 /* CoreDataServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = D340C28A2D2D772D004902E6 /* CoreDataServiceProtocol.swift */; };
 		D3427CF52EBFDA5500154238 /* ClinicCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3427CF22EBFDA5500154238 /* ClinicCoordinator.swift */; };
@@ -289,11 +292,6 @@
 		D3F533BE2D0749BD002122AF /* ClinicListScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F533BD2D0749BD002122AF /* ClinicListScreen.swift */; };
 		D3F533C02D0749D4002122AF /* ClinicListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F533BF2D0749CE002122AF /* ClinicListViewModel.swift */; };
 		D3F533C52D0771DA002122AF /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = D3F533C42D0771DA002122AF /* SDWebImageSwiftUI */; };
-		D3F533CC2D077221002122AF /* EnvironmentValues+ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F533C62D077221002122AF /* EnvironmentValues+ImageCache.swift */; };
-		D3F533CD2D077221002122AF /* AsyncImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F533C92D077221002122AF /* AsyncImage.swift */; };
-		D3F533CE2D077221002122AF /* ImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F533C72D077221002122AF /* ImageLoader.swift */; };
-		D3F533CF2D077221002122AF /* RemoteImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F533CA2D077221002122AF /* RemoteImageLoader.swift */; };
-		D3F533D02D077221002122AF /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F533C82D077221002122AF /* ImageCache.swift */; };
 		D3F533D82D0B3DF8002122AF /* MobileNumberRegistrationViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F533D72D0B3DF8002122AF /* MobileNumberRegistrationViewModelTests.swift */; };
 		D3F533DC2D0B4E52002122AF /* sampleTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F533DB2D0B4E52002122AF /* sampleTest.swift */; };
 		D3F6D5FA2DBBDFD0007EE213 /* Connectivity .swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F6D5F92DBBDFC3007EE213 /* Connectivity .swift */; };
@@ -367,6 +365,9 @@
 		D32A677530316C040056CBF6 /* ShimmerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShimmerView.swift; sourceTree = "<group>"; };
 		D32A67773034752F0056CBF6 /* CartAdditionUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartAdditionUseCase.swift; sourceTree = "<group>"; };
 		D32A6779303AB6BC0056CBF6 /* ProductRatingBottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductRatingBottomSheet.swift; sourceTree = "<group>"; };
+		D32CEA18307E1E4700551ECC /* KeyChainStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyChainStore.swift; sourceTree = "<group>"; };
+		D32CEA1A307E1F2100551ECC /* KeyChainTokenStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyChainTokenStore.swift; sourceTree = "<group>"; };
+		D32CEA1C307E8E6600551ECC /* AuthInterceptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthInterceptor.swift; sourceTree = "<group>"; };
 		D340C2882D2D6D72004902E6 /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
 		D340C28A2D2D772D004902E6 /* CoreDataServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataServiceProtocol.swift; sourceTree = "<group>"; };
 		D3427CF22EBFDA5500154238 /* ClinicCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClinicCoordinator.swift; sourceTree = "<group>"; };
@@ -571,11 +572,6 @@
 		D3F533BA2D074971002122AF /* ClinicListModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClinicListModel.swift; sourceTree = "<group>"; };
 		D3F533BD2D0749BD002122AF /* ClinicListScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClinicListScreen.swift; sourceTree = "<group>"; };
 		D3F533BF2D0749CE002122AF /* ClinicListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClinicListViewModel.swift; sourceTree = "<group>"; };
-		D3F533C62D077221002122AF /* EnvironmentValues+ImageCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EnvironmentValues+ImageCache.swift"; sourceTree = "<group>"; };
-		D3F533C72D077221002122AF /* ImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoader.swift; sourceTree = "<group>"; };
-		D3F533C82D077221002122AF /* ImageCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCache.swift; sourceTree = "<group>"; };
-		D3F533C92D077221002122AF /* AsyncImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncImage.swift; sourceTree = "<group>"; };
-		D3F533CA2D077221002122AF /* RemoteImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteImageLoader.swift; sourceTree = "<group>"; };
 		D3F533D42D0B3C83002122AF /* PawWalker-Dev.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; name = "PawWalker-Dev.xctestplan"; path = "../PawWalker-Dev.xctestplan"; sourceTree = "<group>"; };
 		D3F533D72D0B3DF8002122AF /* MobileNumberRegistrationViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobileNumberRegistrationViewModelTests.swift; sourceTree = "<group>"; };
 		D3F533DB2D0B4E52002122AF /* sampleTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = sampleTest.swift; sourceTree = "<group>"; };
@@ -651,6 +647,7 @@
 		40593A4B2C92002D00C05574 /* Network */ = {
 			isa = PBXGroup;
 			children = (
+				D32CEA1C307E8E6600551ECC /* AuthInterceptor.swift */,
 				D3C88B8E2FFE75BF00D2FAE9 /* AppError.swift */,
 				D3A0996D2FDDC3B100BBAD45 /* AlamofireServiceLayer.swift */,
 				D3A099692FDD48D000BBAD45 /* ServiceLayer.swift */,
@@ -912,6 +909,15 @@
 			path = Data;
 			sourceTree = "<group>";
 		};
+		D32CEA17307E1E2B00551ECC /* Keychain */ = {
+			isa = PBXGroup;
+			children = (
+				D32CEA1A307E1F2100551ECC /* KeyChainTokenStore.swift */,
+				D32CEA18307E1E4700551ECC /* KeyChainStore.swift */,
+			);
+			path = Keychain;
+			sourceTree = "<group>";
+		};
 		D340C2872D2D6C76004902E6 /* Database */ = {
 			isa = PBXGroup;
 			children = (
@@ -1114,17 +1120,16 @@
 		D35405AF2CDFB1E500436654 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				D32CEA17307E1E2B00551ECC /* Keychain */,
 				D3DCC20C2EA927C200141DA0 /* Toast */,
 				D31E64E12E5E119800DC9896 /* VersionInfo.swift */,
 				D3F6D5F82DBBDFB9007EE213 /* NetWork */,
 				D31E73A82D9080B100937237 /* CashFree */,
-				D3F533CB2D077221002122AF /* AsyncImage */,
 				D3F533B52D074491002122AF /* ViewUtils */,
 				D3E856812CE4EF8A0017EED7 /* Location */,
 				D356D14B2CE25C3C00C22BBB /* Encryption */,
 				D356D1482CDFE9E500C22BBB /* Analytics */,
 				D35405B02CDFB68200436654 /* ProgressHud */,
-				D39555B42F59D8AC006FFB91 /* Favorite */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -1339,13 +1344,6 @@
 				D3CB4DE62DA23CCA00F814DD /* MyOrdersModel.swift */,
 			);
 			path = Model;
-			sourceTree = "<group>";
-		};
-		D39555B42F59D8AC006FFB91 /* Favorite */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Favorite;
 			sourceTree = "<group>";
 		};
 		D3C0E20F2DD2458C00945F88 /* Model */ = {
@@ -2080,18 +2078,6 @@
 			path = "Clinic List";
 			sourceTree = "<group>";
 		};
-		D3F533CB2D077221002122AF /* AsyncImage */ = {
-			isa = PBXGroup;
-			children = (
-				D3F533C62D077221002122AF /* EnvironmentValues+ImageCache.swift */,
-				D3F533C72D077221002122AF /* ImageLoader.swift */,
-				D3F533C82D077221002122AF /* ImageCache.swift */,
-				D3F533C92D077221002122AF /* AsyncImage.swift */,
-				D3F533CA2D077221002122AF /* RemoteImageLoader.swift */,
-			);
-			path = AsyncImage;
-			sourceTree = "<group>";
-		};
 		D3F6D5F82DBBDFB9007EE213 /* NetWork */ = {
 			isa = PBXGroup;
 			children = (
@@ -2351,6 +2337,7 @@
 				59A065392F51B4E3009FC337 /* FilterScreen.swift in Sources */,
 				D36B1A452CD13740005EA763 /* BundleExtension.swift in Sources */,
 				D32A677630316C0E0056CBF6 /* ShimmerView.swift in Sources */,
+				D32CEA19307E1E4E00551ECC /* KeyChainStore.swift in Sources */,
 				D3C88B982FFFC92B00D2FAE9 /* SubmitReviewRequest.swift in Sources */,
 				D3C0E20B2DCFA39C00945F88 /* ProductDetail+SimilarProduct.swift in Sources */,
 				D3427D0C2EC2587300154238 /* FavoriteCoordinator.swift in Sources */,
@@ -2438,6 +2425,7 @@
 				D387C31B2D90231B005EDE1D /* MyAppointmentListViewModel.swift in Sources */,
 				D340C2892D2D6D78004902E6 /* CoreDataManager.swift in Sources */,
 				D3A0996E2FDDC3BA00BBAD45 /* AlamofireServiceLayer.swift in Sources */,
+				D32CEA1D307E8E6C00551ECC /* AuthInterceptor.swift in Sources */,
 				40593A4F2C920C7500C05574 /* APIClient.swift in Sources */,
 				D3CB4DF52DA2EEF400F814DD /* FavoriteClinicView.swift in Sources */,
 				40F823332C90A6EE00C6328C /* ContentView.swift in Sources */,
@@ -2463,14 +2451,9 @@
 				D3427CFC2EC06D1600154238 /* AppCoordinator.swift in Sources */,
 				D3C88B812FFE521B00D2FAE9 /* GetHomeUseCase.swift in Sources */,
 				D3F3B9472D3588B6006235D1 /* UserSessionManager.swift in Sources */,
-				D3F533CC2D077221002122AF /* EnvironmentValues+ImageCache.swift in Sources */,
-				D3F533CD2D077221002122AF /* AsyncImage.swift in Sources */,
 				D3C88C57301D034600D2FAE9 /* MoreProductModel.swift in Sources */,
 				D3E2C4B62D4A6DFA00F64F7D /* DateFormats.swift in Sources */,
-				D3F533CE2D077221002122AF /* ImageLoader.swift in Sources */,
 				D31E73AC2D90834F00937237 /* CashFreePGViewController.swift in Sources */,
-				D3F533CF2D077221002122AF /* RemoteImageLoader.swift in Sources */,
-				D3F533D02D077221002122AF /* ImageCache.swift in Sources */,
 				D3C0E22E2DD3938000945F88 /* BlogListModel.swift in Sources */,
 				D3C88C49301BB97900D2FAE9 /* ProductRepositoryImplementation.swift in Sources */,
 				D37CE3A930595D6300BB5356 /* AppCoordinatorView 2.swift in Sources */,
@@ -2510,6 +2493,7 @@
 				D3E2C4BC2D4A92E500F64F7D /* ColorExtension.swift in Sources */,
 				D3C0E2192DD34A5100945F88 /* ClinicDetailModel.swift in Sources */,
 				D37CE3AB30595D9200BB5356 /* AppCoordinatorView 3.swift in Sources */,
+				D32CEA1B307E1F2900551ECC /* KeyChainTokenStore.swift in Sources */,
 				D3E2C4B42D469A6700F64F7D /* SlotBookingViewModel.swift in Sources */,
 				D387C3232D903F87005EDE1D /* MyOrdersListScreen.swift in Sources */,
 				D3DCC20F2EA927D900141DA0 /* ToastModel.swift in Sources */,

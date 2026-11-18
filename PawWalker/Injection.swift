@@ -47,6 +47,9 @@ final class Injection {
         container.register(ProductRepository.self) { _ in
             return ProductRepositoryImplementation()
         }
+        container.register(TokenStoreProtocol.self) { _ in
+            return KeychainTokenStore()
+        }
     }
 }
 

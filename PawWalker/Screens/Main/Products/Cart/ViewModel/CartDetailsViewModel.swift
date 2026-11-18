@@ -45,8 +45,8 @@ class CartDetailsViewModel : ProductListViewModel {
     func handleCartCountUpdate() {
         EventHandler.cartCountSubject
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] count in
-                self?.cartCount = count
+            .sink(receiveValue: {  count in
+                self.cartCount = count
             })
         .store(in: &cancellables)
     }
@@ -67,8 +67,8 @@ class CartDetailsViewModel : ProductListViewModel {
                                     userSessionRespository: UserSessionRepostoryImplentation())))
         CashFreeBroker.cashFreeCompletion
             .receive(on: DispatchQueue.main)
-            .sink {[weak self] status in
-                guard let self = self else {return}
+            .sink {  status in
+                //guard let self = self else {return}
                 self.showCashfreePage = false
                 if status {
                     EventHandler.cartCountSubject.send(0)

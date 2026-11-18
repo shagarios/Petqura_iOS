@@ -16,6 +16,7 @@ class MyAccountViewModel : ObservableObject {
     @Published var myAddress : Address?
     @Published var myAppointmentData : MyAppointments?
     @Injected var apiClient : ApiClientProtocol
+    @Injected var tokenStore : TokenStoreProtocol
     @Published var myOrder: MyOrder?
     @Published var addressCount : Int = 0
     @Published var appoinmentCount : Int = 0
@@ -161,6 +162,7 @@ class MyAccountViewModel : ObservableObject {
         if let user = self.fetchUser()  {
             context.delete(user)
             do {
+                try tokenStore.clear()
                 try context.save()
             }
             catch {
